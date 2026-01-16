@@ -1,0 +1,175 @@
+@import '../design-tokens/css-variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-charcoal text-off-white antialiased;
+    /* Inter font features for better aesthetics */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Subtle paper texture will be added via background-image */
+  }
+
+  ::selection {
+    @apply bg-teal/30 text-off-white;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-charcoal;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-charcoal-lighter rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-grey-subtle;
+  }
+}
+
+@layer components {
+  .section-heading {
+    @apply text-2xl md:text-3xl font-semibold text-off-white mb-8;
+    /* Will add hand-drawn underline effect later */
+  }
+
+  .link-underline {
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-teal after:transition-all after:duration-300 hover:after:w-full;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 border border-teal text-teal rounded font-mono text-sm transition-all duration-300 hover:bg-teal/10 hover:scale-105;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-teal text-charcoal rounded font-mono text-sm font-medium transition-all duration-300 hover:bg-teal-dark hover:scale-105;
+  }
+
+  .card {
+    @apply bg-charcoal-light rounded-lg p-6 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-xl border border-charcoal-lighter/50;
+    /* Subtle border for depth, will add sketch effect later */
+  }
+
+  .tag {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-mono bg-charcoal-lighter text-teal;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-teal to-coral bg-clip-text text-transparent;
+  }
+
+  /* Sketchy border effect using box-shadow layering */
+  .sketch-border {
+    position: relative;
+    border: 1.5px solid var(--color-border);
+    border-radius: 0.5rem;
+    /* Subtle irregularity via multiple box-shadows */
+    box-shadow:
+      0 0 0 1px var(--color-border),
+      1px 1px 0 0 var(--color-charcoal-lighter),
+      -1px -1px 0 0 var(--color-charcoal-lighter);
+  }
+
+  /* Paper texture overlay */
+  .paper-texture {
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /* Subtle grain overlay for depth */
+  .grain-overlay {
+    position: relative;
+  }
+
+  .grain-overlay::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.02'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    z-index: 9999;
+  }
+}
+
+/* CSS Variables for theming */
+@layer base {
+  :root {
+    --bg-primary: #1e1e2e;
+    --bg-secondary: #2a2a3e;
+    --bg-card: #2a2a3e;
+    --bg-elevated: #3a3a4a;
+    --text-primary: #e8e6e3;
+    --text-secondary: #a0a0a0;
+    --accent-primary: #5eead4;
+    --accent-secondary: #f0a0a0;
+    --sketch-line: #4a4a5a;
+    --border-subtle: #3a3a4a;
+  }
+
+  .light {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f8f8;
+    --bg-card: #f0f0f0;
+    --bg-elevated: #e8e8e8;
+    --text-primary: #2d2d2d;
+    --text-secondary: #6a6a6a;
+    --accent-primary: #3da89f;
+    --accent-secondary: #d88888;
+    --sketch-line: #c0c0c0;
+    --border-subtle: #d0d0d0;
+  }
+}
+
+/* Light mode overrides */
+.light body {
+  @apply bg-white text-slate-800;
+}
+
+.light .bg-charcoal {
+  @apply bg-white;
+}
+
+.light .bg-charcoal-light {
+  @apply bg-slate-50;
+}
+
+.light .text-off-white {
+  @apply text-slate-800;
+}
+
+.light .text-grey-muted {
+  @apply text-slate-600;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

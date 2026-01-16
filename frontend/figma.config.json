@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "Figma integration configuration for Portfolio project",
+  "figma": {
+    "fileKey": "YOUR_FIGMA_FILE_KEY",
+    "accessToken": "${FIGMA_ACCESS_TOKEN}",
+    "outputPath": "./src/design-tokens/",
+    "outputFormat": "json"
+  },
+  "tokenStudio": {
+    "enabled": true,
+    "syncMode": "pull",
+    "themes": {
+      "dark": {
+        "enabled": true,
+        "sourceFile": "tokens.json",
+        "set": "dark"
+      },
+      "light": {
+        "enabled": true,
+        "sourceFile": "tokens.json",
+        "set": "light"
+      }
+    }
+  },
+  "transformations": {
+    "tailwind": {
+      "enabled": true,
+      "outputFile": "../tailwind.config.js",
+      "prefix": ""
+    },
+    "css": {
+      "enabled": true,
+      "outputFile": "./css-variables.css"
+    }
+  },
+  "componentMapping": {
+    "Button": {
+      "figmaNodeId": "",
+      "reactComponent": "./src/components/ui/Button.tsx"
+    },
+    "Card": {
+      "figmaNodeId": "",
+      "reactComponent": "./src/components/ui/Card.tsx"
+    },
+    "Tag": {
+      "figmaNodeId": "",
+      "reactComponent": "./src/components/ui/Tag.tsx"
+    }
+  }
+}
