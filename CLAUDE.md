@@ -4,7 +4,26 @@
 **Owner:** Mohamad Faisal Bin Mohd Hanafi  
 **Stack:** Spring Boot (Backend) + React/TypeScript (Frontend)  
 **Document Version:** 1.0  
-**Last Updated:** December 2025
+**Last Updated:** January 2026
+
+---
+
+## Token Optimization (@import from Root)
+
+This project inherits token optimization rules from Root CLAUDE.md v1.2.0.
+
+### Key Rules
+1. **CLI-First**: Use `git` via Bash (NOT mcp__git__), native tools before MCP
+2. **Response Calibration**: Match response length to task complexity
+3. **Context Management**: Use `/clear` after discrete tasks, commit as checkpoints
+
+### Project-Specific
+- Backend verification: Use `curl` for API testing (port 8081 in dev)
+- Frontend verification: Use Playwright MCP for browser testing
+- Git operations: Use git CLI directly
+- Build commands: `.\gradlew.bat bootRun` (backend), `npm run dev` (frontend)
+
+@see ../CLAUDE.md for complete token optimization framework
 
 ---
 
@@ -218,7 +237,7 @@ portfolio-platform/
 
 ### Base URL
 ```
-Development: http://localhost:8080/api/v1
+Development: http://localhost:8081/api/v1
 Production:  https://api.portfolio.faisal.dev/api/v1
 ```
 
