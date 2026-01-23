@@ -35,10 +35,12 @@
 - ✅ Accessible at https://faisalhanafi.com
 - ✅ SSL certificate working (Let's Encrypt)
 
-**5. Backend Deployment (Pending)**
-- ⏳ Waiting for GitHub Actions to build and deploy JAR
-- ⏳ Backend will run on port 8080 (proxied via Nginx)
-- ⏳ API endpoints will be available at https://faisalhanafi.com/api/
+**5. Backend Deployment**
+- ✅ GitHub Actions successfully builds and deploys JAR (53MB)
+- ✅ Systemd service runs backend on port 8080 (proxied via Nginx)
+- ✅ Service auto-restarts on failure and boots on system startup
+- ⚠️ Backend requires production database configuration (currently crashing on H2 initialization)
+- 📝 API endpoints will be available at https://faisalhanafi.com/api/ once database is configured
 
 ### Deployment Strategy
 
@@ -151,3 +153,45 @@ To deploy new changes:
 - Static IP: 54.169.32.54
 - OS: Amazon Linux 2023
 - Uptime: Restarted 2026-01-23 ~18:30 SGT
+
+---
+
+## Deployment Verification - 2026-01-23 18:00 SGT
+
+### Auto-Deployment Confirmed Working ✅
+
+**Test Commits:**
+- `cddf0ff` - Fixed temp directory creation
+- `a7ec45d` - Fixed Windows Java path for CI/CD
+- `889ee9c` - Added deployment log
+
+**Verification Results:**
+1. ✅ GitHub Actions triggers on every push
+2. ✅ Frontend builds successfully (React + Vite)
+3. ✅ Backend builds successfully (Spring Boot JAR with Gradle)
+4. ✅ Files deployed to Lightsail via SSH
+5. ✅ Backend service restarts automatically
+6. ✅ Frontend accessible at https://faisalhanafi.com
+7. ✅ Systemd service managing backend lifecycle
+
+**Deployment Workflow Time:** ~3-4 minutes per push
+
+**Memory Usage During Deployment:**
+- Frontend build: ~200MB (runs on GitHub)
+- Backend build: ~1.5GB (runs on GitHub)
+- Server impact: Minimal (only file copy + service restart)
+
+**Key Success Factors:**
+- Builds happen on GitHub Actions (not on 1GB Lightsail instance)
+- Gradle `java.home` path commented out for CI/CD compatibility
+- Systemd service with memory limits (300MB max)
+- Nginx reverse proxy routing working correctly
+
+**Next Steps (Backend Configuration):**
+- Configure production database connection (PostgreSQL/MySQL)
+- Update `application-production.yml` with database credentials
+- Remove H2 in-memory database dependency
+- Test API endpoints after database is configured
+
+**Conclusion:**
+The deployment pipeline is fully operational. Every code push now automatically builds and deploys both frontend and backend to Lightsail without manual intervention or full system restarts.
