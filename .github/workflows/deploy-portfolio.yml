@@ -1,0 +1,79 @@
+name: Deploy Portfolio to Lightsail
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Java 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      # 3. Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # 4. Build Frontend
+      - name: Build React Frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
+      # 5. Build Backend JAR
+      - name: Build Spring Boot JAR
+        working-directory: ./backend
+        run: |
+          chmod +x gradlew
+          ./gradlew clean bootJar --no-daemon
+
+      # 6. Prepare deployment package
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          cp -r frontend/dist deploy/frontend
+          cp backend/build/libs/*.jar deploy/portfolio-backend.jar
+
+      # 7. Deploy to Lightsail
+      - name: Deploy to Lightsail
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
+        run: |
+          # Setup SSH
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/lightsail.pem
+          chmod 600 ~/.ssh/lightsail.pem
+          ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+
+          # Deploy frontend
+          echo "Deploying frontend..."
+          scp -i ~/.ssh/lightsail.pem -r deploy/frontend/* ec2-user@$LIGHTSAIL_IP:/tmp/portfolio-frontend/
+          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo rm -rf /var/www/portfolio/* && sudo cp -r /tmp/portfolio-frontend/* /var/www/portfolio/ && sudo chown -R nginx:nginx /var/www/portfolio"
+
+          # Deploy backend
+          echo "Deploying backend..."
+          scp -i ~/.ssh/lightsail.pem deploy/portfolio-backend.jar ec2-user@$LIGHTSAIL_IP:/home/ec2-user/portfolio-backend.jar
+
+          # Restart backend service
+          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo systemctl restart portfolio-backend || echo 'First deployment - service will be set up manually'"
+
+      - name: Deployment Complete
+        run: |
+          echo "✅ Frontend deployed to /var/www/portfolio"
+          echo "✅ Backend JAR deployed to /home/ec2-user/portfolio-backend.jar"
+          echo "🌐 Visit: https://faisalhanafi.com"
