@@ -62,6 +62,7 @@ jobs:
 
           # Deploy frontend
           echo "Deploying frontend..."
+          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "mkdir -p /tmp/portfolio-frontend"
           scp -i ~/.ssh/lightsail.pem -r deploy/frontend/* ec2-user@$LIGHTSAIL_IP:/tmp/portfolio-frontend/
           ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo rm -rf /var/www/portfolio/* && sudo cp -r /tmp/portfolio-frontend/* /var/www/portfolio/ && sudo chown -R nginx:nginx /var/www/portfolio"
 
