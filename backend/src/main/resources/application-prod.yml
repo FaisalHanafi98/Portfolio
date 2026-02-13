@@ -7,18 +7,13 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: false
-  sql:
-    init:
-      mode: never
 
-# CORS configuration for custom domain
 cors:
-  allowed-origins: ${CORS_ALLOWED_ORIGINS:https://yourdomain.com,https://www.yourdomain.com}
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:https://faisalhanafi.com,https://www.faisalhanafi.com}
 
 logging:
   level:
-    dev.faisal.portfolio: INFO
+    com.faisal.portfolio: INFO
 
-# Server configuration
 server:
   port: ${PORT:8080}
