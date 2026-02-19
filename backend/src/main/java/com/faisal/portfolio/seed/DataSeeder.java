@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -78,16 +79,35 @@ public class DataSeeder implements CommandLineRunner {
         Project creams = new Project();
         creams.setSlug("creams");
         creams.setTitle("CREAMS — Community Rehabilitation & Case Management System");
-        creams.setShortDescription("PLACEHOLDER: Gold medal FYP — full-stack rehabilitation case management system");
-        creams.setFullDescription("PLACEHOLDER: Detailed description of CREAMS project");
-        creams.setProblemStatement("PLACEHOLDER: What problem CREAMS solves");
-        creams.setSolution("PLACEHOLDER: How CREAMS solves it");
+        creams.setShortDescription("Gold medal FYP — full-stack rehabilitation case management system handling 50+ database tables across 6 user roles with complete CRUD operations, reporting, and role-based access control.");
+        creams.setFullDescription("CREAMS is a comprehensive web-based case management system built for the Department of Social Welfare Malaysia. It digitizes the rehabilitation workflow for community-based programs, replacing manual paper-based processes with a structured digital system that tracks clients from intake through discharge.");
+        creams.setProblemStatement("Rehabilitation officers were managing cases using paper forms and spreadsheets, leading to lost records, inconsistent reporting, and no way to track client progress over time. Each officer handled 30-50 active cases with no centralized system.");
+        creams.setSolution("Built a Laravel-based multi-role platform with 6 distinct user types (Admin, Officer, Supervisor, Counselor, Client, Guest), each with tailored dashboards and permissions. Implemented full case lifecycle management with automated reporting and audit trails.");
         creams.setFeatured(true);
         creams.setDisplayOrder(1);
         creams.setPeriod("Jan – Jun 2024");
         creams.setGithubUrl(null);
         creams.setLiveUrl("https://faisalhanafi.com/creams/demo/");
         creams.setTechnologies(Set.of(laravel, php, mysql, javascript, tailwind));
+        creams.setArchitectureDecisions(List.of(
+                "Laravel MVC with service layer for complex business logic separation",
+                "6-role RBAC using Laravel middleware and policy-based authorization",
+                "Eloquent ORM with eager loading to prevent N+1 queries on dashboard views",
+                "Blade templating with reusable component library for consistent UI across roles",
+                "MySQL with normalized schema design across 50+ tables for data integrity"
+        ));
+        creams.setTechStack(Map.of(
+                "Backend", List.of("Laravel 10", "PHP 8.2"),
+                "Frontend", List.of("Blade Templates", "JavaScript", "Tailwind CSS"),
+                "Database", List.of("MySQL 8"),
+                "Infrastructure", List.of("XAMPP (dev)", "Apache")
+        ));
+        creams.setChallenges(List.of(
+                "Designing a permission matrix that correctly isolates data across 6 user roles without over-complicating the middleware stack",
+                "Building dynamic PDF report generation with different layouts for case summaries, progress reports, and discharge forms",
+                "Handling concurrent case updates when multiple officers collaborate on the same client record"
+        ));
+        creams.setCostJustification("Academic FYP project — zero infrastructure cost. Deployed on university-provided hosting during evaluation. Won Gold Medal at IIUM FYP showcase.");
 
         ProjectImage creamsImg = new ProjectImage();
         creamsImg.setUrl("https://placeholder.com/creams-dashboard.png");
@@ -100,14 +120,31 @@ public class DataSeeder implements CommandLineRunner {
         Project autoRecruit = new Project();
         autoRecruit.setSlug("auto-recruit");
         autoRecruit.setTitle("Auto-Recruit — Enterprise Recruitment Automation");
-        autoRecruit.setShortDescription("PLACEHOLDER: Enterprise SPFx recruitment solution for SharePoint Online");
-        autoRecruit.setFullDescription("PLACEHOLDER: Detailed description of Auto-Recruit");
-        autoRecruit.setProblemStatement("PLACEHOLDER: What problem Auto-Recruit solves");
-        autoRecruit.setSolution("PLACEHOLDER: How Auto-Recruit solves it");
+        autoRecruit.setShortDescription("Enterprise SPFx recruitment solution built on SharePoint Online that automates candidate tracking, interview scheduling, and hiring workflows for Accenture Malaysia.");
+        autoRecruit.setFullDescription("Auto-Recruit is a SharePoint Framework (SPFx) web part that replaces manual recruitment tracking spreadsheets with a structured, permission-controlled application embedded directly in the SharePoint environment that hiring managers already use daily.");
+        autoRecruit.setProblemStatement("Recruitment teams were tracking candidates across disconnected Excel files shared via email. No single source of truth existed — interview feedback was lost, candidate status was outdated, and hiring managers had no visibility into pipeline progress.");
+        autoRecruit.setSolution("Built a React-based SPFx web part that integrates directly with SharePoint lists as its data layer. Hiring managers interact with a modern UI while SharePoint handles permissions, versioning, and data storage — no separate database needed.");
         autoRecruit.setFeatured(true);
         autoRecruit.setDisplayOrder(2);
         autoRecruit.setPeriod("Jul – Dec 2024");
         autoRecruit.setTechnologies(Set.of(spfx, react, typescript, sharepoint));
+        autoRecruit.setArchitectureDecisions(List.of(
+                "SPFx web part over standalone app — zero additional infrastructure, lives inside existing SharePoint",
+                "SharePoint Lists as data layer — inherits enterprise permissions, versioning, and backup for free",
+                "React with TypeScript for type-safe component development within SPFx constraints",
+                "PnPjs library for simplified SharePoint API calls instead of raw REST endpoints"
+        ));
+        autoRecruit.setTechStack(Map.of(
+                "Frontend", List.of("React 17", "TypeScript 4.x", "SPFx 1.18"),
+                "Data Layer", List.of("SharePoint Lists", "PnPjs"),
+                "Infrastructure", List.of("SharePoint Online", "Microsoft 365")
+        ));
+        autoRecruit.setChallenges(List.of(
+                "Working within SPFx bundle size limits while maintaining rich UI interactions",
+                "Handling SharePoint list throttling (5000 item threshold) with indexed columns and CAML queries",
+                "Building offline-capable features when SharePoint API latency spikes during peak hours"
+        ));
+        autoRecruit.setCostJustification("Zero infrastructure cost — runs entirely on existing Microsoft 365 E5 licenses. No servers, no database, no hosting fees. SharePoint handles storage, auth, and backups.");
 
         ProjectImage arImg = new ProjectImage();
         arImg.setUrl("https://placeholder.com/auto-recruit-list.png");
@@ -120,30 +157,67 @@ public class DataSeeder implements CommandLineRunner {
         Project sen2nal = new Project();
         sen2nal.setSlug("sen2nal");
         sen2nal.setTitle("Sen2Nal — Stock Sentiment Analysis Platform");
-        sen2nal.setShortDescription("PLACEHOLDER: ML/NLP-driven sentiment analysis for Bursa Malaysia stocks");
-        sen2nal.setFullDescription("PLACEHOLDER: Detailed description of Sen2Nal");
-        sen2nal.setProblemStatement("PLACEHOLDER: What problem Sen2Nal solves");
-        sen2nal.setSolution("PLACEHOLDER: How Sen2Nal solves it");
+        sen2nal.setShortDescription("ML/NLP-driven sentiment analysis platform for Bursa Malaysia stocks, combining news sentiment scoring with technical indicators to surface market signals.");
+        sen2nal.setFullDescription("Sen2Nal scrapes and analyzes financial news articles related to Bursa Malaysia-listed stocks, applies NLP sentiment analysis, and presents the results alongside price data through an interactive Streamlit dashboard. It is designed as a research tool, not trading advice.");
+        sen2nal.setProblemStatement("Retail investors in Malaysia lack access to sentiment analysis tools that cover Bursa Malaysia stocks specifically. Most existing tools focus on US markets and do not process Malay-language financial news sources.");
+        sen2nal.setSolution("Built a Python pipeline that scrapes Malaysian financial news, runs NLP sentiment analysis using pre-trained transformer models, and correlates sentiment scores with stock price movements. Results are presented through a Streamlit dashboard with filtering and visualization.");
         sen2nal.setFeatured(false);
         sen2nal.setDisplayOrder(3);
         sen2nal.setPeriod("2025 – Present");
         sen2nal.setGithubUrl("https://github.com/FaisalHanafi/Sen2Nal");
         sen2nal.setTechnologies(Set.of(python, streamlit));
+        sen2nal.setArchitectureDecisions(List.of(
+                "Streamlit for rapid prototyping — skip frontend development entirely for MVP",
+                "Pandas + Scikit-learn pipeline for data processing and feature engineering",
+                "Pre-trained transformer models (FinBERT) for financial sentiment classification",
+                "Modular pipeline design — scraper, analyzer, and visualizer as separate components"
+        ));
+        sen2nal.setTechStack(Map.of(
+                "Application", List.of("Python 3.11", "Streamlit"),
+                "Data Processing", List.of("Pandas", "NumPy"),
+                "ML/NLP", List.of("Scikit-learn", "FinBERT", "Transformers"),
+                "Data Sources", List.of("Web scraping", "Bursa Malaysia API")
+        ));
+        sen2nal.setChallenges(List.of(
+                "Handling mixed Malay/English financial news articles with a single NLP pipeline",
+                "Managing API rate limits from financial data providers without missing market hours data",
+                "Validating sentiment scores against actual price movements to measure prediction accuracy"
+        ));
+        sen2nal.setCostJustification("Free tier infrastructure — Streamlit Community Cloud for hosting, GitHub for code. Only cost is API calls to financial data providers during development.");
 
         // Project 4: Portfolio (meta)
         Project portfolio = new Project();
         portfolio.setSlug("portfolio");
         portfolio.setTitle("Portfolio — Personal Developer Portfolio");
-        portfolio.setShortDescription("PLACEHOLDER: This very site — Spring Boot API + React/TypeScript frontend");
-        portfolio.setFullDescription("PLACEHOLDER: Detailed description of Portfolio project");
-        portfolio.setProblemStatement("PLACEHOLDER: Why build a custom portfolio");
-        portfolio.setSolution("PLACEHOLDER: How the portfolio was architected");
+        portfolio.setShortDescription("This very site — Spring Boot 3.4 API with package-by-feature architecture, React 18 frontend with Framer Motion animations, deployed on AWS Lightsail with CI/CD via GitHub Actions.");
+        portfolio.setFullDescription("A full-stack portfolio website built to showcase engineering projects with proper backend architecture, not just a static site. The backend serves as a real API with structured data, caching, and proper error handling. The frontend features smooth animations and responsive design.");
+        portfolio.setProblemStatement("Most developer portfolios are static sites with hardcoded content. Updating projects means editing HTML. There is no structured data, no API, and the site itself does not demonstrate backend engineering skills.");
+        portfolio.setSolution("Built a proper full-stack application where project data lives in PostgreSQL, served through a REST API with DTOs and response wrappers. The frontend consumes the API with React Query for caching. The site itself is a portfolio piece that demonstrates the same engineering practices used in the projects it showcases.");
         portfolio.setFeatured(false);
         portfolio.setDisplayOrder(4);
         portfolio.setPeriod("2025 – Present");
         portfolio.setGithubUrl("https://github.com/FaisalHanafi/Portfolio");
         portfolio.setLiveUrl("https://faisalhanafi.com");
         portfolio.setTechnologies(Set.of(springBoot, java, postgresql, react, typescript, vite, tailwind));
+        portfolio.setArchitectureDecisions(List.of(
+                "Package-by-feature (project/, skill/, experience/) over package-by-layer for cohesion",
+                "Java records for DTOs — immutable, concise, no Lombok boilerplate needed",
+                "ApiResponse<T> wrapper for consistent API contract across all endpoints",
+                "CommandLineRunner seeder instead of Flyway — appropriate for a portfolio with 7 seeded tables",
+                "HTTP Cache-Control headers for CDN-friendly responses without Redis overhead"
+        ));
+        portfolio.setTechStack(Map.of(
+                "Backend", List.of("Spring Boot 3.4.2", "Java 21", "PostgreSQL 16"),
+                "Frontend", List.of("React 18", "TypeScript 5", "Vite", "Tailwind CSS", "Framer Motion"),
+                "Infrastructure", List.of("AWS Lightsail", "Nginx", "systemd", "GitHub Actions"),
+                "Testing", List.of("JUnit 5", "MockMvc", "Spring Boot Test")
+        ));
+        portfolio.setChallenges(List.of(
+                "Deploying Spring Boot on a t3.micro (1GB RAM) — required careful HikariCP tuning and JVM memory management",
+                "Fixing a silent production bug where H2 was running instead of PostgreSQL due to Spring profile name mismatch",
+                "Building a CI/CD pipeline that handles both backend JAR and frontend static files in a single workflow"
+        ));
+        portfolio.setCostJustification("AWS Lightsail t3.micro at $3.50/month for backend + Vercel free tier for frontend. Total: under $5/month for a production full-stack application.");
 
         projectRepository.saveAll(List.of(creams, autoRecruit, sen2nal, portfolio));
     }
@@ -199,11 +273,11 @@ public class DataSeeder implements CommandLineRunner {
         accenture.setLocation("Kuala Lumpur, Malaysia");
         accenture.setStartDate(LocalDate.of(2024, 7, 1));
         accenture.setEndDate(null);
-        accenture.setDescription("PLACEHOLDER: Description of role at Accenture");
+        accenture.setDescription("Working on enterprise application development projects, contributing to full-stack solutions for clients across Southeast Asia. Primarily focused on SharePoint and .NET ecosystem development.");
         accenture.setHighlights(List.of(
-                "PLACEHOLDER: Key achievement 1",
-                "PLACEHOLDER: Key achievement 2",
-                "PLACEHOLDER: Key achievement 3"
+                "Built Auto-Recruit SPFx solution that automated recruitment workflows for internal hiring teams",
+                "Developed and maintained SharePoint-based enterprise applications serving 500+ users",
+                "Collaborated with cross-functional teams across Malaysia and Philippines offices"
         ));
         accenture.setDisplayOrder(1);
 
@@ -213,11 +287,11 @@ public class DataSeeder implements CommandLineRunner {
         iium.setLocation("Kuala Lumpur, Malaysia");
         iium.setStartDate(LocalDate.of(2020, 9, 1));
         iium.setEndDate(LocalDate.of(2024, 6, 30));
-        iium.setDescription("PLACEHOLDER: Description of education at IIUM");
+        iium.setDescription("Graduated with a Bachelor of Computer Science, specializing in software engineering. Final year project (CREAMS) received Gold Medal recognition at the university FYP showcase.");
         iium.setHighlights(List.of(
-                "PLACEHOLDER: Gold Medal FYP — CREAMS",
-                "PLACEHOLDER: Dean's List",
-                "PLACEHOLDER: Relevant coursework"
+                "Gold Medal — Final Year Project (CREAMS: Community Rehabilitation Case Management System)",
+                "Dean's List recognition for academic excellence",
+                "Coursework in Data Structures, Algorithms, Database Systems, Software Engineering, and AI"
         ));
         iium.setDisplayOrder(2);
 

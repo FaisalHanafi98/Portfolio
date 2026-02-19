@@ -1,6 +1,7 @@
 package com.faisal.portfolio.project;
 
 import java.util.List;
+import java.util.Map;
 
 public record ProjectDetailDto(
         Long id,
@@ -15,7 +16,11 @@ public record ProjectDetailDto(
         String githubUrl,
         String liveUrl,
         List<TechnologyDto> technologies,
-        List<ImageDto> images
+        List<ImageDto> images,
+        List<String> architectureDecisions,
+        Map<String, List<String>> techStack,
+        List<String> challenges,
+        String costJustification
 ) {
     public record TechnologyDto(Long id, String name, String iconUrl) {
     }
@@ -45,7 +50,11 @@ public record ProjectDetailDto(
                 project.getGithubUrl(),
                 project.getLiveUrl(),
                 techs,
-                imgs
+                imgs,
+                project.getArchitectureDecisions(),
+                project.getTechStack(),
+                project.getChallenges(),
+                project.getCostJustification()
         );
     }
 }

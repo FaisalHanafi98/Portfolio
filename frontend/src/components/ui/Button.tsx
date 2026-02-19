@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react';
+import React, { ReactNode, useRef } from 'react';
 import { motion, HTMLMotionProps, useMotionValue, useSpring } from 'framer-motion';
 
 interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
@@ -91,7 +91,7 @@ export default function Button({
   if (href) {
     return (
       <motion.a
-        ref={ref as any}
+        ref={ref as React.Ref<never>}
         href={href}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener noreferrer' : undefined}
@@ -105,7 +105,7 @@ export default function Button({
 
   return (
     <motion.button
-      ref={ref as any}
+      ref={ref as React.Ref<never>}
       className={baseStyles}
       {...motionProps}
       {...props}

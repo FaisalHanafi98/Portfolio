@@ -27,17 +27,9 @@ export default function FeaturedProject({ project, index }: FeaturedProjectProps
       >
         <Link to={`/projects/${project.slug}`} className="block relative group">
           <div className="relative overflow-hidden rounded-lg">
-            {project.thumbnailUrl ? (
-              <img
-                src={project.thumbnailUrl}
-                alt={project.title}
-                className="w-full aspect-video object-cover"
-              />
-            ) : (
-              <div className="w-full aspect-video bg-navy-light flex items-center justify-center">
-                <span className="text-4xl">🚀</span>
-              </div>
-            )}
+            <div className="w-full aspect-video bg-navy-light flex items-center justify-center">
+              <span className="text-4xl">🚀</span>
+            </div>
             <div className="absolute inset-0 bg-teal/20 group-hover:bg-transparent transition-colors duration-300" />
           </div>
         </Link>

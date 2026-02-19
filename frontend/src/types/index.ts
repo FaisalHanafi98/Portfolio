@@ -13,28 +13,13 @@ export interface ApiResponse<T> {
 export interface Technology {
   id: number;
   name: string;
-  category: string;
   iconUrl?: string;
 }
 
 export interface ProjectImage {
-  id: number;
   url: string;
   altText: string;
   displayOrder: number;
-}
-
-export interface ProjectMetrics {
-  databaseTables?: number;
-  userRoles?: number;
-  linesOfCode?: number;
-  complexityReduction?: string;
-  recognition?: string;
-}
-
-export interface ProjectLinks {
-  github?: string;
-  live?: string;
 }
 
 export interface ProjectSummary {
@@ -43,8 +28,8 @@ export interface ProjectSummary {
   title: string;
   shortDescription: string;
   technologies: string[];
-  thumbnailUrl?: string;
   featured: boolean;
+  period: string;
 }
 
 export interface ProjectDetail {
@@ -55,13 +40,16 @@ export interface ProjectDetail {
   fullDescription: string;
   problemStatement: string;
   solution: string;
-  keyFeatures: string[];
-  technologies: Technology[];
-  metrics: ProjectMetrics;
-  images: ProjectImage[];
-  links: ProjectLinks;
-  period: string;
   featured: boolean;
+  period: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  technologies: Technology[];
+  images: ProjectImage[];
+  architectureDecisions?: string[];
+  techStack?: Record<string, string[]>;
+  challenges?: string[];
+  costJustification?: string;
 }
 
 // Skill types

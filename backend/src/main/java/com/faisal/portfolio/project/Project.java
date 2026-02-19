@@ -4,11 +4,14 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Entity
@@ -54,6 +57,21 @@ public class Project {
 
     @Column(length = 100)
     private String period;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "architecture_decisions", columnDefinition = "TEXT")
+    private List<String> architectureDecisions;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "tech_stack", columnDefinition = "TEXT")
+    private Map<String, List<String>> techStack;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "TEXT")
+    private List<String> challenges;
+
+    @Column(name = "cost_justification", columnDefinition = "TEXT")
+    private String costJustification;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

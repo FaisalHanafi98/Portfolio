@@ -1,15 +1,18 @@
 # Portfolio Platform
 
+[![CI](https://github.com/FaisalHanafi/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/FaisalHanafi/portfolio/actions/workflows/ci.yml)
+
 A dynamic, full-stack portfolio platform built with Spring Boot and React, demonstrating modern web development practices.
 
 ## Tech Stack
 
 ### Backend
-- **Framework:** Spring Boot 3.2
-- **Language:** Java 17
+- **Framework:** Spring Boot 3.4.2
+- **Language:** Java 21
 - **Database:** PostgreSQL (production) / H2 (development)
+- **Monitoring:** Spring Boot Actuator + Prometheus
 - **Documentation:** OpenAPI/Swagger
-- **Build Tool:** Gradle
+- **Build Tool:** Gradle 8.14
 
 ### Frontend
 - **Framework:** React 18
@@ -22,41 +25,34 @@ A dynamic, full-stack portfolio platform built with Spring Boot and React, demon
 ## Project Structure
 
 ```
-portfolio-platform/
+portfolio/
 ├── backend/           # Spring Boot API
-│   ├── src/main/java/dev/faisal/portfolio/
-│   │   ├── controller/    # REST endpoints
-│   │   ├── service/       # Business logic
-│   │   ├── repository/    # Data access
-│   │   ├── model/         # JPA entities
-│   │   ├── dto/           # Data transfer objects
-│   │   ├── config/        # Configuration
-│   │   └── exception/     # Error handling
-│   └── src/main/resources/
-│       ├── application.yml
-│       └── data.sql       # Seed data
+│   └── src/main/java/com/faisal/portfolio/
+│       ├── project/       # Projects feature
+│       ├── skill/         # Skills feature
+│       ├── experience/    # Experience feature
+│       ├── common/        # Shared (ApiResponse, exceptions)
+│       ├── config/        # CORS, OpenAPI config
+│       └── seed/          # Data seeder
 │
 ├── frontend/          # React application
-│   ├── src/
-│   │   ├── api/           # API client & hooks
-│   │   ├── components/    # React components
-│   │   ├── pages/         # Page components
-│   │   ├── hooks/         # Custom hooks
-│   │   ├── types/         # TypeScript types
-│   │   ├── lib/           # Utilities
-│   │   └── styles/        # Global styles
-│   └── public/
+│   └── src/
+│       ├── api/           # API client & hooks
+│       ├── components/    # React components
+│       ├── pages/         # Page components
+│       ├── types/         # TypeScript types
+│       └── lib/           # Utilities
 │
-└── docs/              # Documentation
+└── .github/workflows/ # CI/CD pipelines
 ```
 
 ## Getting Started
 
 ### Prerequisites
 
-- Java 17+
-- Node.js 18+
-- npm or yarn
+- Java 21+
+- Node.js 20+
+- npm
 
 ### Backend Setup
 
@@ -68,7 +64,6 @@ cd backend
 
 # The API will be available at http://localhost:8080
 # Swagger UI: http://localhost:8080/swagger-ui.html
-# H2 Console: http://localhost:8080/h2-console
 ```
 
 ### Frontend Setup
@@ -78,9 +73,6 @@ cd frontend
 
 # Install dependencies
 npm install
-
-# Create environment file
-cp .env.example .env
 
 # Start development server
 npm run dev
@@ -97,7 +89,8 @@ npm run dev
 | GET | `/api/v1/projects/{slug}` | Get project details |
 | GET | `/api/v1/skills` | Get skills by category |
 | GET | `/api/v1/experience` | Get work experience |
-| GET | `/api/v1/about` | Get bio information |
+| GET | `/api/health` | Actuator health (DB status) |
+| GET | `/api/prometheus` | Prometheus metrics |
 
 ## Development Commands
 
@@ -116,36 +109,12 @@ npm run dev                # Start dev server
 npm run build              # Production build
 npm run lint               # Run ESLint
 npm run type-check         # TypeScript check
-npm run preview            # Preview production build
 ```
 
 ## Deployment
 
-### Backend (Render/Railway)
-
-1. Set environment variables:
-   - `DATABASE_URL`: PostgreSQL connection string
-   - `SPRING_PROFILES_ACTIVE`: `prod`
-
-2. Build command: `./gradlew build`
-3. Start command: `java -jar build/libs/portfolio-0.0.1-SNAPSHOT.jar`
-
-### Frontend (Vercel/Netlify)
-
-1. Set environment variables:
-   - `VITE_API_URL`: Production API URL
-
-2. Build command: `npm run build`
-3. Output directory: `dist`
-
-## Features
-
-- Responsive design (mobile-first)
-- Dark/light theme toggle
-- Smooth animations with Framer Motion
-- Accessible (WCAG 2.1 AA)
-- SEO optimized
-- TypeScript strict mode (zero `any` types)
+- **Backend:** AWS Lightsail (systemd + Nginx reverse proxy)
+- **Frontend:** Vercel
 
 ## Author
 

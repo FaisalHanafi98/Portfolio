@@ -1,5 +1,6 @@
 package com.faisal.portfolio.project;
 
+import com.faisal.portfolio.common.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class ProjectService {
 
     public ProjectDetailDto getProjectBySlug(String slug) {
         Project project = projectRepository.findBySlug(slug)
-                .orElseThrow(() -> new IllegalArgumentException("Project not found: " + slug));
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found: " + slug));
         return ProjectDetailDto.from(project);
     }
 }
