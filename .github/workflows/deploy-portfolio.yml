@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       # 4. Build Frontend
       - name: Build React Frontend
@@ -33,6 +33,8 @@ jobs:
         run: |
           npm ci
           npm run build
+        env:
+          VITE_API_URL: https://faisalhanafi.com
 
       # 5. Build Backend JAR
       - name: Build Spring Boot JAR
@@ -71,7 +73,7 @@ jobs:
           scp -i ~/.ssh/lightsail.pem deploy/portfolio-backend.jar ec2-user@$LIGHTSAIL_IP:/home/ec2-user/portfolio-backend.jar
 
           # Restart backend service
-          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo systemctl restart portfolio-backend || echo 'First deployment - service will be set up manually'"
+          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo systemctl restart portfolio || echo 'First deployment - service will be set up manually'"
 
       - name: Deployment Complete
         run: |
