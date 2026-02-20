@@ -1,6 +1,6 @@
 # Portfolio Platform
 
-[![CI](https://github.com/FaisalHanafi/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/FaisalHanafi/portfolio/actions/workflows/ci.yml)
+[![CI](https://github.com/FaisalHanafi98/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/FaisalHanafi98/Portfolio/actions/workflows/ci.yml)
 
 A dynamic, full-stack portfolio platform built with Spring Boot and React, demonstrating modern web development practices.
 
