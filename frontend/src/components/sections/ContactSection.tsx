@@ -38,7 +38,7 @@ export default function ContactSection() {
 
         <motion.div variants={slideUp}>
           <Button
-            href="mailto:faisal@example.com"
+            href="mailto:faisalhanafi98@gmail.com"
             size="lg"
           >
             Say Hello

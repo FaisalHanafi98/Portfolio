@@ -28,13 +28,13 @@ jobs:
           node-version: '20'
 
       # 4. Build Frontend
+      # VITE_API_URL left empty — client defaults to /api/v1 (relative URL)
+      # Nginx on Lightsail proxies /api/ to the Spring Boot backend on port 8080
       - name: Build React Frontend
         working-directory: ./frontend
         run: |
           npm ci
           npm run build
-        env:
-          VITE_API_URL: https://faisalhanafi.com
 
       # 5. Build Backend JAR
       - name: Build Spring Boot JAR
