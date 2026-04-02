@@ -5,6 +5,7 @@ import ProjectCard from '../projects/ProjectCard';
 import { ProjectCardSkeleton } from '../ui/Skeleton';
 import { useProjects } from '../../api/hooks';
 import { slideUp, staggerContainer } from '../../lib/animations';
+import SketchUnderline from '../ui/SketchUnderline';
 
 export default function ProjectsSection() {
   const { data: projects, isLoading, error } = useProjects();
@@ -15,14 +16,15 @@ export default function ProjectsSection() {
   return (
     <AnimatedSection id="projects" className="py-24 px-6">
       <div className="max-w-6xl mx-auto">
-        <motion.h2
-          variants={slideUp}
-          className="section-heading flex items-center gap-4"
-        >
-          <span className="text-teal font-mono text-xl">02.</span>
-          Some Things I've Built
-          <span className="flex-1 h-px bg-navy-lighter ml-4" />
-        </motion.h2>
+        <div className="mb-12">
+          <motion.h2
+            variants={slideUp}
+            className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+          >
+            Some Things I've Built
+          </motion.h2>
+          <SketchUnderline width={200} className="text-pink/50" delay={0.3} />
+        </div>
 
         {isLoading ? (
           <div className="space-y-24">
@@ -31,7 +33,7 @@ export default function ProjectsSection() {
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-slate">Unable to load projects. Please try again later.</p>
+            <p className="text-charcoal-light">Unable to load projects. Please try again later.</p>
           </div>
         ) : (
           <>
@@ -60,7 +62,7 @@ export default function ProjectsSection() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  className="text-2xl font-semibold text-slate-light text-center mb-12"
+                  className="text-2xl font-semibold text-charcoal text-center mb-12"
                 >
                   Other Noteworthy Projects
                 </motion.h3>

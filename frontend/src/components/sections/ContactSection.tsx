@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import AnimatedSection from '../ui/AnimatedSection';
 import Button from '../ui/Button';
 import { slideUp, staggerContainer } from '../../lib/animations';
+import SketchUnderline from '../ui/SketchUnderline';
 
 export default function ContactSection() {
   return (
@@ -15,21 +16,23 @@ export default function ContactSection() {
       >
         <motion.p
           variants={slideUp}
-          className="font-mono text-teal mb-4"
+          className="font-hand text-blue text-xl mb-4"
         >
-          05. What's Next?
+          What's Next?
         </motion.p>
 
-        <motion.h2
-          variants={slideUp}
-          className="text-4xl md:text-5xl font-bold text-slate-light mb-6"
-        >
-          Get In Touch
-        </motion.h2>
+        <motion.div variants={slideUp} className="mb-3 inline-block">
+          <h2 className="text-4xl md:text-5xl font-bold text-charcoal">
+            Get In Touch
+          </h2>
+        </motion.div>
+        <motion.div variants={slideUp} className="flex justify-center mb-6">
+          <SketchUnderline width={140} className="text-pink/50" delay={0.5} />
+        </motion.div>
 
         <motion.p
           variants={slideUp}
-          className="text-slate text-lg mb-12"
+          className="text-charcoal-light text-lg mb-12"
         >
           I'm currently open to new opportunities and would love to hear from you.
           Whether you have a question, a project idea, or just want to say hi,

@@ -2,15 +2,15 @@ import { motion } from 'framer-motion';
 import Button from '../ui/Button';
 import { staggerContainer, heroTextReveal, letterReveal } from '../../lib/animations';
 import SketchUnderline from '../ui/SketchUnderline';
-import { SketchArrow, SketchStar } from '../ui/SketchDoodles';
+import { SketchStar } from '../ui/SketchDoodles';
 
 export default function HeroSection() {
   const nameText = "Faisal Hanafi.";
 
   return (
     <section id="intro" className="min-h-screen flex items-center justify-center px-6 pt-20 relative">
-      {/* Decorative sketch star - top right */}
-      <div className="absolute top-32 right-12 text-coral/30 hidden lg:block">
+      {/* Decorative sketch star */}
+      <div className="absolute top-32 right-12 text-pink/30 hidden lg:block">
         <SketchStar delay={2} />
       </div>
 
@@ -22,13 +22,13 @@ export default function HeroSection() {
       >
         <motion.p
           variants={heroTextReveal}
-          className="font-mono text-teal mb-5 text-sm md:text-base"
+          className="font-hand text-blue text-xl md:text-2xl mb-5"
         >
           Hi, my name is
         </motion.p>
 
         {/* Name with letter-by-letter reveal */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-off-white mb-2">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-charcoal mb-2">
           {nameText.split('').map((char, index) => (
             <motion.span
               key={`${char}-${index}`}
@@ -44,29 +44,29 @@ export default function HeroSection() {
 
         {/* Hand-drawn underline under name */}
         <div className="mb-6">
-          <SketchUnderline width={150} className="text-teal/40" delay={1.2} />
+          <SketchUnderline width={150} className="text-blue/40" delay={1.2} />
         </div>
 
         <motion.h2
           variants={heroTextReveal}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-grey-muted mb-6"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal-light mb-6"
         >
           I build things for the web.
         </motion.h2>
 
         <motion.p
           variants={heroTextReveal}
-          className="text-grey-muted max-w-xl text-lg mb-12 leading-relaxed"
+          className="text-charcoal-light max-w-xl text-lg mb-12 leading-relaxed"
         >
-          I'm a <span className="text-off-white font-medium">software engineer</span> and{' '}
-          <span className="text-off-white font-medium">data enthusiast</span>.
+          I'm a <span className="text-charcoal font-medium">software engineer</span> and{' '}
+          <span className="text-charcoal font-medium">data enthusiast</span>.
           I build systems that scale and solutions that matter.
           {' '}Currently at{' '}
           <a
             href="https://www.accenture.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-teal hover:text-teal-dark link-underline transition-colors"
+            className="text-blue hover:text-blue-dark link-underline transition-colors"
           >
             Accenture
           </a>
@@ -81,16 +81,6 @@ export default function HeroSection() {
             Learn More
           </Button>
         </motion.div>
-
-        {/* Decorative arrow pointing to CTA */}
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 2, duration: 0.5 }}
-          className="absolute -left-16 top-[480px] text-teal/40 hidden xl:block"
-        >
-          <SketchArrow delay={2.2} />
-        </motion.div>
       </motion.div>
 
       {/* Scroll indicator */}
@@ -100,8 +90,8 @@ export default function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.5, duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
       >
-        <span className="text-grey-muted text-xs font-mono tracking-wider">SCROLL</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-grey-muted to-transparent" />
+        <span className="text-charcoal-lighter text-xs font-mono tracking-wider">SCROLL</span>
+        <div className="w-[1px] h-12 bg-gradient-to-b from-charcoal-lighter to-transparent" />
       </motion.div>
     </section>
   );

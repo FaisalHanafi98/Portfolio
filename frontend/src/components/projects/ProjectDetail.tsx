@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import Tag from '../ui/Tag';
 import Button from '../ui/Button';
 import { staggerContainer, slideUp } from '../../lib/animations';
+import SketchUnderline from '../ui/SketchUnderline';
 import type { ProjectDetail as ProjectDetailType } from '../../types';
 
 interface ProjectDetailProps {
@@ -18,17 +19,18 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
     >
       {/* Header */}
       <motion.header variants={slideUp} className="mb-12">
-        <p className="font-mono text-teal mb-4">{project.period}</p>
-        <h1 className="text-4xl md:text-5xl font-bold text-slate-light mb-4">
+        <p className="font-hand text-blue text-lg mb-4">{project.period}</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-charcoal mb-4">
           {project.title}
         </h1>
-        <p className="text-xl text-slate">{project.shortDescription}</p>
+        <SketchUnderline width={200} className="text-blue/40" delay={0.3} />
+        <p className="text-xl text-charcoal-light mt-4">{project.shortDescription}</p>
       </motion.header>
 
       {/* Project Image */}
       {project.images && project.images.length > 0 && (
         <motion.div variants={slideUp} className="mb-12">
-          <div className="rounded-lg overflow-hidden">
+          <div className="rounded-xl overflow-hidden border-2 border-cream-darker/60">
             <img
               src={project.images[0].url}
               alt={project.images[0].altText}
@@ -50,33 +52,33 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* Problem Statement */}
       {project.problemStatement && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-4">
+          <h2 className="text-2xl font-semibold text-charcoal mb-4">
             The Problem
           </h2>
-          <p className="text-slate leading-relaxed">{project.problemStatement}</p>
+          <p className="text-charcoal-light leading-relaxed">{project.problemStatement}</p>
         </motion.section>
       )}
 
       {/* Solution */}
       {project.solution && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-4">
+          <h2 className="text-2xl font-semibold text-charcoal mb-4">
             The Solution
           </h2>
-          <p className="text-slate leading-relaxed">{project.solution}</p>
+          <p className="text-charcoal-light leading-relaxed">{project.solution}</p>
         </motion.section>
       )}
 
       {/* Architecture Decisions */}
       {project.architectureDecisions && project.architectureDecisions.length > 0 && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-4">
+          <h2 className="text-2xl font-semibold text-charcoal mb-4">
             Architecture Decisions
           </h2>
           <ul className="space-y-3">
             {project.architectureDecisions.map((decision, index) => (
-              <li key={index} className="flex items-start gap-3 text-slate">
-                <span className="text-teal mt-1">▹</span>
+              <li key={index} className="flex items-start gap-3 text-charcoal-light">
+                <span className="text-blue mt-1">&#9656;</span>
                 {decision}
               </li>
             ))}
@@ -87,16 +89,16 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* Tech Stack */}
       {project.techStack && Object.keys(project.techStack).length > 0 && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-6">
+          <h2 className="text-2xl font-semibold text-charcoal mb-6">
             Tech Stack
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.entries(project.techStack).map(([layer, techs]) => (
-              <div key={layer} className="bg-navy-light p-6 rounded-lg">
-                <h3 className="text-lg font-semibold text-teal mb-3">{layer}</h3>
+              <div key={layer} className="bg-white p-6 rounded-xl border border-cream-darker/60">
+                <h3 className="text-lg font-semibold text-blue mb-3 font-hand">{layer}</h3>
                 <div className="flex flex-wrap gap-2">
                   {techs.map((t) => (
-                    <span key={t} className="text-sm text-slate bg-navy px-3 py-1 rounded-full">
+                    <span key={t} className="text-sm text-charcoal-light bg-cream-dark px-3 py-1 rounded-full">
                       {t}
                     </span>
                   ))}
@@ -110,13 +112,13 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* Challenges */}
       {project.challenges && project.challenges.length > 0 && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-4">
+          <h2 className="text-2xl font-semibold text-charcoal mb-4">
             Challenges
           </h2>
           <ul className="space-y-3">
             {project.challenges.map((challenge, index) => (
-              <li key={index} className="flex items-start gap-3 text-slate">
-                <span className="text-coral mt-1">▹</span>
+              <li key={index} className="flex items-start gap-3 text-charcoal-light">
+                <span className="text-pink mt-1">&#9656;</span>
                 {challenge}
               </li>
             ))}
@@ -127,19 +129,19 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {/* Cost Justification */}
       {project.costJustification && (
         <motion.section variants={slideUp} className="mb-12">
-          <h2 className="text-2xl font-semibold text-slate-light mb-4">
+          <h2 className="text-2xl font-semibold text-charcoal mb-4">
             Cost & Infrastructure
           </h2>
-          <p className="text-slate leading-relaxed">{project.costJustification}</p>
+          <p className="text-charcoal-light leading-relaxed">{project.costJustification}</p>
         </motion.section>
       )}
 
       {/* Full Description */}
       <motion.section variants={slideUp} className="mb-12">
-        <h2 className="text-2xl font-semibold text-slate-light mb-4">
+        <h2 className="text-2xl font-semibold text-charcoal mb-4">
           About This Project
         </h2>
-        <div className="text-slate leading-relaxed space-y-4">
+        <div className="text-charcoal-light leading-relaxed space-y-4">
           <p>{project.fullDescription}</p>
         </div>
       </motion.section>

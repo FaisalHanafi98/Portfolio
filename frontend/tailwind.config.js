@@ -4,35 +4,68 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // New greyish-casual color palette
+        // Cream notebook palette
+        cream: {
+          DEFAULT: '#FFF8F0',
+          dark: '#F5EDE3',
+          darker: '#EBE1D5',
+        },
         charcoal: {
-          DEFAULT: '#1e1e2e',      // Main background (was navy #0a192f)
-          light: '#2a2a3e',         // Card backgrounds (was navy-light #112240)
-          lighter: '#3a3a4a',       // Borders, subtle accents (was navy-lighter #233554)
+          DEFAULT: '#2D3436',
+          light: '#636E72',
+          lighter: '#B2BEC3',
         },
-        'off-white': '#e8e6e3',     // Primary text (was slate-light #ccd6f6)
-        'grey-muted': '#a0a0a0',    // Secondary text (was slate #8892b0)
-        'grey-subtle': '#4a4a5a',   // Sketch elements, dividers
-        teal: {
-          DEFAULT: '#5eead4',       // Soft muted teal (was bright #64ffda)
-          dark: '#4fd1c5',
+        // WCAG AA-compliant accent colors
+        blue: {
+          DEFAULT: '#0984E3',
+          light: '#74B9FF',
+          dark: '#0767B2',
         },
-        coral: '#f0a0a0',           // Secondary accent (dusty rose/coral)
+        pink: {
+          DEFAULT: '#E84393',
+          light: '#FD79A8',
+          dark: '#C0277A',
+        },
+        green: {
+          DEFAULT: '#00B894',
+          light: '#55EFC4',
+          dark: '#009473',
+        },
+        purple: {
+          DEFAULT: '#6C5CE7',
+          light: '#A29BFE',
+          dark: '#5541D9',
+        },
+        coral: {
+          DEFAULT: '#E17055',
+          light: '#FAB1A0',
+        },
+        yellow: {
+          DEFAULT: '#FDCB6E',
+          dark: '#E5A716',
+        },
 
-        // Legacy aliases for gradual migration (will remove these later)
+        // Legacy aliases — maps old dark-theme tokens to cream equivalents
+        // so existing components don't break during migration
         navy: {
-          DEFAULT: '#1e1e2e',
-          light: '#2a2a3e',
-          lighter: '#3a3a4a',
+          DEFAULT: '#FFF8F0',     // was dark bg → now cream
+          light: '#F5EDE3',       // was card bg → now cream-dark
+          lighter: '#EBE1D5',     // was border → now cream-darker
         },
+        'off-white': '#2D3436',   // was light text → now charcoal (primary text)
+        'grey-muted': '#636E72',  // was secondary text → now charcoal-light
+        'grey-subtle': '#B2BEC3', // was sketch lines → now charcoal-lighter
         slate: {
-          light: '#e8e6e3',
-          DEFAULT: '#a0a0a0',
-          dark: '#4a4a5a',
+          DEFAULT: '#636E72',     // was secondary text
+          light: '#2D3436',       // was primary text → now charcoal
+          dark: '#B2BEC3',        // was dim text → now lighter
+        },
+        teal: {
+          DEFAULT: '#0984E3',     // map old teal accent → blue
+          dark: '#0767B2',
         },
       },
       fontFamily: {
@@ -51,11 +84,12 @@ export default {
           'Consolas',
           'monospace',
         ],
-        // Optional: Add a casual/rounded font for special headings
-        // display: ['Poppins', 'Inter', 'sans-serif'],
+        hand: [
+          'Caveat',
+          'cursive',
+        ],
       },
       fontSize: {
-        // Slightly adjusted scale for better hierarchy
         'xs': ['0.75rem', { lineHeight: '1rem' }],
         'sm': ['0.875rem', { lineHeight: '1.25rem' }],
         'base': ['1rem', { lineHeight: '1.5rem' }],

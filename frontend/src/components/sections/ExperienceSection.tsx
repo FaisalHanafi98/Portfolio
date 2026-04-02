@@ -4,6 +4,7 @@ import AnimatedSection from '../ui/AnimatedSection';
 import { ExperienceSkeleton } from '../ui/Skeleton';
 import { useExperience } from '../../api/hooks';
 import { slideUp } from '../../lib/animations';
+import SketchUnderline from '../ui/SketchUnderline';
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -17,25 +18,26 @@ export default function ExperienceSection() {
   return (
     <AnimatedSection id="experience" className="py-24 px-6">
       <div className="max-w-4xl mx-auto">
-        <motion.h2
-          variants={slideUp}
-          className="section-heading flex items-center gap-4"
-        >
-          <span className="text-teal font-mono text-xl">04.</span>
-          Where I've Worked
-          <span className="flex-1 h-px bg-navy-lighter ml-4" />
-        </motion.h2>
+        <div className="mb-12">
+          <motion.h2
+            variants={slideUp}
+            className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+          >
+            Where I've Worked
+          </motion.h2>
+          <SketchUnderline width={180} className="text-green/50" delay={0.3} />
+        </div>
 
         {isLoading ? (
           <ExperienceSkeleton />
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-slate">Unable to load experience. Please try again later.</p>
+            <p className="text-charcoal-light">Unable to load experience. Please try again later.</p>
           </div>
         ) : experiences && experiences.length > 0 ? (
           <div className="flex flex-col md:flex-row gap-8">
             {/* Tab List */}
-            <div className="flex md:flex-col overflow-x-auto md:overflow-visible border-b md:border-b-0 md:border-l border-navy-lighter">
+            <div className="flex md:flex-col overflow-x-auto md:overflow-visible border-b md:border-b-0 md:border-l-2 border-cream-darker">
               {experiences.map((exp, index) => (
                 <button
                   key={exp.id}
@@ -45,8 +47,8 @@ export default function ExperienceSection() {
                     transition-all duration-300 relative
                     ${
                       activeIndex === index
-                        ? 'text-teal bg-navy-light/50'
-                        : 'text-slate hover:text-teal hover:bg-navy-light/30'
+                        ? 'text-blue bg-blue/5 font-medium'
+                        : 'text-charcoal-light hover:text-charcoal hover:bg-cream-dark/50'
                     }
                   `}
                 >
@@ -56,7 +58,7 @@ export default function ExperienceSection() {
                       absolute left-0 bottom-0 md:bottom-auto md:left-0 md:top-0
                       h-0.5 md:h-full md:w-0.5 w-full md:w-0.5
                       transition-all duration-300
-                      ${activeIndex === index ? 'bg-teal' : 'bg-transparent'}
+                      ${activeIndex === index ? 'bg-blue' : 'bg-transparent'}
                     `}
                   />
                 </button>
@@ -76,25 +78,25 @@ export default function ExperienceSection() {
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
                       >
-                        <h3 className="text-xl font-semibold text-slate-light">
+                        <h3 className="text-xl font-semibold text-charcoal">
                           {exp.role}{' '}
-                          <span className="text-teal">@ {exp.company}</span>
+                          <span className="text-blue">@ {exp.company}</span>
                         </h3>
 
-                        <p className="font-mono text-sm text-slate mt-1 mb-4">
+                        <p className="font-mono text-sm text-charcoal-light mt-1 mb-4">
                           {formatDate(exp.startDate)} -{' '}
                           {exp.endDate ? formatDate(exp.endDate) : 'Present'}
                         </p>
 
-                        <p className="text-slate mb-4">{exp.description}</p>
+                        <p className="text-charcoal-light mb-4">{exp.description}</p>
 
                         <ul className="space-y-2">
                           {exp.highlights.map((highlight, i) => (
                             <li
                               key={i}
-                              className="flex items-start gap-2 text-slate"
+                              className="flex items-start gap-2 text-charcoal-light"
                             >
-                              <span className="text-teal mt-1.5">▹</span>
+                              <span className="text-green mt-1.5">&#9656;</span>
                               {highlight}
                             </li>
                           ))}
@@ -106,7 +108,7 @@ export default function ExperienceSection() {
             </div>
           </div>
         ) : (
-          <p className="text-slate text-center">No experience data available.</p>
+          <p className="text-charcoal-light text-center">No experience data available.</p>
         )}
       </div>
     </AnimatedSection>

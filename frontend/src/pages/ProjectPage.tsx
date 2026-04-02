@@ -21,7 +21,7 @@ export default function ProjectPage() {
       <div className="max-w-4xl mx-auto mb-8">
         <Link
           to="/#projects"
-          className="inline-flex items-center gap-2 text-teal hover:underline font-mono text-sm"
+          className="inline-flex items-center gap-2 text-blue hover:text-blue-dark font-mono text-sm transition-colors"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -36,8 +36,8 @@ export default function ProjectPage() {
         </div>
       ) : error ? (
         <div className="max-w-4xl mx-auto text-center py-12">
-          <h1 className="text-2xl font-bold text-slate-light mb-4">Project Not Found</h1>
-          <p className="text-slate mb-8">The project you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold text-charcoal mb-4">Project Not Found</h1>
+          <p className="text-charcoal-light mb-8">The project you're looking for doesn't exist or has been removed.</p>
           <Link to="/" className="btn-primary">
             Go Home
           </Link>

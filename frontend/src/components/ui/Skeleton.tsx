@@ -11,7 +11,7 @@ export default function Skeleton({
   width,
   height,
 }: SkeletonProps) {
-  const baseStyles = 'animate-pulse bg-navy-lighter';
+  const baseStyles = 'animate-pulse bg-cream-darker';
 
   const variantStyles = {
     text: 'rounded h-4',
@@ -22,17 +22,14 @@ export default function Skeleton({
   return (
     <div
       className={`${baseStyles} ${variantStyles[variant]} ${className}`}
-      style={{
-        width: width,
-        height: height,
-      }}
+      style={{ width, height }}
     />
   );
 }
 
 export function ProjectCardSkeleton() {
   return (
-    <div className="bg-navy-light rounded-lg p-6 space-y-4">
+    <div className="bg-white rounded-xl p-6 space-y-4 border border-cream-darker/60">
       <Skeleton variant="rectangular" height={200} className="w-full" />
       <Skeleton width="70%" />
       <Skeleton width="100%" />

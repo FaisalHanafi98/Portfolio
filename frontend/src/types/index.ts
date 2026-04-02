@@ -90,6 +90,3 @@ export interface About {
   resumeUrl: string;
   photoUrl?: string;
 }
-
-// Theme type
-export type Theme = 'dark' | 'light';

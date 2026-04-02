@@ -23,7 +23,7 @@ export default function SketchDivider({ className = '' }: SketchDividerProps) {
         width="300"
         height="20"
         viewBox="0 0 300 20"
-        className="text-grey-subtle"
+        className="text-charcoal-lighter"
         fill="none"
       >
         {/* Main divider line with hand-drawn imperfection */}
