@@ -37,6 +37,7 @@ frontend/.vite/
 *.pem
 *.ppk
 LightsailDefaultKey*
+lightsail private key.txt
 
 # Misc
 *.tmp
