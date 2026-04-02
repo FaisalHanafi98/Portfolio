@@ -1,3 +1,7 @@
+> **GOVERNANCE NOTICE**: This project-level CLAUDE.md operates under the authority of the root CLAUDE.md. In case of conflict, root CLAUDE.md (Section 0.2 Override Hierarchy) prevails. This file may define project-specific constraints but may not override root governance.
+
+---
+
 # 🚀 Portfolio Platform — Claude Code Session Prompt
 
 **Project:** Personal Portfolio Platform  
@@ -8,22 +12,7 @@
 
 ---
 
-## Token Optimization (@import from Root)
-
-This project inherits token optimization rules from Root CLAUDE.md v1.2.0.
-
-### Key Rules
-1. **CLI-First**: Use `git` via Bash (NOT mcp__git__), native tools before MCP
-2. **Response Calibration**: Match response length to task complexity
-3. **Context Management**: Use `/clear` after discrete tasks, commit as checkpoints
-
-### Project-Specific
-- Backend verification: Use `curl` for API testing (port 8081 in dev)
-- Frontend verification: Use Playwright MCP for browser testing
-- Git operations: Use git CLI directly
-- Build commands: `.\gradlew.bat bootRun` (backend), `npm run dev` (frontend)
-
-@see ../CLAUDE.md for complete token optimization framework
+> Token optimization and CLI-first rules: See root [CLAUDE.md](../CLAUDE.md) v2.0.0 (Section 6).
 
 ---
 

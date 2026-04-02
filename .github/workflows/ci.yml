@@ -74,5 +74,5 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          VITE_API_URL: https://api.faisalhanafi.com
+        # VITE_API_URL intentionally unset — defaults to /api/v1 (relative)
+        # Nginx on Lightsail proxies /api/ to Spring Boot on port 8080

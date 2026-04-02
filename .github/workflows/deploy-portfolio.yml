@@ -10,47 +10,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Java 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
 
-      # 3. Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
 
-      # 4. Build Frontend
-      # VITE_API_URL left empty — client defaults to /api/v1 (relative URL)
-      # Nginx on Lightsail proxies /api/ to the Spring Boot backend on port 8080
+      # VITE_API_URL intentionally unset — defaults to /api/v1 (relative)
+      # Nginx on Lightsail proxies /api/ to Spring Boot on port 8080
       - name: Build React Frontend
         working-directory: ./frontend
         run: |
           npm ci
           npm run build
 
-      # 5. Build Backend JAR
       - name: Build Spring Boot JAR
         working-directory: ./backend
         run: |
           chmod +x gradlew
-          ./gradlew clean build --no-daemon
+          ./gradlew clean build -x test --no-daemon
 
-      # 6. Prepare deployment package
       - name: Create deployment package
         run: |
-          mkdir -p deploy
-          cp -r frontend/dist deploy/frontend
-          cp backend/build/libs/*.jar deploy/portfolio-backend.jar
+          mkdir -p deploy-pkg
+          cp -r frontend/dist deploy-pkg/frontend
+          cp backend/build/libs/*.jar deploy-pkg/portfolio-backend.jar
+          cp deploy/nginx-portfolio.conf deploy-pkg/
+          cp deploy/portfolio.service deploy-pkg/
 
-      # 7. Deploy to Lightsail
       - name: Deploy to Lightsail
         env:
           SSH_PRIVATE_KEY: ${{ secrets.LIGHTSAIL_SSH_KEY }}
@@ -60,23 +57,55 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/lightsail.pem
           chmod 600 ~/.ssh/lightsail.pem
-          ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts
+          ssh-keyscan -H $LIGHTSAIL_IP >> ~/.ssh/known_hosts 2>/dev/null
+
+          SSH="ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP"
+          SCP="scp -i ~/.ssh/lightsail.pem"
 
           # Deploy frontend
-          echo "Deploying frontend..."
-          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "mkdir -p /tmp/portfolio-frontend"
-          scp -i ~/.ssh/lightsail.pem -r deploy/frontend/* ec2-user@$LIGHTSAIL_IP:/tmp/portfolio-frontend/
-          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo rm -rf /var/www/portfolio/* && sudo cp -r /tmp/portfolio-frontend/* /var/www/portfolio/ && sudo chown -R nginx:nginx /var/www/portfolio"
+          echo "--- Deploying frontend ---"
+          $SSH "mkdir -p /tmp/portfolio-frontend"
+          $SCP -r deploy-pkg/frontend/* ec2-user@$LIGHTSAIL_IP:/tmp/portfolio-frontend/
+          $SSH "sudo rm -rf /var/www/portfolio/* && sudo cp -r /tmp/portfolio-frontend/* /var/www/portfolio/ && sudo chown -R nginx:nginx /var/www/portfolio && rm -rf /tmp/portfolio-frontend"
 
-          # Deploy backend
-          echo "Deploying backend..."
-          scp -i ~/.ssh/lightsail.pem deploy/portfolio-backend.jar ec2-user@$LIGHTSAIL_IP:/home/ec2-user/portfolio-backend.jar
+          # Deploy backend JAR
+          echo "--- Deploying backend ---"
+          $SCP deploy-pkg/portfolio-backend.jar ec2-user@$LIGHTSAIL_IP:/home/ec2-user/portfolio-backend.jar
 
-          # Restart backend service
-          ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP "sudo systemctl restart portfolio || echo 'First deployment - service will be set up manually'"
+          # Deploy Nginx config (only if changed)
+          echo "--- Syncing Nginx config ---"
+          $SCP deploy-pkg/nginx-portfolio.conf ec2-user@$LIGHTSAIL_IP:/tmp/portfolio.conf
+          $SSH "sudo cp /tmp/portfolio.conf /etc/nginx/conf.d/portfolio.conf && sudo nginx -t && sudo systemctl reload nginx"
 
-      - name: Deployment Complete
+          # Deploy systemd service (only if changed)
+          echo "--- Syncing systemd service ---"
+          $SCP deploy-pkg/portfolio.service ec2-user@$LIGHTSAIL_IP:/tmp/portfolio.service
+          $SSH "sudo cp /tmp/portfolio.service /etc/systemd/system/portfolio.service && sudo systemctl daemon-reload"
+
+          # Restart backend
+          echo "--- Restarting backend ---"
+          $SSH "sudo systemctl restart portfolio"
+
+          # Cleanup
+          $SSH "rm -f /tmp/portfolio.conf /tmp/portfolio.service"
+
+      - name: Verify deployment
+        env:
+          LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
         run: |
-          echo "✅ Frontend deployed to /var/www/portfolio"
-          echo "✅ Backend JAR deployed to /home/ec2-user/portfolio-backend.jar"
-          echo "🌐 Visit: https://faisalhanafi.com"
+          echo "Waiting for backend to start..."
+          sleep 15
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://$LIGHTSAIL_IP" --max-time 10 || echo "000")
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "Frontend serving: OK (HTTP $HTTP_CODE)"
+          else
+            echo "Frontend returned HTTP $HTTP_CODE (may need DNS/HTTPS)"
+          fi
+          API_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://$LIGHTSAIL_IP/api/v1/health" --max-time 10 || echo "000")
+          if [ "$API_CODE" = "200" ]; then
+            echo "Backend API: OK (HTTP $API_CODE)"
+          else
+            echo "Backend API returned HTTP $API_CODE (may still be starting)"
+          fi
+          echo ""
+          echo "Deployment complete. Visit: https://faisalhanafi.com"

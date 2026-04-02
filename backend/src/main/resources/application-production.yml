@@ -19,6 +19,13 @@ spring:
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS:https://faisalhanafi.com,https://www.faisalhanafi.com}
 
+# Disable Swagger/OpenAPI in production
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
 logging:
   level:
     com.faisal.portfolio: INFO
@@ -26,3 +33,7 @@ logging:
 
 server:
   port: ${PORT:8080}
+  # Prevent information leakage
+  error:
+    include-stacktrace: never
+    include-message: never

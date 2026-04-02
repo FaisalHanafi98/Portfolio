@@ -1,0 +1,50 @@
+# Portfolio Spring Boot Backend — systemd service
+# Deploy to: /etc/systemd/system/portfolio.service
+# After deploy: sudo systemctl daemon-reload && sudo systemctl enable portfolio
+
+[Unit]
+Description=Portfolio Spring Boot Backend
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=ec2-user
+Group=ec2-user
+
+# Java 21 (Amazon Corretto or Temurin)
+Environment="JAVA_HOME=/usr/lib/jvm/java-21"
+Environment="SPRING_PROFILES_ACTIVE=production"
+Environment="SERVER_PORT=8080"
+
+# Database credentials loaded from env file on server
+# Create this file on Lightsail: /home/ec2-user/.portfolio-env
+# Contents:
+#   DB_URL=jdbc:postgresql://localhost:5432/portfolio
+#   DB_USERNAME=portfolio
+#   DB_PASSWORD=<your-password>
+EnvironmentFile=/home/ec2-user/.portfolio-env
+
+# Memory limits for t3.micro (1GB RAM total)
+# Backend gets 384MB max, leaving room for Nginx + OS + swap
+# IMPORTANT: Quotes required — systemd splits unquoted spaces into separate assignments
+Environment="JAVA_OPTS=-Xms128m -Xmx384m -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+
+ExecStart=/usr/lib/jvm/java-21/bin/java $JAVA_OPTS -jar /home/ec2-user/portfolio-backend.jar
+WorkingDirectory=/home/ec2-user
+
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=300
+StartLimitBurst=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=portfolio
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/home/ec2-user /tmp
+
+[Install]
+WantedBy=multi-user.target
