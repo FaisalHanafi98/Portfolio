@@ -17,7 +17,10 @@ apiClient.interceptors.response.use(
   (error: AxiosError<ApiResponse<unknown>>) => {
     if (error.response) {
       const apiError = error.response.data;
-      console.error('API Error:', apiError.error?.message || 'Unknown error');
+      const errorMessage = typeof apiError?.error === 'string'
+        ? apiError.error
+        : apiError?.error?.message || 'Unknown error';
+      console.error('API Error:', errorMessage);
     } else if (error.request) {
       console.error('Network Error: No response received');
     } else {
