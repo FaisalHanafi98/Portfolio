@@ -14,7 +14,7 @@ Group=ec2-user
 
 # Java 21 (Amazon Corretto or Temurin)
 Environment="JAVA_HOME=/usr/lib/jvm/java-21"
-Environment="SPRING_PROFILES_ACTIVE=production"
+Environment="SPRING_PROFILES_ACTIVE=prod"
 Environment="SERVER_PORT=8080"
 
 # Database credentials loaded from env file on server

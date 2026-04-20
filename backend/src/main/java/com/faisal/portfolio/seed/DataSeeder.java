@@ -217,7 +217,7 @@ public class DataSeeder implements CommandLineRunner {
                 "Fixing a silent production bug where H2 was running instead of PostgreSQL due to Spring profile name mismatch",
                 "Building a CI/CD pipeline that handles both backend JAR and frontend static files in a single workflow"
         ));
-        portfolio.setCostJustification("AWS Lightsail t3.micro at $3.50/month for backend + Vercel free tier for frontend. Total: under $5/month for a production full-stack application.");
+        portfolio.setCostJustification("AWS Lightsail keeps hosting simple and low-cost while Nginx serves the frontend and proxies the backend on a single deployment target.");
 
         projectRepository.saveAll(List.of(creams, autoRecruit, sen2nal, portfolio));
     }

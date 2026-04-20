@@ -4,6 +4,12 @@
 
 A dynamic, full-stack portfolio platform built with Spring Boot and React, demonstrating modern web development practices.
 
+## Start Here
+
+`docs/SOURCE_OF_TRUTH.md` is the only documentation entry point for this repository.
+
+Use this README as supporting reference only.
+
 ## Tech Stack
 
 ### Backend
@@ -59,11 +65,12 @@ portfolio/
 ```bash
 cd backend
 
-# Run in development mode (uses H2 in-memory database)
+# Run with the default dev profile (uses H2 in-memory database on port 8081)
 ./gradlew bootRun
 
-# The API will be available at http://localhost:8080
-# Swagger UI: http://localhost:8080/swagger-ui.html
+# Health: http://localhost:8081/actuator/health
+# API: http://localhost:8081/api/v1/projects
+# Swagger UI: http://localhost:8081/swagger-ui.html
 ```
 
 ### Frontend Setup
@@ -89,8 +96,8 @@ npm run dev
 | GET | `/api/v1/projects/{slug}` | Get project details |
 | GET | `/api/v1/skills` | Get skills by category |
 | GET | `/api/v1/experience` | Get work experience |
-| GET | `/api/health` | Actuator health (DB status) |
-| GET | `/api/prometheus` | Prometheus metrics |
+| GET | `/actuator/health` | Local ops/runtime healthcheck, not a public production endpoint |
+| GET | `/actuator/prometheus` | Prometheus metrics |
 
 ## Development Commands
 
@@ -113,8 +120,11 @@ npm run type-check         # TypeScript check
 
 ## Deployment
 
-- **Backend:** AWS Lightsail (systemd + Nginx reverse proxy)
-- **Frontend:** Vercel
+- **Live target:** AWS Lightsail
+- **Frontend:** Static Vite build served by Nginx from `/var/www/portfolio`
+- **Backend:** Spring Boot service managed by systemd and reverse-proxied by Nginx
+- **Deployment workflow:** `.github/workflows/deploy-portfolio.yml`
+- **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge
 
 ## Author
 
