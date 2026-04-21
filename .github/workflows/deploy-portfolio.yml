@@ -42,9 +42,16 @@ jobs:
 
       - name: Create deployment package
         run: |
+          set -euo pipefail
           mkdir -p deploy-pkg
           cp -r frontend/dist deploy-pkg/frontend
-          cp backend/build/libs/*.jar deploy-pkg/portfolio-backend.jar
+          mapfile -t DEPLOY_JARS < <(find backend/build/libs -maxdepth 1 -type f -name '*.jar' ! -name '*-plain.jar' | sort)
+          if [ "${#DEPLOY_JARS[@]}" -ne 1 ]; then
+            echo "Expected exactly one deployable Spring Boot JAR, found ${#DEPLOY_JARS[@]}"
+            printf '%s\n' "${DEPLOY_JARS[@]}"
+            exit 1
+          fi
+          cp "${DEPLOY_JARS[0]}" deploy-pkg/portfolio-backend.jar
           cp deploy/nginx-portfolio.conf deploy-pkg/
           cp deploy/portfolio.service deploy-pkg/
 
@@ -91,21 +98,36 @@ jobs:
 
       - name: Verify deployment
         env:
+          SSH_PRIVATE_KEY: ${{ secrets.LIGHTSAIL_SSH_KEY }}
           LIGHTSAIL_IP: ${{ secrets.LIGHTSAIL_IP }}
         run: |
-          echo "Waiting for backend to start..."
-          sleep 15
-          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://$LIGHTSAIL_IP" --max-time 10 || echo "000")
-          if [ "$HTTP_CODE" = "200" ]; then
-            echo "Frontend serving: OK (HTTP $HTTP_CODE)"
-          else
-            echo "Frontend returned HTTP $HTTP_CODE (may need DNS/HTTPS)"
+          set -euo pipefail
+
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/lightsail.pem
+          chmod 600 ~/.ssh/lightsail.pem
+          ssh-keyscan -H "$LIGHTSAIL_IP" >> ~/.ssh/known_hosts 2>/dev/null
+
+          SSH="ssh -i ~/.ssh/lightsail.pem ec2-user@$LIGHTSAIL_IP"
+
+          echo "Verifying portfolio service restart..."
+          if ! $SSH "for attempt in 1 2 3 4 5 6; do if sudo systemctl is-active --quiet portfolio; then exit 0; fi; sleep 5; done; exit 1"; then
+            echo "portfolio service failed to reach active state"
+            $SSH "sudo systemctl status portfolio --no-pager || true; sudo journalctl -u portfolio -n 50 --no-pager || true"
+            exit 1
           fi
-          API_CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://$LIGHTSAIL_IP/api/v1/health" --max-time 10 || echo "000")
-          if [ "$API_CODE" = "200" ]; then
-            echo "Backend API: OK (HTTP $API_CODE)"
-          else
-            echo "Backend API returned HTTP $API_CODE (may still be starting)"
+
+          echo "Verifying Nginx serves the frontend for faisalhanafi.com..."
+          if ! $SSH "curl -fsS -H 'Host: faisalhanafi.com' http://127.0.0.1/ --max-time 10 > /dev/null"; then
+            echo "frontend verification failed through Nginx"
+            exit 1
           fi
-          echo ""
-          echo "Deployment complete. Visit: https://faisalhanafi.com"
+
+          echo "Verifying /api/v1/health through Nginx with the production host..."
+          if ! $SSH "curl -fsS -H 'Host: faisalhanafi.com' http://127.0.0.1/api/v1/health --max-time 10"; then
+            echo "API verification failed through Nginx"
+            $SSH "sudo journalctl -u portfolio -n 50 --no-pager || true"
+            exit 1
+          fi
+
+          echo "Deployment verification passed."
