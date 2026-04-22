@@ -53,6 +53,7 @@ jobs:
           fi
           cp "${DEPLOY_JARS[0]}" deploy-pkg/portfolio-backend.jar
           cp deploy/nginx-portfolio.conf deploy-pkg/
+          cp deploy/nginx-portfolio-bootstrap.conf deploy-pkg/
           cp deploy/portfolio.service deploy-pkg/
 
       - name: Deploy to Lightsail
@@ -82,7 +83,8 @@ jobs:
           # Deploy Nginx config (only if changed)
           echo "--- Syncing Nginx config ---"
           $SCP deploy-pkg/nginx-portfolio.conf ec2-user@$LIGHTSAIL_IP:/tmp/portfolio.conf
-          $SSH "sudo cp /tmp/portfolio.conf /etc/nginx/conf.d/portfolio.conf && sudo nginx -t && sudo systemctl reload nginx"
+          $SCP deploy-pkg/nginx-portfolio-bootstrap.conf ec2-user@$LIGHTSAIL_IP:/tmp/portfolio-bootstrap.conf
+          $SSH "set -euo pipefail; if [ -f /etc/letsencrypt/live/faisalhanafi.com/fullchain.pem ] && [ -f /etc/letsencrypt/live/faisalhanafi.com/privkey.pem ]; then sudo cp /tmp/portfolio.conf /etc/nginx/conf.d/portfolio.conf; echo 'Applied HTTPS Nginx config.'; else sudo cp /tmp/portfolio-bootstrap.conf /etc/nginx/conf.d/portfolio.conf; echo 'Applied bootstrap HTTP Nginx config because certificate files are missing.'; fi; sudo nginx -t && sudo systemctl reload nginx"
 
           # Deploy systemd service (only if changed)
           echo "--- Syncing systemd service ---"
@@ -94,7 +96,7 @@ jobs:
           $SSH "sudo systemctl restart portfolio"
 
           # Cleanup
-          $SSH "rm -f /tmp/portfolio.conf /tmp/portfolio.service"
+          $SSH "rm -f /tmp/portfolio.conf /tmp/portfolio-bootstrap.conf /tmp/portfolio.service"
 
       - name: Verify deployment
         env:
@@ -117,16 +119,35 @@ jobs:
             exit 1
           fi
 
-          echo "Verifying Nginx serves the frontend for faisalhanafi.com..."
+          echo "Verifying Nginx serves the frontend for faisalhanafi.com over HTTP on the host..."
           if ! $SSH "curl -fsS -H 'Host: faisalhanafi.com' http://127.0.0.1/ --max-time 10 > /dev/null"; then
             echo "frontend verification failed through Nginx"
             exit 1
           fi
 
-          echo "Verifying /api/v1/health through Nginx with the production host..."
+          echo "Verifying /api/v1/health through Nginx with the production host over HTTP on the host..."
           if ! $SSH "curl -fsS -H 'Host: faisalhanafi.com' http://127.0.0.1/api/v1/health --max-time 10"; then
             echo "API verification failed through Nginx"
             $SSH "sudo journalctl -u portfolio -n 50 --no-pager || true"
+            exit 1
+          fi
+
+          echo "Verifying whether the production certificate exists..."
+          if ! $SSH "test -f /etc/letsencrypt/live/faisalhanafi.com/fullchain.pem && test -f /etc/letsencrypt/live/faisalhanafi.com/privkey.pem"; then
+            echo "HTTPS verification failed: certificate files are missing on the server."
+            echo "Run: sudo certbot --nginx -d faisalhanafi.com -d www.faisalhanafi.com"
+            exit 1
+          fi
+
+          echo "Verifying the public site responds over HTTPS..."
+          if ! curl -fsS https://faisalhanafi.com/ --max-time 20 > /dev/null; then
+            echo "Public HTTPS frontend verification failed"
+            exit 1
+          fi
+
+          echo "Verifying the public API responds over HTTPS..."
+          if ! curl -fsS https://faisalhanafi.com/api/v1/health --max-time 20; then
+            echo "Public HTTPS API verification failed"
             exit 1
           fi
 
