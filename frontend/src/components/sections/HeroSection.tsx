@@ -5,7 +5,7 @@ import SketchUnderline from '../ui/SketchUnderline';
 import { SketchStar } from '../ui/SketchDoodles';
 
 export default function HeroSection() {
-  const nameText = "Faisal Hanafi.";
+  const nameText = 'Faisal Hanafi.';
 
   return (
     <section id="intro" className="min-h-screen flex items-center justify-center px-6 pt-20 relative">
@@ -51,17 +51,17 @@ export default function HeroSection() {
           variants={heroTextReveal}
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal-light mb-6"
         >
-          I build things for the web.
+          I build systems around data, software, and decisions.
         </motion.h2>
 
         <motion.p
           variants={heroTextReveal}
-          className="text-charcoal-light max-w-xl text-lg mb-12 leading-relaxed"
+          className="text-charcoal-light max-w-2xl text-lg mb-12 leading-relaxed"
         >
-          I'm a <span className="text-charcoal font-medium">software engineer</span> and{' '}
-          <span className="text-charcoal font-medium">data enthusiast</span>.
-          I build systems that scale and solutions that matter.
-          {' '}Currently at{' '}
+          I&apos;m a <span className="text-charcoal font-medium">data science graduate</span> who
+          grew into software engineering through enterprise delivery, financial curiosity, and a
+          habit of caring deeply about how systems handle real people, real data, and real money.
+          {' '}Currently building at{' '}
           <a
             href="https://www.accenture.com"
             target="_blank"
@@ -70,7 +70,7 @@ export default function HeroSection() {
           >
             Accenture
           </a>
-          .
+          , while exploring better tools for analytics, AI, and financial clarity.
         </motion.p>
 
         <motion.div variants={heroTextReveal} className="flex gap-4 flex-wrap">

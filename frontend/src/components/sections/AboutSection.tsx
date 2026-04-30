@@ -5,18 +5,20 @@ import SketchUnderline from '../ui/SketchUnderline';
 import SketchDivider from '../ui/SketchDivider';
 
 const stats = [
-  { label: 'Years Experience', value: '1+', color: 'text-blue' },
-  { label: 'Projects Completed', value: '3+', color: 'text-pink' },
-  { label: 'Technologies', value: '15+', color: 'text-green' },
+  { label: 'Dean\'s List Semesters', value: '9', color: 'text-blue' },
+  { label: 'Page Load Improvement', value: '68%', color: 'text-pink' },
+  { label: 'FYP Recognition', value: 'Gold', color: 'text-green' },
 ];
 
 const technologies = [
+  'SQL',
+  'Power BI',
   'TypeScript',
   'React',
   'Spring Boot',
-  'Laravel',
   'PostgreSQL',
-  'Tailwind CSS',
+  'Laravel',
+  'AI Agents',
 ];
 
 export default function AboutSection() {
@@ -44,29 +46,41 @@ export default function AboutSection() {
               className="md:col-span-2 space-y-4"
             >
               <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Hello! I'm Faisal, a <span className="text-charcoal font-medium">Data Science graduate</span> turned{' '}
-                <span className="text-charcoal font-medium">full-stack developer</span> based in
-                Kuala Lumpur, Malaysia. I enjoy creating things that live on the internet, whether
-                that be websites, applications, or anything in between.
+                I&apos;m Faisal, a <span className="text-charcoal font-medium">Data Science graduate</span>{' '}
+                based in Kuala Lumpur who ended up building at the intersection of analytics,
+                software, and business systems. I like taking problems that feel messy at first,
+                whether they live in a workflow, a dataset, or a financial decision, and turning
+                them into something clearer and more useful.
               </motion.p>
 
               <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                I graduated from{' '}
-                <span className="text-blue font-medium">International Islamic University Malaysia (IIUM)</span>{' '}
-                with a CGPA of 3.72 and received the{' '}
-                <span className="text-pink font-medium">Gold Medal</span> for Best Final Year Project in
-                the Development category.
+                Academically, I graduated from{' '}
+                <span className="text-blue font-medium">International Islamic University Malaysia</span>{' '}
+                with a CGPA of 3.72, made the Dean&apos;s List for 9 semesters, and received a{' '}
+                <span className="text-pink font-medium">Gold Medal</span> for my final year project.
+                What stayed with me most from that chapter was the moment I realized that building
+                the right system can support progress in people&apos;s lives, not just check a technical
+                box.
               </motion.p>
 
               <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Currently, I'm working as an Application Development Associate at{' '}
-                <span className="text-blue font-medium">Accenture Technology Malaysia</span>, where I focus
-                on building enterprise-grade applications using React, TypeScript, and SharePoint
-                technologies.
+                Professionally, I work inside enterprise delivery at{' '}
+                <span className="text-blue font-medium">Accenture Technology Malaysia</span>, where
+                I&apos;ve learned how much trust depends on speed, validation, usability, and clean
+                reporting. I don&apos;t just want systems that run, I want systems people can rely on
+                when the stakes are real.
               </motion.p>
 
               <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Here are a few technologies I've been working with recently:
+                I&apos;m also unusually careful with money and transactions, partly by temperament and
+                partly because I know what it feels like to lose a substantial amount to a scam.
+                That experience made financial clarity deeply personal to me. It&apos;s a big reason
+                I&apos;m drawn to analytics, market tools, anomaly detection, and AI-driven financial
+                systems that could one day help other people protect themselves better too.
+              </motion.p>
+
+              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
+                Here are a few areas I&apos;ve been working across recently:
               </motion.p>
 
               <motion.ul
@@ -98,7 +112,6 @@ export default function AboutSection() {
             </motion.div>
           </div>
 
-          {/* Stats */}
           <motion.div
             variants={staggerContainer}
             initial="hidden"
