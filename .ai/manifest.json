@@ -1,0 +1,28 @@
+{
+  "core": "3b953ef",
+  "stacks": [
+    "springboot",
+    "react"
+  ],
+  "skills": [
+    "springboot",
+    "react-ui-patterns",
+    "ui-accessibility",
+    "frontend-design-aesthetics",
+    "tdd",
+    "code-commenting",
+    "verification-before-completion"
+  ],
+  "agents": [
+    "code-reviewer"
+  ],
+  "mcp": [],
+  "hooks": {
+    "pre-commit": [
+      "secret-scan"
+    ]
+  },
+  "budget": {
+    "always_on_tokens": 2000
+  }
+}

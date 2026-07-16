@@ -1,51 +1,91 @@
-> **GOVERNANCE NOTICE**: This project-level AGENTS.md operates under the authority of the root AGENTS.md. In case of conflict, the root AGENTS.md prevails.
+<!-- GENERATED from core@3b953ef - edit in core/, then: python core/tools/ai.py sync -->
 
-# Portfolio Platform Assistant Context
+# Portfolio - instructions for AI agents
 
-This file provides assistant context only.
+# Constraints
 
-It is not a source of runtime truth, deployment truth, CI/CD truth, or session workflow truth.
+These are the rules that apply to every session. Everything procedural lives in
+skills and loads on demand — this file stays small on purpose.
 
-For those topics, defer to:
+## Git
 
-- `docs/SOURCE_OF_TRUTH.md`
-- `docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md`
-- executable files referenced there
+- Never force-push, hard-reset, or delete branches without an explicit request.
+- Never skip hooks (`--no-verify`). If a hook blocks you, fix the cause.
+- Stage specific files; no blanket `git add -A` in repos with unrelated changes.
+- Commit format: `type(scope): description` — feat, fix, refactor, docs, test, chore.
+- Commit when a discrete task completes. Ask before pushing to main/master/dev.
 
-## Mission
+## Secrets and data
 
-Help build and maintain a portfolio platform that demonstrates real engineering capability through a working full-stack product.
+- No secrets, credentials, or `.env` files in any commit, ever. The pre-commit
+  secret scan is a backstop, not permission to be careless.
+- PDPA: no real personal data in code, tests, or fixtures. CREAMS and
+  RinggitSense are sensitive; use synthetic data.
+- Financial advice output (RinggitSense, Sen2Nal) carries the mandatory
+  disclaimers defined in each project's facts.
 
-## Audience
+## Engineering
 
-- Non-technical recruiters who need a fast legitimacy signal
-- Technical hiring managers who want evidence of engineering depth
-- Faisal as the owner and maintainer of the portfolio
+- Behavior changes need a test that fails first. Run the verification command
+  and read its output before claiming anything works.
+- Prefer built-in tools and CLIs over MCP when an equivalent exists.
+- Keep diffs scoped to the task. No opportunistic refactors or drive-by fixes;
+  flag them instead.
+- Don't invent facts — especially Malaysian regulations, bank formats, or
+  statistics. Say what you don't know.
 
-## Product Intent
+## Escalation
 
-The portfolio should:
+- Ask before anything destructive, schema-changing, or production-affecting.
+- When a task turns out bigger than classified, say so before continuing.
 
-- present Faisal's work clearly and honestly
-- show full-stack capability through a real backend and polished frontend
-- remain maintainable and easy to update
-- prioritize credibility over hype
+## Spring Boot / Java
 
-## Content Priorities
+- Constructor injection only; no field @Autowired. Service layer owns
+  transactions (@Transactional at service, not controller or repository).
+- DTOs at API boundaries — never expose entities. Bean Validation on input.
+- Tests: JUnit 5 + Mockito for units, MockMvc for web slices, Testcontainers
+  for repository tests against real PostgreSQL.
+- Depth: the `springboot` skill (patterns, security, tdd, verification
+  references).
 
-Key work to represent well:
+## React / TypeScript
 
-- CREAMS
-- Auto-Recruit
-- This portfolio itself
+- React 18 + TypeScript, strict mode. Server data through a query library
+  (SWR/React Query) — never raw `useEffect` fetching.
+- Parallelize independent fetches; no request waterfalls.
+- Accessibility before aesthetics: labels, keyboard nav, 4.5:1 contrast,
+  44px touch targets. The `ui-accessibility` skill has the full checklist.
+- Semantic color tokens, no hardcoded hex in components.
+- Depth: `react-ui-patterns` and `frontend-design-aesthetics` skills.
 
-Key qualities to preserve:
+## Project facts
 
-- clear storytelling
-- professional presentation
-- truthful technical claims
-- maintainable implementation
+Portfolio platform: a working full-stack product (Spring Boot + React) whose
+job is proving real engineering capability. Credibility over hype; every
+technical claim must be truthful and demonstrable. Roughly complete — changes
+are maintenance and polish, not rebuilds.
 
-## Working Rule
+### Audience
 
-If a task requires operational truth, do not answer from this file. Follow `docs/SOURCE_OF_TRUTH.md` instead.
+Non-technical recruiters (fast legitimacy signal), technical hiring managers
+(evidence of depth), and Faisal as maintainer.
+
+### Content priorities
+
+Represent CREAMS, Auto-Recruit, and this portfolio itself well. Preserve:
+clear storytelling, professional presentation, truthful claims, maintainable
+implementation.
+
+### Operational truth rule (unchanged from the previous AGENTS.md)
+
+Context files answer no operational questions. Runtime, deployment, CI/CD,
+and session-workflow truth live in `docs/SOURCE_OF_TRUTH.md` and
+`docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md` — follow those, and the
+executable files they reference. The pre-2026-02 CLAUDE.md is archived at
+`docs/archive/reference/CLAUDE_2026-02-18.md`; don't trust it.
+
+## Synced skills
+
+On-demand skills in `.claude/skills/`: springboot, react-ui-patterns, ui-accessibility, frontend-design-aesthetics, tdd, code-commenting, verification-before-completion.
+Trust their trigger descriptions; don't preload them.
