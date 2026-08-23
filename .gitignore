@@ -36,6 +36,7 @@ frontend/.vite/
 # AWS/Secrets
 *.pem
 *.ppk
+*.key
 LightsailDefaultKey*
 lightsail private key.txt
 
