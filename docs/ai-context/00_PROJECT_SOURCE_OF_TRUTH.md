@@ -1,0 +1,187 @@
+# Project Source of Truth — Portfolio
+
+Stable facts about this project. Items marked PLANNED are not yet implemented.
+Items marked INFERRED are derived from code patterns, not verified through direct testing.
+When in doubt, read the executable files — they always win over this document.
+
+Authority chain: `docs/SOURCE_OF_TRUTH.md` > `docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md`
+
+---
+
+## Project Purpose
+
+A full-stack portfolio platform that demonstrates Faisal Hanafi's engineering capability through
+a real backend, a polished frontend, and truthful project storytelling. The portfolio itself is
+part of the proof-of-capability — it is not a static site.
+
+Primary audiences:
+- Non-technical recruiters (fast credibility signal)
+- Technical hiring managers (engineering depth)
+- Faisal (maintainable platform he can update honestly)
+
+---
+
+## Tech Stack
+
+### Backend
+
+| Component | Value | Confidence |
+|---|---|---|
+| Framework | Spring Boot 3.4.2 | HIGH — build.gradle verified |
+| Language | Java 21 | HIGH — build.gradle toolchain confirmed |
+| JDK requirement | Amazon Corretto or Temurin 21 ONLY | HIGH — pilot confirmed; JDK 8/25/26 all fail |
+| Build tool | Gradle 8.14 | HIGH — README verified |
+| ORM | Spring Data JPA (Hibernate) | HIGH — build.gradle verified |
+| Validation | spring-boot-starter-validation | HIGH — build.gradle verified |
+| Observability | Spring Boot Actuator + Micrometer Prometheus | HIGH — build.gradle verified |
+| API docs | springdoc-openapi-starter-webmvc-ui 2.8.4 | HIGH — build.gradle verified |
+| Boilerplate reduction | Lombok | HIGH — build.gradle verified |
+| Dev database | H2 in-memory | HIGH — application-dev.yml verified |
+| Prod database | PostgreSQL (via env vars DB_URL, DB_USERNAME, DB_PASSWORD) | HIGH — application-prod.yml verified |
+
+### Frontend
+
+| Component | Value | Confidence |
+|---|---|---|
+| Framework | React 18 | HIGH — README verified |
+| Language | TypeScript (strict mode) | HIGH — README + tsc check confirmed |
+| Build tool | Vite | HIGH — README verified |
+| Styling | Tailwind CSS | HIGH — README verified |
+| Animation | Framer Motion | HIGH — README verified |
+| State/data fetching | React Query | HIGH — README verified |
+| HTTP client | Axios (via api/client.ts) | HIGH — client.ts verified |
+
+### Infrastructure
+
+| Component | Value | Confidence |
+|---|---|---|
+| Hosting | AWS Lightsail | HIGH — deploy workflow verified |
+| Web server | Nginx (serves frontend static files + proxies /api/) | HIGH — deploy workflow + deploy/ files |
+| Backend process manager | systemd (portfolio.service) | HIGH — deploy workflow verified |
+| CI/CD | GitHub Actions (.github/workflows/deploy-portfolio.yml) | HIGH — file verified |
+| SSL | Let's Encrypt via certbot | HIGH — deploy workflow conditional verified |
+| Domain | faisalhanafi.com | HIGH — deploy workflow verified |
+
+---
+
+## Architecture Overview
+
+```
+Local dev:
+  React (Vite dev server :5173) --> Spring Boot (:8081, dev profile, H2)
+
+Production:
+  Browser --> Nginx (:80/:443)
+                ├── /          --> /var/www/portfolio (static Vite build)
+                └── /api/      --> Spring Boot (:8080, prod profile, PostgreSQL)
+                                   (managed by systemd as 'portfolio' service)
+```
+
+Backend port distinction: local dev uses 8081; production backend uses 8080 (behind Nginx).
+
+---
+
+## Main Modules
+
+### Backend — package: com.faisal.portfolio
+
+| Package | Contents | Confidence |
+|---|---|---|
+| project | Project, ProjectController, ProjectDetailDto, ProjectDto, ProjectImage, ProjectRepository, ProjectService, Technology | HIGH — file list verified |
+| skill | Skill, SkillCategory, SkillCategoryDto, SkillCategoryRepository, SkillController, SkillRepository, SkillService | HIGH — file list verified |
+| experience | Experience, ExperienceController, ExperienceDto, ExperienceRepository, ExperienceService | HIGH — file list verified |
+| common | ApiResponse (record), GlobalExceptionHandler, ResourceNotFoundException | HIGH — file list verified |
+| config | CorsConfig, OpenApiConfig | HIGH — file list verified |
+| seed | DataSeeder (CommandLineRunner) | HIGH — file verified |
+
+### Frontend — src/
+
+| Directory | Contents | Confidence |
+|---|---|---|
+| api/ | client.ts (Axios instance), hooks.ts | HIGH — file list verified |
+| components/layout/ | EmailSidebar, Footer, Layout, Navbar, SocialSidebar | HIGH — file list verified |
+| components/projects/ | FeaturedProject, ProjectCard, ProjectDetail | HIGH — file list verified |
+| components/sections/ | AboutSection, ContactSection, ExperienceSection, HeroSection, ProjectsSection, SkillsSection | HIGH — file list verified |
+| components/ui/ | AnimatedSection, Button, Card, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
+| hooks/ | useScrollPosition.ts | HIGH — file list verified |
+| lib/ | animations.ts | HIGH — file list verified |
+| pages/ | HomePage.tsx, ProjectPage.tsx | HIGH — file list verified |
+| types/ | index.ts | HIGH — file list verified |
+
+---
+
+## User Roles
+
+None. The portfolio is a public read-only product. There is no authentication, no admin panel,
+and no write access of any kind through the public API.
+
+The PRD explicitly scopes out admin CMS, authentication, and blog platform as out-of-scope
+unless explicitly reintroduced.
+
+---
+
+## Naming Conventions
+
+| Convention | Rule | Confidence |
+|---|---|---|
+| Backend root package | com.faisal.portfolio | HIGH — all files verified |
+| Backend architecture | Package-by-feature (project/, skill/, experience/) | HIGH — directory structure verified |
+| Backend DTOs | Java records (e.g., ProjectDto, ProjectDetailDto, ExperienceDto) | HIGH — DataSeeder imports + ApiResponse verified |
+| Frontend components | PascalCase (HeroSection.tsx, ProjectCard.tsx) | HIGH — file list verified |
+| Frontend hooks | camelCase (useScrollPosition.ts) | HIGH — file list verified |
+
+---
+
+## Database Expectations
+
+| Environment | Database | Schema management | Seed | Confidence |
+|---|---|---|---|---|
+| dev | H2 in-memory (portfoliodb) | ddl-auto: create-drop (recreated each boot) | DataSeeder runs on every boot | HIGH — application-dev.yml verified |
+| prod | PostgreSQL (credentials via env vars) | ddl-auto: update | DataSeeder runs on every boot | HIGH — application-prod.yml verified; ddl-auto: update is INFERRED migration strategy |
+
+Production migration note: No Flyway or Liquibase is present in build.gradle. ddl-auto: update
+means Hibernate manages schema evolution automatically. This is sufficient for a portfolio but
+means there is no migration rollback capability. Status: ACCEPTED for current scale.
+
+---
+
+## Non-Negotiable Rules
+
+1. Pre-commit gate must pass before any commit. Never use --no-verify.
+2. One deliverable per session. The session guard enforces a 90-minute cap.
+3. JDK 21 only. JDK 8, 25, and 26 were all tested during the 2026-04-18 pilot and all failed.
+4. Do not run the prod Spring profile locally unless PostgreSQL is available and configured.
+5. Do not commit lightsail private key.txt (it is gitignored but must not be staged).
+6. Do not use git add -A without reviewing git status first.
+7. Commit messages must follow docs/COMMIT_MESSAGE_SOP.md format.
+8. Production backend port is 8080; local dev backend port is 8081.
+
+---
+
+## Links to Active Authority Documents
+
+- `docs/SOURCE_OF_TRUTH.md` — documentation entry point; lists all active authorities
+- `docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md` — session execution rules and gate semantics
+- `docs/COMMIT_MESSAGE_SOP.md` — required commit message format
+- `.githooks/pre-commit` — enforced commit gate
+- `scripts/healthcheck.sh` — healthcheck dispatcher
+- `.github/workflows/deploy-portfolio.yml` — CI/CD pipeline (deployment truth)
+
+---
+
+## Stable Facts vs Planned Items
+
+### Stable (implemented and verified)
+- Spring Boot REST API serving projects, skills, experience, and health
+- H2 dev database with DataSeeder
+- V3.2 gate system (session guard + L1 + L2-fast + L2-full + pre-commit hook)
+- GitHub Actions CI/CD pipeline deploying to Lightsail
+- React frontend with Tailwind, Framer Motion, React Query
+
+### Planned (documented but not verified as implemented)
+- Cybersecurity audit (planned 2026-04-16, not yet done)
+- Playwright/E2E tests (listed in OPTIONAL_IMPROVEMENTS, not implemented)
+- Contact form (listed in OPTIONAL_IMPROVEMENTS, not implemented)
+- OG meta tags (listed in OPTIONAL_IMPROVEMENTS, not implemented)
+- Response compression (listed in OPTIONAL_IMPROVEMENTS, not implemented)
+- Production deployment verification of 2026-05-01 changes
