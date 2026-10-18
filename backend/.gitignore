@@ -1,5 +1,7 @@
 # Gradle
 .gradle/
+# Local Gradle user home used by the documented verification commands.
+.gradle-home/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
