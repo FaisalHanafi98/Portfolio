@@ -47,7 +47,7 @@ A session is done only when:
 - the single deliverable is complete
 - the required checks for that deliverable have been run
 - the pre-commit gate passes
-- the commit message follows `docs/COMMIT_MESSAGE_SOP.md`
+- the commit message follows `../../standards/COMMIT_MESSAGES.md`
 
 ## Reality Boundaries
 

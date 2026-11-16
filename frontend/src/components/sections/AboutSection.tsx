@@ -117,18 +117,18 @@ export default function AboutSection() {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="grid grid-cols-3 gap-8 mt-16"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 mt-16"
           >
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
                 variants={slideUp}
-                className="text-center p-6 rounded-xl bg-white border border-cream-darker/60 hover:shadow-md transition-shadow"
+                className="text-center p-6 rounded-xl bg-white border border-cream-darker/60 hover:shadow-md transition-shadow duration-200 min-w-0"
               >
                 <div className={`text-3xl md:text-4xl font-bold mb-2 ${stat.color}`}>
                   {stat.value}
                 </div>
-                <div className="text-sm text-charcoal-light font-mono">{stat.label}</div>
+                <div className="text-sm text-charcoal-light font-mono break-words">{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>

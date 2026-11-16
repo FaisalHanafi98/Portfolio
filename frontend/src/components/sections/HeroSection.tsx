@@ -81,17 +81,49 @@ export default function HeroSection() {
             Learn More
           </Button>
         </motion.div>
+
+        {/* Engineering Proof Tape */}
+        <motion.div
+          variants={heroTextReveal}
+          className="mt-14 p-5 md:p-6 rounded-2xl bg-white/85 border-2 border-cream-darker/60 backdrop-blur-sm shadow-sm grid grid-cols-2 md:grid-cols-4 gap-6"
+        >
+          <div className="min-w-0">
+            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">Gold FYP</div>
+            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
+              CREAMS Case Management (IIUM)
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">Enterprise</div>
+            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
+              Accenture SPFx &amp; BI Delivery
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">Full-Stack</div>
+            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
+              Spring Boot + Laravel + React
+            </div>
+          </div>
+          <div className="min-w-0">
+            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">ML &amp; Data</div>
+            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
+              Financial NLP &amp; ETL Validation
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
 
       {/* Scroll indicator */}
       <motion.div
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        initial={{ opacity: 0, y: -10 }}
+        aria-hidden="true"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2"
+        initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.5, duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
+        transition={{ delay: 0.8, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       >
-        <span className="text-charcoal-lighter text-xs font-mono tracking-wider">SCROLL</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-charcoal-lighter to-transparent" />
+        <span className="text-charcoal-light text-xs font-mono tracking-wider">SCROLL</span>
+        <div className="w-[1px] h-10 bg-gradient-to-b from-charcoal-light/60 to-transparent" />
       </motion.div>
     </section>
   );

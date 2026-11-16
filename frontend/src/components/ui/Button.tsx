@@ -1,5 +1,5 @@
 import React, { ReactNode, useRef } from 'react';
-import { motion, HTMLMotionProps, useMotionValue, useSpring } from 'framer-motion';
+import { motion, HTMLMotionProps, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 
 interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
   children: ReactNode;
@@ -13,13 +13,13 @@ interface ButtonProps extends Omit<HTMLMotionProps<'button'>, 'children'> {
 const variants = {
   primary: 'border-2 border-charcoal text-charcoal hover:bg-charcoal hover:text-cream',
   secondary: 'bg-charcoal text-cream hover:bg-charcoal-light',
-  ghost: 'text-charcoal-light hover:text-charcoal border border-transparent hover:border-charcoal/20',
+  ghost: 'text-charcoal-light hover:text-charcoal border border-charcoal/20 hover:border-charcoal/40 hover:bg-cream-dark/40',
 };
 
 const sizes = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
+  sm: 'px-4 py-2 text-xs min-h-[36px]',
+  md: 'px-6 py-3 text-sm min-h-[44px]',
+  lg: 'px-8 py-4 text-base min-h-[48px]',
 };
 
 export default function Button({
@@ -33,19 +33,21 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const ref = useRef<HTMLButtonElement | HTMLAnchorElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const enableMagnetic = magnetic && !prefersReducedMotion;
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const springX = useSpring(x, { stiffness: 300, damping: 20 });
-  const springY = useSpring(y, { stiffness: 300, damping: 20 });
+  const springX = useSpring(x, { stiffness: 320, damping: 24 });
+  const springY = useSpring(y, { stiffness: 320, damping: 24 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (!magnetic || !ref.current) return;
+    if (!enableMagnetic || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    x.set((e.clientX - centerX) * 0.15);
-    y.set((e.clientY - centerY) * 0.15);
+    x.set((e.clientX - centerX) * 0.12);
+    y.set((e.clientY - centerY) * 0.12);
   };
 
   const handleMouseLeave = () => {
@@ -55,19 +57,20 @@ export default function Button({
 
   const baseStyles = `
     inline-flex items-center justify-center
-    font-mono rounded-lg transition-all duration-300
+    font-mono rounded-lg transition-[background-color,color,border-color] duration-200 ease-out
+    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue
     ${variants[variant]}
     ${sizes[size]}
     ${className}
   `;
 
   const motionProps = {
-    style: magnetic ? { x: springX, y: springY } : undefined,
-    whileHover: { scale: 1.05 },
-    whileTap: { scale: 0.95 },
-    transition: { type: 'spring', stiffness: 400, damping: 17 },
-    onMouseMove: magnetic ? handleMouseMove : undefined,
-    onMouseLeave: magnetic ? handleMouseLeave : undefined,
+    style: enableMagnetic ? { x: springX, y: springY } : undefined,
+    whileHover: prefersReducedMotion ? undefined : { y: -2 },
+    whileTap: prefersReducedMotion ? undefined : { scale: 0.98 },
+    transition: { type: 'spring' as const, stiffness: 420, damping: 24 },
+    onMouseMove: enableMagnetic ? handleMouseMove : undefined,
+    onMouseLeave: enableMagnetic ? handleMouseLeave : undefined,
   };
 
   if (href) {

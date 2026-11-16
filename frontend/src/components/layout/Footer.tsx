@@ -47,7 +47,7 @@ export default function Footer() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-charcoal-light hover:text-blue transition-colors p-2"
+              className="text-charcoal-light hover:text-blue transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg hover:bg-cream-dark/50"
               aria-label={link.name}
             >
               {link.icon}
@@ -60,10 +60,10 @@ export default function Footer() {
             href="https://github.com/FaisalHanafi98/Portfolio"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-charcoal-light hover:text-charcoal transition-colors"
+            className="text-sm text-charcoal-light hover:text-charcoal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded inline-block"
           >
             <p className="font-hand text-lg">Designed & Built by Faisal</p>
-            <p className="text-xs mt-1 font-mono text-charcoal-lighter">
+            <p className="text-xs mt-1 font-mono text-charcoal-light">
               Spring Boot + React + TypeScript
             </p>
           </a>

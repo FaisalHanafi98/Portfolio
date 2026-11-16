@@ -1,73 +1,21 @@
 import type { Variants, Transition } from 'framer-motion';
 
+// Crisp ease-out curve for interruptible UI entrances
+export const easeOutCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 // Default transition settings
-export const defaultTransition: Transition = {
-  duration: 0.5,
-  ease: [0.25, 0.1, 0.25, 1],
-};
-
-export const springTransition: Transition = {
-  type: 'spring',
-  stiffness: 100,
-  damping: 15,
-};
-
-// Fade in animation
-export const fadeIn: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: defaultTransition,
-  },
+const defaultTransition: Transition = {
+  duration: 0.35,
+  ease: easeOutCurve,
 };
 
 // Slide up animation
 export const slideUp: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 16 },
   visible: {
     opacity: 1,
     y: 0,
     transition: defaultTransition,
-  },
-};
-
-// Slide down animation
-export const slideDown: Variants = {
-  hidden: { opacity: 0, y: -20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: defaultTransition,
-  },
-};
-
-// Slide in from left
-export const slideLeft: Variants = {
-  hidden: { opacity: 0, x: -30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: defaultTransition,
-  },
-};
-
-// Slide in from right
-export const slideRight: Variants = {
-  hidden: { opacity: 0, x: 30 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: defaultTransition,
-  },
-};
-
-// Scale up animation
-export const scaleUp: Variants = {
-  hidden: { opacity: 0, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: springTransition,
   },
 };
 
@@ -77,92 +25,56 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-// Stagger children (fast)
-export const staggerFast: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
+      staggerChildren: 0.06,
+      delayChildren: 0.04,
     },
   },
 };
 
 // Hero text reveal animation
 export const heroTextReveal: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 14 },
   visible: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
-      ease: [0.25, 0.1, 0.25, 1],
+      duration: 0.4,
+      ease: easeOutCurve,
     },
   },
 };
 
 // Letter-by-letter reveal animation
 export const letterReveal: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 12 },
   visible: (custom: number) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.4,
-      delay: 0.3 + custom * 0.03, // Stagger each letter by 30ms
-      ease: [0.25, 0.1, 0.25, 1],
+      duration: 0.28,
+      delay: 0.1 + custom * 0.02, // Crisp 20ms stagger per letter
+      ease: easeOutCurve,
     },
   }),
 };
 
-// Card hover animation
-export const cardHover = {
-  rest: {
-    y: 0,
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-  },
-  hover: {
-    y: -4,
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)',
-    transition: {
-      duration: 0.3,
-      ease: 'easeOut',
-    },
-  },
-};
-
-// Nav link animation
-export const navLinkHover = {
-  rest: { width: 0 },
-  hover: {
-    width: '100%',
-    transition: { duration: 0.3, ease: 'easeInOut' },
-  },
-};
-
 // Page transition
 export const pageTransition: Variants = {
-  initial: { opacity: 0, y: 10 },
+  initial: { opacity: 0, y: 8 },
   animate: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' },
+    transition: { duration: 0.28, ease: easeOutCurve },
   },
   exit: {
     opacity: 0,
-    y: -10,
-    transition: { duration: 0.3, ease: 'easeIn' },
+    y: -6,
+    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] },
   },
 };
 
 // Viewport options for scroll-triggered animations
 export const viewportOptions = {
   once: true,
-  margin: '-100px',
+  margin: '-80px',
 };

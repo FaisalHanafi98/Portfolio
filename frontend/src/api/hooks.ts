@@ -5,31 +5,15 @@ import type {
   ProjectDetail,
   SkillCategory,
   Experience,
-  About,
 } from '../types';
 
 // Query keys for cache management
 export const queryKeys = {
-  health: ['health'] as const,
   projects: ['projects'] as const,
   project: (slug: string) => ['project', slug] as const,
   skills: ['skills'] as const,
   experience: ['experience'] as const,
-  about: ['about'] as const,
 };
-
-// Health check hook
-export function useHealthCheck() {
-  return useQuery({
-    queryKey: queryKeys.health,
-    queryFn: async () => {
-      const response = await api.healthCheck();
-      return response.data;
-    },
-    staleTime: 30000,
-    retry: 2,
-  });
-}
 
 // Projects hooks
 export function useProjects() {
@@ -79,14 +63,4 @@ export function useExperience() {
   });
 }
 
-// About hook
-export function useAbout() {
-  return useQuery<About>({
-    queryKey: queryKeys.about,
-    queryFn: async () => {
-      const response = await api.getAbout();
-      return response.data;
-    },
-    staleTime: 10 * 60 * 1000,
-  });
-}
+

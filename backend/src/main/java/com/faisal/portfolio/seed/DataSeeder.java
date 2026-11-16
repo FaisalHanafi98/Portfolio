@@ -44,14 +44,16 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        if (projectRepository.count() == 0) {
-            log.info("Seeding portfolio data...");
-            seedTechnologiesAndProjects();
-            seedSkills();
-            seedExperiences();
-            log.info("Seeding complete");
+        if (projectRepository.count() > 0) {
+            log.info("Data already seeded, skipping");
+            return;
         }
-        refreshNarrativeContent();
+
+        log.info("Seeding portfolio data...");
+        seedTechnologiesAndProjects();
+        seedSkills();
+        seedExperiences();
+        log.info("Seeding complete");
     }
 
     private void seedTechnologiesAndProjects() {
@@ -85,7 +87,7 @@ public class DataSeeder implements CommandLineRunner {
         creams.setDisplayOrder(1);
         creams.setPeriod("Jan – Jun 2024");
         creams.setGithubUrl(null);
-        creams.setLiveUrl("https://faisalhanafi.com/creams/demo/");
+        creams.setLiveUrl(null);
         creams.setTechnologies(Set.of(laravel, php, mysql, javascript, tailwind));
         creams.setArchitectureDecisions(List.of(
                 "Laravel MVC with service layer for complex business logic separation",
@@ -162,7 +164,7 @@ public class DataSeeder implements CommandLineRunner {
         sen2nal.setFeatured(false);
         sen2nal.setDisplayOrder(3);
         sen2nal.setPeriod("2025 – Present");
-        sen2nal.setGithubUrl("https://github.com/FaisalHanafi/Sen2Nal");
+        sen2nal.setGithubUrl("https://github.com/FaisalHanafi98/Sen2Nal");
         sen2nal.setTechnologies(Set.of(python, streamlit));
         sen2nal.setArchitectureDecisions(List.of(
                 "Streamlit for rapid prototyping — skip frontend development entirely for MVP",
@@ -187,16 +189,16 @@ public class DataSeeder implements CommandLineRunner {
         Project portfolio = new Project();
         portfolio.setSlug("portfolio");
         portfolio.setTitle("Portfolio — Personal Developer Portfolio");
-        portfolio.setShortDescription("This very site — Spring Boot 3.4 API with package-by-feature architecture, React 18 frontend with Framer Motion animations, deployed on AWS Lightsail with CI/CD via GitHub Actions.");
-        portfolio.setFullDescription("A full-stack portfolio website built to showcase engineering projects with proper backend architecture, not just a static site. The backend serves as a real API with structured data, caching, and proper error handling. The frontend features smooth animations and responsive design.");
+        portfolio.setShortDescription("This very site — Spring Boot 3.4 API with package-by-feature architecture, React 18 + TypeScript 5 frontend, and containerized Nginx + PostgreSQL delivery via GitHub Actions.");
+        portfolio.setFullDescription("A full-stack portfolio website built to showcase engineering projects with proper backend architecture, not just a static site. The backend serves as a real API with structured data, caching, and proper error handling. The frontend features accessible interaction states, responsive layouts, and reduced-motion-safe transitions.");
         portfolio.setProblemStatement("Most developer portfolios are static sites with hardcoded content. Updating projects means editing HTML. There is no structured data, no API, and the site itself does not demonstrate backend engineering skills.");
-        portfolio.setSolution("Built a proper full-stack application where project data lives in PostgreSQL, served through a REST API with DTOs and response wrappers. The frontend consumes the API with React Query for caching. The site itself is a portfolio piece that demonstrates the same engineering practices used in the projects it showcases.");
+        portfolio.setSolution("Built a proper full-stack application where project data lives in PostgreSQL (with H2 for standalone local dev), served through a REST API with DTOs and response wrappers. The frontend consumes the API with React Query for request state, retry, and cache resilience.");
         portfolio.setFeatured(false);
         portfolio.setDisplayOrder(4);
         portfolio.setPeriod("2025 – Present");
-        portfolio.setGithubUrl("https://github.com/FaisalHanafi/Portfolio");
-        portfolio.setLiveUrl("https://faisalhanafi.com");
-        portfolio.setTechnologies(Set.of(springBoot, java, postgresql, react, typescript, vite, tailwind));
+        portfolio.setGithubUrl("https://github.com/FaisalHanafi98/Portfolio");
+        portfolio.setLiveUrl(null);
+        portfolio.setTechnologies(Set.of(springBoot, java, postgresql, react, typescript, vite, tailwind, docker));
         portfolio.setArchitectureDecisions(List.of(
                 "Package-by-feature (project/, skill/, experience/) over package-by-layer for cohesion",
                 "Java records for DTOs — immutable, concise, no Lombok boilerplate needed",
@@ -205,17 +207,17 @@ public class DataSeeder implements CommandLineRunner {
                 "HTTP Cache-Control headers for CDN-friendly responses without Redis overhead"
         ));
         portfolio.setTechStack(Map.of(
-                "Backend", List.of("Spring Boot 3.4.2", "Java 21", "PostgreSQL 16"),
+                "Backend", List.of("Spring Boot 3.4.2", "Java 21", "PostgreSQL 16", "H2 (local dev)"),
                 "Frontend", List.of("React 18", "TypeScript 5", "Vite", "Tailwind CSS", "Framer Motion"),
-                "Infrastructure", List.of("AWS Lightsail", "Nginx", "systemd", "GitHub Actions"),
-                "Testing", List.of("JUnit 5", "MockMvc", "Spring Boot Test")
+                "Infrastructure", List.of("Docker Compose", "Nginx", "systemd", "GitHub Actions"),
+                "Testing", List.of("JUnit 5", "MockMvc", "Spring Boot Test", "Node Test Runner")
         ));
         portfolio.setChallenges(List.of(
-                "Deploying Spring Boot on a t3.micro (1GB RAM) — required careful HikariCP tuning and JVM memory management",
-                "Fixing a silent production bug where H2 was running instead of PostgreSQL due to Spring profile name mismatch",
-                "Building a CI/CD pipeline that handles both backend JAR and frontend static files in a single workflow"
+                "Tuning Spring Boot and HikariCP for small single-node VPS memory budgets (1GB RAM)",
+                "Fixing a silent profile mismatch where H2 ran instead of PostgreSQL by aligning Compose and production profiles",
+                "Building a CI/CD pipeline that verifies backend tests, frontend checks, and an isolated Compose smoke stack"
         ));
-        portfolio.setCostJustification("AWS Lightsail keeps hosting simple and low-cost while Nginx serves the frontend and proxies the backend on a single deployment target.");
+        portfolio.setCostJustification("Designed for single-node VPS deployment (Nginx serving the Vite bundle and proxying /api/ to a private Spring Boot service backed by PostgreSQL) after retiring the initial AWS Lightsail instance.");
 
         projectRepository.saveAll(List.of(creams, autoRecruit, sen2nal, portfolio));
     }
@@ -267,142 +269,46 @@ public class DataSeeder implements CommandLineRunner {
     private void seedExperiences() {
         Experience accenture = new Experience();
         accenture.setCompany("Accenture Technology Malaysia");
-        accenture.setRole("Application Development Associate");
-        accenture.setLocation("Kuala Lumpur, Malaysia");
-        accenture.setStartDate(LocalDate.of(2024, 7, 1));
-        accenture.setEndDate(null);
-        accenture.setDescription("Working on enterprise application development projects, contributing to full-stack solutions for clients across Southeast Asia. Primarily focused on SharePoint and .NET ecosystem development.");
-        accenture.setHighlights(List.of(
-                "Built Auto-Recruit SPFx solution that automated recruitment workflows for internal hiring teams",
-                "Developed and maintained SharePoint-based enterprise applications serving 500+ users",
-                "Collaborated with cross-functional teams across Malaysia and Philippines offices"
-        ));
-        accenture.setDisplayOrder(1);
-
-        Experience iium = new Experience();
-        iium.setCompany("International Islamic University Malaysia (IIUM)");
-        iium.setRole("Bachelor of Computer Science");
-        iium.setLocation("Kuala Lumpur, Malaysia");
-        iium.setStartDate(LocalDate.of(2020, 9, 1));
-        iium.setEndDate(LocalDate.of(2024, 6, 30));
-        iium.setDescription("Graduated with a Bachelor of Computer Science, specializing in software engineering. Final year project (CREAMS) received Gold Medal recognition at the university FYP showcase.");
-        iium.setHighlights(List.of(
-                "Gold Medal — Final Year Project (CREAMS: Community Rehabilitation Case Management System)",
-                "Dean's List recognition for academic excellence",
-                "Coursework in Data Structures, Algorithms, Database Systems, Software Engineering, and AI"
-        ));
-        iium.setDisplayOrder(2);
-
-        experienceRepository.saveAll(List.of(accenture, iium));
-    }
-
-    private void refreshNarrativeContent() {
-        log.info("Refreshing portfolio narrative content...");
-
-        projectRepository.findBySlug("creams").ifPresent(project -> {
-            project.setTitle("CREAMS - Community Rehabilitation & Case Management System");
-            project.setShortDescription("Gold Medal final year project that grew from a university brief into a case management system I came to see as genuinely important to the development and support of unique children.");
-            project.setFullDescription("CREAMS began as a project I was told to create, but the deeper I got into the workflow, the more I understood that it was not just another academic deliverable. It was tied to the development of unique children and the people responsible for supporting that progress. That changed the way I approached the system. I treated it less like an assignment and more like a structured tool for care, coordination, and accountability.");
-            project.setProblemStatement("The rehabilitation workflow depended heavily on scattered records, manual updates, and inconsistent reporting. That created friction for the staff doing the work, but it also weakened visibility into the progress of children whose development needed careful and consistent support.");
-            project.setSolution("I built a full-stack case management platform that organized the workflow around role-based access, structured records, progress tracking, scheduling, and reporting. More importantly, I built it with the understanding that usability and accountability mattered because the system was supporting work with human consequences.");
-            project.setChallenges(List.of(
-                    "Designing a permission model that stayed practical for multiple roles without making the system harder to use",
-                    "Turning a university brief into a product that felt operationally credible instead of merely presentable",
-                    "Balancing data structure, reporting needs, and workflow clarity in a domain where consistency really matters"
-            ));
-            project.setCostJustification("Built as a final year project, but designed with the seriousness of a real operational system because the underlying work it supports is meaningful.");
-            project.getImages().forEach(image -> image.setAltText("CREAMS dashboard and rehabilitation workflow overview"));
-        });
-
-        projectRepository.findBySlug("auto-recruit").ifPresent(project -> {
-            project.setTitle("Auto-Recruit - Enterprise Recruitment Workflow System");
-            project.setShortDescription("Enterprise recruitment workflow solution built in the SharePoint ecosystem, focused on clearer operations, stronger validation, and a smoother experience for business users.");
-            project.setFullDescription("Auto-Recruit reflects the kind of work I do well in enterprise environments: taking a process that people depend on every day and making it more structured, more visible, and easier to trust. It was not just about building screens. It was about reducing friction for hiring workflows, improving validation, and helping business users work with live information more confidently.");
-            project.setProblemStatement("Recruitment tracking often becomes fragmented across spreadsheets, manual updates, and disconnected process steps. That slows down decision-making and makes it harder for teams to trust the current state of the workflow.");
-            project.setSolution("I contributed to a SharePoint-based workflow solution that combined React, TypeScript, SPFx, validation logic, reporting needs, and business-facing improvements. The goal was to make the workflow more reliable and easier to navigate while staying grounded in the realities of enterprise delivery.");
-            project.setChallenges(List.of(
-                    "Working within enterprise platform constraints while still improving usability and responsiveness",
-                    "Supporting changing business processes without turning the workflow into something brittle",
-                    "Balancing validation, performance, and stakeholder expectations inside a live operational environment"
-            ));
-            project.setCostJustification("Built within an existing enterprise platform, which kept infrastructure overhead low while emphasizing operational value and maintainability.");
-        });
-
-        projectRepository.findBySlug("sen2nal").ifPresent(project -> {
-            project.setTitle("Sen2Nal - Financial Sentiment and Market Intelligence");
-            project.setShortDescription("A financial NLP and market analysis project shaped by my interest in trading, signal quality, and how better interpretation can support better decisions.");
-            project.setFullDescription("Sen2Nal comes from a very personal interest in markets and decision-making. As an active day trader, I am constantly aware of how noisy financial information can be, and how difficult it is to separate signal from distraction. This project let me explore that problem more seriously through sentiment analysis, market context, and predictive modelling.");
-            project.setProblemStatement("Financial data is abundant, but interpretation is uneven. News, sentiment, and price movement do not naturally line up in ways that are easy to read, especially for people trying to make disciplined decisions in fast-moving environments.");
-            project.setSolution("I designed Sen2Nal as a market intelligence project that combines financial NLP, structured storage, time-series thinking, and explainable modelling. The aim was not just to produce output, but to build a system that helps make market information easier to interrogate and reason about.");
-            project.setChallenges(List.of(
-                    "Connecting sentiment signals with market behavior in a way that stayed analytically honest",
-                    "Balancing modelling ambition with explainability through tools like SHAP and walk-forward validation",
-                    "Designing a finance-focused project that felt useful rather than just technically decorative"
-            ));
-            project.setCostJustification("Built as a self-directed finance and NLP project, focused more on analytical depth and system thinking than on polished hosting infrastructure.");
-        });
-
-        projectRepository.findBySlug("portfolio").ifPresent(project -> {
-            project.setTitle("Portfolio - Data, AI, and Software Systems in One Place");
-            project.setShortDescription("A portfolio built as a real product, not a static page, because I wanted the site itself to demonstrate how I think about APIs, data, deployment, and storytelling.");
-            project.setFullDescription("I did not want my portfolio to be a page full of claims with no system behind it. I wanted it to reflect the way I actually think: data should be structured, content should be queryable, and the product should hold together from backend to frontend to deployment. That is why this site exists as a full-stack application instead of a static template.");
-            project.setProblemStatement("Many portfolios look polished on the surface but reveal very little about how the person behind them approaches systems, data, or delivery. I wanted mine to do more than present information. I wanted it to prove a way of thinking.");
-            project.setSolution("I built the portfolio as a Spring Boot and React application with database-backed content, API-driven sections, and a deployment setup that reflects real operational concerns. The site itself acts as both a showcase and a small proof of how I connect engineering choices to practical outcomes.");
-            project.setChallenges(List.of(
-                    "Keeping the portfolio honest to my real profile while still making it engaging to read",
-                    "Running a proper backend and deployment workflow for a project many people would have kept static",
-                    "Treating content quality, API structure, and production behavior as part of the same product"
-            ));
-            project.setCostJustification("Designed as a low-cost full-stack product on Lightsail so the portfolio itself could demonstrate delivery decisions, not just design choices.");
-        });
-
-        Experience accenture = experienceRepository.findByCompany("Accenture Technology Malaysia")
-                .orElseGet(Experience::new);
-        accenture.setCompany("Accenture Technology Malaysia");
         accenture.setRole("Packaged App Development Associate");
         accenture.setLocation("Kuala Lumpur, Malaysia");
         accenture.setStartDate(LocalDate.of(2024, 7, 1));
         accenture.setEndDate(null);
-        accenture.setDescription("I work on enterprise workflow and analytics delivery, helping translate business processes into systems that are faster, clearer, and easier for teams to trust.");
+        accenture.setDescription("Working on enterprise workflow and analytics delivery, helping translate business processes into systems that are faster, clearer, and easier for teams to trust across the SharePoint, React, TypeScript, and Power BI ecosystem.");
         accenture.setHighlights(List.of(
-                "Worked across React, TypeScript, SPFx, validation logic, Power BI reporting, stakeholder-facing updates, and operational workflow improvements",
-                "Helped improve page load performance by around 68 percent, reducing friction for people using the system day to day",
-                "Built 20 plus validation rules and supported 28 plus workflow updates aligned with live business processes"
+                "Built and maintained enterprise SharePoint Framework (SPFx) and React/TypeScript workflow solutions, including Auto-Recruit",
+                "Improved page load performance by roughly 68% and implemented 20+ validation rules across 28+ workflow updates",
+                "Supported Power BI reporting and cross-functional delivery across Malaysia and regional teams"
         ));
         accenture.setDisplayOrder(1);
-        experienceRepository.save(accenture);
 
-        Experience aem = experienceRepository.findByCompany("AEM Energy Solutions")
-                .orElseGet(Experience::new);
+        Experience aem = new Experience();
         aem.setCompany("AEM Energy Solutions");
         aem.setRole("Data Analyst Intern");
         aem.setLocation("Kuala Lumpur, Malaysia");
         aem.setStartDate(LocalDate.of(2023, 6, 1));
         aem.setEndDate(LocalDate.of(2023, 9, 30));
-        aem.setDescription("I learned early that data work becomes valuable only when it is cleaned, validated, and structured carefully enough for people to trust what comes out of it.");
+        aem.setDescription("Focused on data extraction, validation, and standardization so operational and client-facing reporting could be trusted.");
         aem.setHighlights(List.of(
                 "Built ETL routines with R and regex to extract, clean, validate, and standardize data across 43 templates and 37 fields",
-                "Supported reporting preparation and secure data handling tied to operational work and client-facing needs",
-                "Developed a practical respect for messy data, consistency, and the quiet discipline behind reliable reporting"
+                "Supported reporting preparation and structured data quality checks for operational workflows"
         ));
         aem.setDisplayOrder(2);
-        experienceRepository.save(aem);
 
-        Experience iium = experienceRepository.findByCompany("International Islamic University Malaysia (IIUM)")
-                .orElseGet(Experience::new);
+        Experience iium = new Experience();
         iium.setCompany("International Islamic University Malaysia (IIUM)");
-        iium.setRole("BSc in Data Science");
+        iium.setRole("Bachelor of Computer Science (Data Science)");
         iium.setLocation("Kuala Lumpur, Malaysia");
         iium.setStartDate(LocalDate.of(2020, 9, 1));
         iium.setEndDate(LocalDate.of(2024, 6, 30));
-        iium.setDescription("My academic years gave me the technical foundation, but they also taught me that I care most about systems that connect structured thinking to real human outcomes.");
+        iium.setDescription("Graduated with a CGPA of 3.72, combining data science foundations with full-stack software engineering. Final year project (CREAMS) received the Gold Medal at the university FYP showcase.");
         iium.setHighlights(List.of(
-                "Graduated with a CGPA of 3.72 out of 4.00 and Dean's List recognition for 9 semesters",
-                "Won the Gold Medal for Best Final Year Project through CREAMS",
-                "Built early depth across data preparation, software engineering, databases, and applied decision-oriented systems"
+                "Gold Medal — Final Year Project (CREAMS: Community Rehabilitation Case Management System)",
+                "Dean's List recognition for 9 semesters (CGPA 3.72 / 4.00)",
+                "Coursework across Data Science, Software Engineering, Database Systems, Algorithms, and AI"
         ));
         iium.setDisplayOrder(3);
-        experienceRepository.save(iium);
+
+        experienceRepository.saveAll(List.of(accenture, aem, iium));
     }
 
     private Technology tech(String name) {

@@ -44,7 +44,7 @@ export default function SketchUnderline({
         initial={{ pathLength: 0, opacity: 0 }}
         animate={{ pathLength: 1, opacity: 1 }}
         transition={{
-          pathLength: { duration: 0.8, ease: 'easeInOut', delay },
+          pathLength: { duration: 0.5, ease: [0.22, 1, 0.36, 1], delay },
           opacity: { duration: 0.2, delay },
         }}
         style={{

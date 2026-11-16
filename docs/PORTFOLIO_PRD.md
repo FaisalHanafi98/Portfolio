@@ -156,6 +156,38 @@ Design expectations:
 - accessible semantics and clear navigation
 - consistent storytelling across sections
 
+### Content request states
+
+Projects, project detail, skills, and experience use
+[`QueryContent`](../frontend/src/components/ui/QueryContent.tsx) to display
+the state of their existing React Query requests.
+
+| Request state | What visitors see |
+|---|---|
+| First load in progress | A skeleton with an accessible loading message |
+| First load paused offline | A message that the request is waiting for a connection |
+| Successful result | The content, or an explicit empty message for a list |
+| First load failed | An error with a retry button |
+| Refresh failed with cached data | The last loaded content and a retry button |
+| Project detail returned HTTP 404 | Project Not Found and a way back, even if the project was cached |
+
+React Query owns request, cache, and retry transitions. Retry acts on the
+same query. Keep these states consistent when changing any of the four views.
+Run `node --test tests/content-states.test.mjs` from `frontend/` to verify
+the state rendering with fixture data.
+
+### Other state owners
+
+| Owner | Transitions |
+|---|---|
+| [Router and lazy route](../frontend/src/App.tsx) | Home, project detail, or unmatched URL. The detail code loads through Suspense before the project request starts. |
+| [Navbar](../frontend/src/components/layout/Navbar.tsx) and [scroll hook](../frontend/src/hooks/useScrollPosition.ts) | Opening the mobile menu locks page scrolling on mobile. Selecting a link, pressing Escape, or crossing the desktop breakpoint closes it. The toggle exposes its expanded state. Header styling changes at the scroll threshold. |
+| [Experience selection](../frontend/src/components/sections/ExperienceSection.tsx) | A company button selects its experience ID. Selection survives list reordering and falls back to the first entry if the selected ID disappears. The outgoing panel exits before the incoming panel enters. |
+| [Project lists](../frontend/src/components/sections/ProjectsSection.tsx) and [detail](../frontend/src/components/projects/ProjectDetail.tsx) | Featured and other groups, optional detail blocks and links, and project image selection derive from the returned content. Image loading is browser-owned. |
+| [Motion](../frontend/src/lib/animations.ts) and [styles](../frontend/src/styles/globals.css) | Viewport reveals, page transitions, pointer and focus feedback, and reduced-motion styles. |
+| [API](../backend/src/main/java/com/faisal/portfolio/common/GlobalExceptionHandler.java) and [startup seed](../backend/src/main/java/com/faisal/portfolio/seed/DataSeeder.java) | Reads resolve to data or an HTTP error. Startup either seeds the database in a transaction or skips when projects already exist. |
+| [Local runtime check](../scripts/healthcheck_l2_full.sh) | Reuse or start the dev backend, wait for health, wait separately for seeded projects, then check project detail and the frontend build. Clean up the backend if the check started it. |
+
 ## 11. Security Considerations
 
 This is a read-heavy public portfolio product. Security expectations should stay proportional to that reality.

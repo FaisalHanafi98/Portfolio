@@ -18,34 +18,34 @@ export default {
           light: '#636E72',
           lighter: '#B2BEC3',
         },
-        // WCAG AA-compliant accent colors
+        // WCAG AA-compliant accent colors on cream (#FFF8F0) and white (#FFFFFF)
         blue: {
-          DEFAULT: '#0984E3',
+          DEFAULT: '#0767B2',
           light: '#74B9FF',
-          dark: '#0767B2',
+          dark: '#054F8A',
         },
         pink: {
-          DEFAULT: '#E84393',
+          DEFAULT: '#C0277A',
           light: '#FD79A8',
-          dark: '#C0277A',
+          dark: '#9B1D62',
         },
         green: {
-          DEFAULT: '#00B894',
+          DEFAULT: '#007A62',
           light: '#55EFC4',
-          dark: '#009473',
+          dark: '#005F4C',
         },
         purple: {
-          DEFAULT: '#6C5CE7',
+          DEFAULT: '#5541D9',
           light: '#A29BFE',
-          dark: '#5541D9',
+          dark: '#412FB5',
         },
         coral: {
-          DEFAULT: '#E17055',
+          DEFAULT: '#B84A32',
           light: '#FAB1A0',
         },
         yellow: {
           DEFAULT: '#FDCB6E',
-          dark: '#E5A716',
+          dark: '#9E6E08',
         },
 
         // Legacy aliases — maps old dark-theme tokens to cream equivalents
@@ -64,8 +64,8 @@ export default {
           dark: '#B2BEC3',        // was dim text → now lighter
         },
         teal: {
-          DEFAULT: '#0984E3',     // map old teal accent → blue
-          dark: '#0767B2',
+          DEFAULT: '#0767B2',     // map old teal accent → blue
+          dark: '#054F8A',
         },
       },
       fontFamily: {

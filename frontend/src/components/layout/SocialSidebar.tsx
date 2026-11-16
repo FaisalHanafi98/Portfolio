@@ -24,9 +24,9 @@ const socialLinks = [
 export default function SocialSidebar() {
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.5 }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       className="fixed left-6 bottom-0 hidden md:flex flex-col items-center gap-6"
     >
       {socialLinks.map((link) => (
@@ -35,7 +35,7 @@ export default function SocialSidebar() {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-charcoal-lighter hover:text-blue hover:-translate-y-1 transition-all duration-300"
+          className="text-charcoal-light hover:text-blue hover:-translate-y-1 active:scale-95 transition-[color,transform] duration-200 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
           aria-label={link.name}
         >
           {link.icon}

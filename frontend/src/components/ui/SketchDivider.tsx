@@ -39,8 +39,8 @@ export default function SketchDivider({ className = '' }: SketchDividerProps) {
               : { pathLength: 0, opacity: 0 }
           }
           transition={{
-            pathLength: { duration: 1.5, ease: 'easeInOut' },
-            opacity: { duration: 0.3 },
+            pathLength: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+            opacity: { duration: 0.2 },
           }}
           style={{
             filter: 'url(#divider-sketch)',
@@ -53,26 +53,26 @@ export default function SketchDivider({ className = '' }: SketchDividerProps) {
           cy="10"
           r="2"
           fill="currentColor"
-          initial={{ scale: 0, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={
             isInView
               ? { scale: 1, opacity: 0.6 }
-              : { scale: 0, opacity: 0 }
+              : { scale: 0.9, opacity: 0 }
           }
-          transition={{ delay: 1.2, duration: 0.3 }}
+          transition={{ delay: 0.4, duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         />
         <motion.circle
           cx="295"
           cy="10"
           r="2"
           fill="currentColor"
-          initial={{ scale: 0, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={
             isInView
               ? { scale: 1, opacity: 0.6 }
-              : { scale: 0, opacity: 0 }
+              : { scale: 0.9, opacity: 0 }
           }
-          transition={{ delay: 1.2, duration: 0.3 }}
+          transition={{ delay: 0.4, duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
         />
 
         {/* SVG filter for sketchy effect */}

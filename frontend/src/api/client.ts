@@ -62,11 +62,6 @@ export const api = {
     return response.data;
   },
 
-  // About
-  getAbout: async (): Promise<ApiResponse<import('../types').About>> => {
-    const response = await apiClient.get('/about');
-    return response.data;
-  },
 };
 
 export default apiClient;

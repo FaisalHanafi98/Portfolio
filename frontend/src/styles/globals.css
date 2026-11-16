@@ -42,19 +42,19 @@
   }
 
   .link-underline {
-    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-0 after:bg-blue after:transition-all after:duration-300 hover:after:w-full;
+    @apply relative after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-left after:scale-x-0 after:bg-blue after:transition-transform after:duration-200 after:ease-out hover:after:scale-x-100;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-charcoal text-charcoal rounded-lg font-mono text-sm transition-all duration-300 hover:bg-charcoal hover:text-cream hover:scale-105;
+    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-charcoal text-charcoal rounded-lg font-mono text-sm transition-[background-color,color,border-color,transform] duration-200 ease-out hover:bg-charcoal hover:text-cream hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-charcoal text-cream rounded-lg font-mono text-sm font-medium transition-all duration-300 hover:bg-charcoal-light hover:scale-105;
+    @apply inline-flex items-center justify-center px-6 py-3 bg-charcoal text-cream rounded-lg font-mono text-sm font-medium transition-[background-color,color,transform] duration-200 ease-out hover:bg-charcoal-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue;
   }
 
   .card {
-    @apply bg-white rounded-xl p-6 transition-all duration-300 hover:translate-y-[-4px] hover:shadow-lg border border-cream-darker/60;
+    @apply bg-white rounded-xl p-6 transition-[transform,box-shadow,border-color] duration-200 ease-out hover:translate-y-[-3px] hover:shadow-lg border border-cream-darker/60;
   }
 
   .tag {
@@ -85,19 +85,19 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background-color: #E84393;
+    background-color: #C0277A;
     opacity: 0.3;
   }
 
   /* Sketch-style card with slight rotation */
   .sketch-card {
-    @apply bg-white rounded-lg p-6 border-2 border-charcoal/10 transition-all duration-300;
+    @apply bg-white rounded-lg p-6 border-2 border-charcoal/10 transition-[transform,box-shadow,border-color] duration-200 ease-out;
     box-shadow: 3px 3px 0 rgba(45, 52, 54, 0.08);
   }
 
   .sketch-card:hover {
     @apply border-blue/30;
-    box-shadow: 5px 5px 0 rgba(9, 132, 227, 0.1);
+    box-shadow: 5px 5px 0 rgba(7, 103, 178, 0.12);
     transform: translateY(-2px);
   }
 }
@@ -146,11 +146,16 @@
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

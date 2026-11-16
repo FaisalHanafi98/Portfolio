@@ -153,7 +153,7 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 4. Do not run the prod Spring profile locally unless PostgreSQL is available and configured.
 5. Do not commit lightsail private key.txt (it is gitignored but must not be staged).
 6. Do not use git add -A without reviewing git status first.
-7. Commit messages must follow docs/COMMIT_MESSAGE_SOP.md format.
+7. Commit messages must follow the [shared workspace SOP](../../../../standards/COMMIT_MESSAGES.md).
 8. Production backend port is 8080; local dev backend port is 8081.
 
 ---
@@ -162,7 +162,7 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 
 - `docs/SOURCE_OF_TRUTH.md` — documentation entry point; lists all active authorities
 - `docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md` — session execution rules and gate semantics
-- `docs/COMMIT_MESSAGE_SOP.md` — required commit message format
+- `../../standards/COMMIT_MESSAGES.md` — required commit message format
 - `.githooks/pre-commit` — enforced commit gate
 - `scripts/healthcheck.sh` — healthcheck dispatcher
 - `.github/workflows/deploy-portfolio.yml` — CI/CD pipeline (deployment truth)

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { MotionConfig } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import SocialSidebar from './SocialSidebar';
@@ -17,12 +18,14 @@ interface LayoutProps {
  */
 export default function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col grain-overlay paper-texture">
-      <Navbar />
-      <SocialSidebar />
-      <EmailSidebar />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen flex flex-col grain-overlay paper-texture overflow-x-clip">
+        <Navbar />
+        <SocialSidebar />
+        <EmailSidebar />
+        <main className="flex-1 min-w-0">{children}</main>
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }

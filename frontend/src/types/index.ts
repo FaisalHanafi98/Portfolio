@@ -80,15 +80,3 @@ export interface Experience {
   description: string;
   highlights: string[];
 }
-
-// About types
-export interface About {
-  name: string;
-  tagline: string;
-  bio: string;
-  email: string;
-  linkedin: string;
-  github: string;
-  resumeUrl: string;
-  photoUrl?: string;
-}
