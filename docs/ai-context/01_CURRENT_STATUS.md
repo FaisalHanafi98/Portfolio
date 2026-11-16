@@ -13,7 +13,7 @@ Faisal connects a frontend, an API, and a database into a working product.
 
 | Area | What the checkout contains |
 |---|---|
-| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents an introduction, projects, skills, experience, and contact links. React Router serves project details at `/projects/:slug`. The seed includes CREAMS, Auto-Recruit, Sen2Nal, and Portfolio. |
+| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents an introduction, projects, skills, experience, and contact links with distinct numbered section headers (`01`–`05`) and alternating surfaces. React Router serves project details at `/projects/:slug`. The seed includes CREAMS, Auto-Recruit, BAiTI, RinggitSense, Sen2Nal, and Portfolio. |
 | API and data | Java 21 and Spring Boot 3.4 expose versioned, read-only JSON endpoints for health, project summaries and details, skill categories, and experience. Spring Data JPA reads the stored content. The application seeds the database on startup when no projects exist. |
 | Runtime | Standalone development uses H2 and a Spring backend on port `8081`. Local Compose is configured to use PostgreSQL, a Spring backend on `8080`, and an Nginx frontend on `3000` that forwards `/api/` to Spring. |
 | Verification | The GitHub Actions workflow defines backend build and tests, frontend type-check, lint, tests and build, and a Compose smoke test covering API health, project list and detail, and the direct CREAMS page URL through Nginx. |

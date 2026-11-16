@@ -12,16 +12,27 @@ export default function ProjectsSection() {
   const query = useProjects();
 
   return (
-    <AnimatedSection id="projects" className="py-24 px-6">
+    <AnimatedSection
+      id="projects"
+      className="py-24 px-6 bg-cream border-b-2 border-cream-darker/80 relative"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="mb-12">
-          <motion.h2
-            variants={slideUp}
-            className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
-          >
-            Some Things I've Built
-          </motion.h2>
-          <SketchUnderline width={200} className="text-pink/50" delay={0.3} />
+        <div className="mb-14">
+          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-pink bg-pink/10 px-3 py-1 rounded-full mb-3">
+            <span>02 / Selected Engineering Work</span>
+          </div>
+          <div>
+            <motion.h2
+              variants={slideUp}
+              className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+            >
+              Some Things I&apos;ve Built
+            </motion.h2>
+          </div>
+          <SketchUnderline width={200} className="text-pink/50" delay={0.2} />
+          <p className="text-charcoal-light mt-4 max-w-2xl">
+            Production systems, enterprise workflow automation, multi-tenant platforms, and stage-gated AI/ML pipelines built across my repositories.
+          </p>
         </div>
 
         <QueryContent

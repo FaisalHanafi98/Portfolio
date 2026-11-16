@@ -12,7 +12,7 @@ const navLinks = [
 ];
 
 const resumeSubject = encodeURIComponent('Resume Request — Faisal Hanafi');
-const resumeHref = import.meta.env.VITE_RESUME_URL || `mailto:faisalhanafi98@gmail.com?subject=${resumeSubject}`;
+const resumeHref = import.meta.env.VITE_RESUME_URL || `mailto:faisalhanafi.dev@gmail.com?subject=${resumeSubject}`;
 const hasBundledResume = Boolean(import.meta.env.VITE_RESUME_URL);
 
 const desktopBreakpoint = '(min-width: 768px)'; // Tailwind's md breakpoint

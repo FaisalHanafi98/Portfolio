@@ -14,16 +14,24 @@ export default function SkillsSection() {
   const query = useSkills();
 
   return (
-    <AnimatedSection id="skills" className="py-24 px-6">
+    <AnimatedSection
+      id="skills"
+      className="py-24 px-6 bg-cream-dark/70 border-b-2 border-cream-darker/80 notebook-lines relative"
+    >
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
-          <motion.h2
-            variants={slideUp}
-            className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
-          >
-            Skills & Technologies
-          </motion.h2>
-          <SketchUnderline width={200} className="text-purple/50" delay={0.3} />
+          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-purple bg-purple/10 px-3 py-1 rounded-full mb-3">
+            <span>03 / Technical Stack</span>
+          </div>
+          <div>
+            <motion.h2
+              variants={slideUp}
+              className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+            >
+              Skills &amp; Technologies
+            </motion.h2>
+          </div>
+          <SketchUnderline width={200} className="text-purple/50" delay={0.2} />
         </div>
 
         <QueryContent
@@ -41,7 +49,11 @@ export default function SkillsSection() {
               className="space-y-10"
             >
               {skillCategories.map((category, catIndex) => (
-                <motion.div key={category.id} variants={slideUp}>
+                <motion.div
+                  key={category.id}
+                  variants={slideUp}
+                  className="bg-white/95 p-6 rounded-xl border border-cream-darker shadow-sm"
+                >
                   <h3 className={`text-lg font-semibold mb-4 font-hand text-xl ${categoryColors[catIndex % categoryColors.length]}`}>
                     {category.name}
                   </h3>

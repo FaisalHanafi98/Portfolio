@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import AnimatedSection from '../ui/AnimatedSection';
 import { slideUp, staggerContainer } from '../../lib/animations';
 import SketchUnderline from '../ui/SketchUnderline';
-import SketchDivider from '../ui/SketchDivider';
 
 const stats = [
   { label: 'Dean\'s List Semesters', value: '9', color: 'text-blue' },
@@ -11,31 +10,37 @@ const stats = [
 ];
 
 const technologies = [
-  'SQL',
-  'Power BI',
-  'TypeScript',
-  'React',
-  'Spring Boot',
-  'PostgreSQL',
-  'Laravel',
-  'AI Agents',
+  'Java 21 / Spring Boot',
+  'Python / FastAPI',
+  'TypeScript / React 18',
+  'SharePoint SPFx',
+  'PostgreSQL (FORCE RLS)',
+  'Laravel / MySQL',
+  'Multi-Agent AI Pipelines',
+  'Power BI / DAX',
 ];
 
 export default function AboutSection() {
   return (
-    <>
-      <SketchDivider />
-      <AnimatedSection id="about" className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-12">
+    <AnimatedSection
+      id="about"
+      className="py-24 px-6 bg-white/85 border-y-2 border-cream-darker/80 relative"
+    >
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-blue bg-blue/10 px-3 py-1 rounded-full mb-3">
+            <span>01 / Profile &amp; Background</span>
+          </div>
+          <div>
             <motion.h2
               variants={slideUp}
               className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
             >
               About Me
             </motion.h2>
-            <SketchUnderline width={120} className="text-blue/50" delay={0.3} />
           </div>
+          <SketchUnderline width={120} className="text-blue/50" delay={0.2} />
+        </div>
 
           <div className="grid md:grid-cols-3 gap-12">
             <motion.div
@@ -134,6 +139,5 @@ export default function AboutSection() {
           </motion.div>
         </div>
       </AnimatedSection>
-    </>
   );
 }

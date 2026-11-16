@@ -17,16 +17,24 @@ export default function ExperienceSection() {
   const query = useExperience();
 
   return (
-    <AnimatedSection id="experience" className="py-24 px-6">
+    <AnimatedSection
+      id="experience"
+      className="py-24 px-6 bg-white/90 border-b-2 border-cream-darker/80 relative"
+    >
       <div className="max-w-4xl mx-auto">
         <div className="mb-12">
-          <motion.h2
-            variants={slideUp}
-            className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
-          >
-            Where I've Worked
-          </motion.h2>
-          <SketchUnderline width={180} className="text-green/50" delay={0.3} />
+          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-green bg-green/10 px-3 py-1 rounded-full mb-3">
+            <span>04 / Career &amp; Education</span>
+          </div>
+          <div>
+            <motion.h2
+              variants={slideUp}
+              className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+            >
+              Where I&apos;ve Worked
+            </motion.h2>
+          </div>
+          <SketchUnderline width={180} className="text-green/50" delay={0.2} />
         </div>
 
         <QueryContent

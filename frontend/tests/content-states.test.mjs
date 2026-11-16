@@ -59,7 +59,7 @@ test('the mobile navigation button exposes the collapsed state, identifies its p
 
   assert.match(html, /<button[^>]+aria-controls="mobile-navigation"[^>]+aria-expanded="false"/);
   assert.match(html, /id="mobile-navigation"/);
-  assert.match(html, /href="mailto:faisalhanafi98@gmail\.com\?subject=Resume%20Request[^"]*"[^>]*>Request Resume/);
+  assert.match(html, /href="mailto:faisalhanafi\.dev@gmail\.com\?subject=Resume%20Request[^"]*"[^>]*>Request Resume/);
   assert.doesNotMatch(html, /href="\/resume\.pdf"/);
 });
 
