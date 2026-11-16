@@ -74,7 +74,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
       {(project.problemStatement || project.solution) && (
         <motion.div
           variants={slideUp}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
         >
           {project.problemStatement && (
             <section className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
@@ -82,7 +82,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
                 01 / Context &amp; Problem
               </p>
               <h2 className="text-xl font-semibold text-charcoal mb-3">
-                The Problem
+                What This Project Is About
               </h2>
               <p className="text-charcoal-light leading-relaxed break-words">
                 {project.problemStatement}
@@ -92,11 +92,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
           {project.solution && (
             <section className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
-              <p className="font-mono text-xs uppercase tracking-wider text-green font-semibold mb-2">
+              <p className="font-mono text-xs uppercase tracking-wider text-blue font-semibold mb-2">
                 02 / Approach &amp; Delivery
               </p>
               <h2 className="text-xl font-semibold text-charcoal mb-3">
-                The Solution
+                What I Did &amp; Built
               </h2>
               <p className="text-charcoal-light leading-relaxed break-words">
                 {project.solution}
@@ -104,6 +104,24 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
             </section>
           )}
         </motion.div>
+      )}
+
+      {/* Business & Operational Outcome First */}
+      {project.costJustification && (
+        <motion.section
+          variants={slideUp}
+          className="mb-12 bg-green/5 p-6 md:p-8 rounded-xl border-2 border-green/30 shadow-sm min-w-0"
+        >
+          <p className="font-mono text-xs uppercase tracking-wider text-green font-semibold mb-2">
+            05 / Operational Reality &amp; Outcome
+          </p>
+          <h2 className="text-2xl font-semibold text-charcoal mb-2">
+            Why It Matters (Business &amp; Human Result)
+          </h2>
+          <p className="text-charcoal font-medium leading-relaxed break-words">
+            {project.costJustification}
+          </p>
+        </motion.section>
       )}
 
       {/* Architecture Decisions */}
@@ -169,25 +187,11 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
         </motion.section>
       )}
 
-      {/* Cost Justification & Full Description */}
+      {/* Full Description */}
       <motion.div variants={slideUp} className="grid grid-cols-1 gap-6 mb-12">
-        {project.costJustification && (
-          <section className="bg-cream-dark/60 p-6 rounded-xl border border-cream-darker min-w-0">
-            <p className="font-mono text-xs uppercase tracking-wider text-charcoal font-semibold mb-2">
-              05 / Operational Reality &amp; Outcome
-            </p>
-            <h2 className="text-xl font-semibold text-charcoal mb-2">
-              Cost &amp; Infrastructure
-            </h2>
-            <p className="text-charcoal-light leading-relaxed break-words">
-              {project.costJustification}
-            </p>
-          </section>
-        )}
-
         <section className="bg-white p-6 rounded-xl border border-cream-darker/60 min-w-0">
           <h2 className="text-xl font-semibold text-charcoal mb-3">
-            About This Project
+            Full Project Overview
           </h2>
           <div className="text-charcoal-light leading-relaxed space-y-4 break-words">
             <p>{project.fullDescription}</p>

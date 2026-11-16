@@ -4,31 +4,62 @@ import { staggerContainer, heroTextReveal, letterReveal } from '../../lib/animat
 import SketchUnderline from '../ui/SketchUnderline';
 import { SketchStar } from '../ui/SketchDoodles';
 
+const businessPillars = [
+  {
+    step: '01 / DATA & BI',
+    title: 'Turn Messy Data Into Trusted Decisions',
+    summary:
+      'Profile, clean, and reconcile thousands of inconsistent spreadsheets, legacy exports, or financial statements into standardized schemas and Power BI dashboards.',
+    proof: 'Proven across 5,687 sheets at AEM Enersol & internal BI at Accenture',
+    accent: 'border-blue/30 bg-blue/5 text-blue',
+  },
+  {
+    step: '02 / WORKFLOW SOFTWARE',
+    title: 'Replace Manual Spreadsheets With Reliable Apps',
+    summary:
+      'Build role-based web applications, approval pipelines, and validation rules so teams stop losing records across email threads and shared Excel files.',
+    proof: 'Proven on 20,000+ candidate records in Auto-Recruit & 25 models in CREAMS',
+    accent: 'border-pink/30 bg-pink/5 text-pink',
+  },
+  {
+    step: '03 / AUTOMATION & AI',
+    title: 'Automate Constrained Operations Safely',
+    summary:
+      'Deliver zero-extra-license cleanroom/workstation automations, equipment-data links, and guardrailed AI pipelines backed by deterministic math and audit trails.',
+    proof: 'Proven on ASE’s semiconductor test floor (~88.5% faster reporting) & RinggitSense',
+    accent: 'border-green/30 bg-green/5 text-green',
+  },
+];
+
 export default function HeroSection() {
   const nameText = 'Faisal Hanafi.';
 
   return (
-    <section id="intro" className="min-h-screen flex items-center justify-center px-6 pt-20 relative">
+    <section id="intro" className="min-h-screen flex items-center justify-center px-6 pt-28 pb-20 relative">
       {/* Decorative sketch star */}
-      <div className="absolute top-32 right-12 text-pink/30 hidden lg:block">
-        <SketchStar delay={2} />
+      <div className="absolute top-32 right-12 text-pink/30 hidden lg:block" aria-hidden="true">
+        <SketchStar delay={0.8} />
       </div>
 
       <motion.div
-        className="max-w-4xl relative"
+        className="max-w-6xl w-full relative"
         variants={staggerContainer}
         initial="hidden"
         animate="visible"
       >
-        <motion.p
-          variants={heroTextReveal}
-          className="font-hand text-blue text-xl md:text-2xl mb-5"
-        >
-          Hi, my name is
-        </motion.p>
+        {/* Top Status & Location Pill */}
+        <motion.div variants={heroTextReveal} className="mb-5 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green/10 border border-green/30 font-mono text-xs font-medium text-green">
+            <span className="w-2 h-2 rounded-full bg-green animate-pulse" aria-hidden="true" />
+            Available Immediately · Kuala Lumpur / Klang Valley
+          </span>
+          <span className="font-mono text-xs text-charcoal-light px-3 py-1.5 rounded-full bg-cream-dark border border-cream-darker">
+            Data Engineering · Full-Stack Software · Process Automation
+          </span>
+        </motion.div>
 
         {/* Name with letter-by-letter reveal */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-charcoal mb-2">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-charcoal mb-2 tracking-tight">
           {nameText.split('').map((char, index) => (
             <motion.span
               key={`${char}-${index}`}
@@ -42,88 +73,99 @@ export default function HeroSection() {
           ))}
         </h1>
 
-        {/* Hand-drawn underline under name */}
-        <div className="mb-6">
-          <SketchUnderline width={150} className="text-blue/40" delay={1.2} />
+        <div className="mb-5">
+          <SketchUnderline width={160} className="text-blue/40" delay={0.4} />
         </div>
 
         <motion.h2
           variants={heroTextReveal}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal-light mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-charcoal-light mb-6 max-w-4xl leading-tight"
         >
-          I build systems around data, software, and decisions.
+          I turn messy data and manual workflows into{' '}
+          <span className="text-charcoal">software teams actually rely on.</span>
         </motion.h2>
 
         <motion.p
           variants={heroTextReveal}
-          className="text-charcoal-light max-w-2xl text-lg mb-12 leading-relaxed"
+          className="text-charcoal-light max-w-3xl text-base md:text-lg mb-8 leading-relaxed"
         >
-          I&apos;m a <span className="text-charcoal font-medium">data science graduate</span> who
-          grew into software engineering through enterprise delivery, financial curiosity, and a
-          habit of caring deeply about how systems handle real people, real data, and real money.
-          {' '}Currently building at{' '}
-          <a
-            href="https://www.accenture.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue hover:text-blue-dark link-underline transition-colors"
-          >
-            Accenture
-          </a>
-          , while exploring better tools for analytics, AI, and financial clarity.
+          Computer Science (Data Science) graduate from{' '}
+          <span className="text-charcoal font-medium">IIUM</span> with hands-on delivery across{' '}
+          <span className="text-charcoal font-medium">Accenture Technology Malaysia</span> (enterprise
+          React/TypeScript/SPFx apps &amp; internal Power BI),{' '}
+          <span className="text-charcoal font-medium">ASE Electronics Penang</span> (semiconductor test-floor
+          reporting automation &amp; SECS/GEM equipment-data integration), and{' '}
+          <span className="text-charcoal font-medium">AEM Enersol</span> (industrial R/Python ETL &amp;
+          migration reconciliation).
         </motion.p>
 
-        <motion.div variants={heroTextReveal} className="flex gap-4 flex-wrap">
+        {/* Primary CTAs + Instant Recruiter Links */}
+        <motion.div variants={heroTextReveal} className="flex flex-wrap items-center gap-4 mb-12">
           <Button href="#projects" size="lg">
-            View My Work
+            See What I Can Build For You
           </Button>
           <Button href="#about" variant="ghost" size="lg">
-            Learn More
+            How I Work (Story &amp; Process)
           </Button>
-        </motion.div>
-
-        {/* Engineering Proof Tape */}
-        <motion.div
-          variants={heroTextReveal}
-          className="mt-14 p-5 md:p-6 rounded-2xl bg-white/90 border-2 border-cream-darker/70 backdrop-blur-sm shadow-sm grid grid-cols-2 md:grid-cols-4 gap-6"
-        >
-          <div className="min-w-0">
-            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">6 Systems</div>
-            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
-              CREAMS · Auto-Recruit · BAiTI · RinggitSense · Sen2Nal · Portfolio
-            </div>
-          </div>
-          <div className="min-w-0">
-            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">Enterprise</div>
-            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
-              Accenture SPFx &amp; BI Delivery
-            </div>
-          </div>
-          <div className="min-w-0">
-            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">Full-Stack</div>
-            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
-              Spring Boot · FastAPI · Laravel · React
-            </div>
-          </div>
-          <div className="min-w-0">
-            <div className="font-mono text-2xl md:text-3xl font-bold text-charcoal">AI &amp; Security</div>
-            <div className="text-xs font-medium text-charcoal-light uppercase tracking-wider mt-1">
-              PostgreSQL RLS · 6-Agent Pipelines
-            </div>
+          <div className="flex items-center gap-2 sm:ml-2 pt-2 sm:pt-0">
+            <a
+              href="https://github.com/FaisalHanafi98"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-lg bg-white border border-cream-darker text-charcoal-light hover:text-blue hover:border-blue/40 font-mono text-xs transition-[color,border-color] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+            >
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/faisalhanafidsa0105/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-lg bg-white border border-cream-darker text-charcoal-light hover:text-blue hover:border-blue/40 font-mono text-xs transition-[color,border-color] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+            >
+              <span>LinkedIn</span>
+            </a>
+            <a
+              href="mailto:faisalhanafi.dev@gmail.com"
+              className="px-3.5 py-2.5 min-h-[44px] inline-flex items-center gap-2 rounded-lg bg-white border border-cream-darker text-charcoal-light hover:text-blue hover:border-blue/40 font-mono text-xs transition-[color,border-color] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+            >
+              <span>Email Me</span>
+            </a>
           </div>
         </motion.div>
-      </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.div
-        aria-hidden="true"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2"
-        initial={{ opacity: 0, y: -6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <span className="text-charcoal-light text-xs font-mono tracking-wider">SCROLL</span>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-charcoal-light/60 to-transparent" />
+        {/* What I Can Do For Your Business — 3 Value Pillars */}
+        <motion.div variants={heroTextReveal}>
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-charcoal-light font-semibold">
+              How I Deliver Value to a Business Team
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {businessPillars.map((pillar) => (
+              <div
+                key={pillar.step}
+                className="p-6 rounded-2xl bg-white/95 border-2 border-cream-darker/80 shadow-sm hover:border-blue/40 transition-[border-color,box-shadow] duration-200 flex flex-col justify-between min-w-0"
+              >
+                <div>
+                  <span
+                    className={`inline-block font-mono text-xs font-semibold px-2.5 py-1 rounded-md border mb-3 ${pillar.accent}`}
+                  >
+                    {pillar.step}
+                  </span>
+                  <h3 className="text-lg font-bold text-charcoal mb-2 break-words">
+                    {pillar.title}
+                  </h3>
+                  <p className="text-sm text-charcoal-light leading-relaxed mb-4 break-words">
+                    {pillar.summary}
+                  </p>
+                </div>
+                <div className="pt-3 border-t border-cream-darker/60 font-mono text-xs text-charcoal font-medium break-words">
+                  &#10003; {pillar.proof}
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );

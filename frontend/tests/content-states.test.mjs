@@ -176,3 +176,27 @@ test('home keeps cached projects, skills and experience visible after refresh fa
   }
   assert.equal(html.match(/Showing the last loaded result/g)?.length, 3);
 });
+
+test('about section renders the interactive story carousel and omits static academic stat boxes', () => {
+  const html = renderHome([]);
+
+  assert.match(html, /How I Think, Work &amp; Build/);
+  assert.match(html, /role="tablist"[^>]+aria-label="Professional story chapters"/);
+  assert.match(html, /Spot the Friction, Build the Structure/);
+  assert.doesNotMatch(html, /Dean&#x27;s List Semesters|FYP Recognition/);
+});
+
+test('projects section filters out the portfolio entry and leads with What It Is About, What I Did, and Why People Care', () => {
+  const projectsList = [
+    { ...project, id: 10, slug: 'auto-recruit', title: 'Auto-Recruit', featured: true },
+    { ...project, id: 11, slug: 'portfolio', title: 'Portfolio Self Entry', featured: true },
+  ];
+  const html = renderHome([[['projects'], { status: 'success', data: projectsList }]]);
+
+  assert.match(html, /Auto-Recruit/);
+  assert.match(html, /01 \/ What This Project Is About/);
+  assert.match(html, /02 \/ What I Did/);
+  assert.match(html, /03 \/ Why People Care/);
+  assert.doesNotMatch(html, /Portfolio Self Entry/);
+});
+

@@ -10,6 +10,15 @@ const categoryColors = ['text-blue', 'text-pink', 'text-green', 'text-purple', '
 const categoryBorders = ['border-blue/20 hover:border-blue/40', 'border-pink/20 hover:border-pink/40', 'border-green/20 hover:border-green/40', 'border-purple/20 hover:border-purple/40', 'border-coral/20 hover:border-coral/40'];
 const categoryBgs = ['hover:bg-blue/5', 'hover:bg-pink/5', 'hover:bg-green/5', 'hover:bg-purple/5', 'hover:bg-coral/5'];
 
+const certifications = [
+  'Microsoft Certified: Power BI Data Analyst Associate (PL-300)',
+  'Microsoft Certified: Azure Data Fundamentals (DP-900)',
+  'Microsoft Certified: Azure Fundamentals (AZ-900)',
+  'AWS Certified Cloud Practitioner',
+  'AWS Academy Cloud Architecting & Foundations',
+  'APU Certified Cloud Solutions Architect',
+];
+
 export default function SkillsSection() {
   const query = useSkills();
 
@@ -78,6 +87,23 @@ export default function SkillsSection() {
             </motion.div>
           )}
         </QueryContent>
+
+        {/* Certifications & Credentials Bank */}
+        <div className="mt-10 bg-white/95 p-6 rounded-xl border border-cream-darker shadow-sm">
+          <h3 className="text-lg font-semibold mb-4 font-hand text-xl text-blue">
+            Certifications &amp; Cloud Credentials
+          </h3>
+          <div className="flex flex-wrap gap-2.5">
+            {certifications.map((cert) => (
+              <span
+                key={cert}
+                className="px-3.5 py-2 rounded-lg bg-cream/70 border border-cream-darker font-mono text-xs text-charcoal font-medium"
+              >
+                &#10003; {cert}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </AnimatedSection>
   );

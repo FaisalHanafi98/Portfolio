@@ -13,7 +13,7 @@ Faisal connects a frontend, an API, and a database into a working product.
 
 | Area | What the checkout contains |
 |---|---|
-| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents an introduction, projects, skills, experience, and contact links with distinct numbered section headers (`01`–`05`) and alternating surfaces. React Router serves project details at `/projects/:slug`. The seed includes CREAMS, Auto-Recruit, BAiTI, RinggitSense, Sen2Nal, and Portfolio. |
+| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents a business-value introduction (`01 / DATA & BI`, `02 / WORKFLOW SOFTWARE`, `03 / AUTOMATION & AI`), an interactive 5-chapter story and 4-step engineering process carousel (`About`), a dual-view (`Business & Impact View` vs. `+ Engineering Depth`) showcase of 5 real business systems (`Auto-Recruit`, `CREAMS`, `RinggitSense`, `BAiTI`, `Sen2Nal` — omitting the self-referential `Portfolio` entry), skills with a Cloud & BI Certifications strip, all 4 chronological career/academic experiences (`ASE Electronics`, `Accenture Technology Malaysia`, `AEM Enersol`, `IIUM`), and contact links (`faisalhanafi.dev@gmail.com`). React Router serves project details at `/projects/:slug`. |
 | API and data | Java 21 and Spring Boot 3.4 expose versioned, read-only JSON endpoints for health, project summaries and details, skill categories, and experience. Spring Data JPA reads the stored content. The application seeds the database on startup when no projects exist. |
 | Runtime | Standalone development uses H2 and a Spring backend on port `8081`. Local Compose is configured to use PostgreSQL, a Spring backend on `8080`, and an Nginx frontend on `3000` that forwards `/api/` to Spring. |
 | Verification | The GitHub Actions workflow defines backend build and tests, frontend type-check, lint, tests and build, and a Compose smoke test covering API health, project list and detail, and the direct CREAMS page URL through Nginx. |
@@ -41,6 +41,21 @@ Faisal connects a frontend, an API, and a database into a working product.
   with verified project/experience facts, and the navbar provides an explicit
   `"Request Resume"` email action until a PDF asset is configured via
   `VITE_RESUME_URL`. [November 2026 session record](02_SESSION_HISTORY/2026-11-16_ui_motion_and_credibility_polish.md)
+- Candidate Intelligence Profile (`CIP-2026-11-11.2`) and business-first UX
+  overhaul completed on 17 November 2026:
+  - Added the missing `ASE Electronics (M) Sdn. Bhd.` industrial OJT (`Jul 2026 – Oct 2026`)
+    alongside `Accenture Technology Malaysia` (including internal Power BI / Power Query / DAX),
+    `AEM Enersol Sdn. Bhd.` (5,687-sheet Halliburton ETL, strikethrough semantics, WORA 7/WEQR),
+    and `IIUM`, plus the Cloud & BI Certifications strip (`PL-300`, `DP-900`, `AZ-900`, `AWS CCP`).
+  - Redesigned `AboutSection.tsx` into an interactive 5-chapter story and 4-step
+    engineering process carousel (`role="tablist"` with keyboard/button navigation),
+    removing the 5-paragraph wall of text and the 3 static academic stat boxes.
+  - Reframed `ProjectsSection.tsx`, `FeaturedProject.tsx`, and `ProjectDetail.tsx`
+    around three plain-English business questions (`01 / What This Project Is About`,
+    `02 / What I Did`, `03 / Why People Care`) with a Dual-View Toggle
+    (`Business & Impact View` vs. `+ Engineering Depth`), and removed `Portfolio`
+    from the featured projects showcase.
+  [November 2026 session record](02_SESSION_HISTORY/2026-11-16_ui_motion_and_credibility_polish.md)
 - Compose now uses the PostgreSQL-compatible Spring profile and a single
   executable backend JAR. The new CI smoke job is defined locally.
   [Compose configuration](../../docker-compose.yml) ·

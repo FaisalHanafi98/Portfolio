@@ -1,143 +1,353 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '../ui/AnimatedSection';
-import { slideUp, staggerContainer } from '../../lib/animations';
+import { slideUp } from '../../lib/animations';
 import SketchUnderline from '../ui/SketchUnderline';
 
-const stats = [
-  { label: 'Dean\'s List Semesters', value: '9', color: 'text-blue' },
-  { label: 'Page Load Improvement', value: '68%', color: 'text-pink' },
-  { label: 'FYP Recognition', value: 'Gold', color: 'text-green' },
+interface StorySlide {
+  id: string;
+  chapter: string;
+  shortTab: string;
+  title: string;
+  subtitle: string;
+  story: string;
+  processStep: string;
+  processDetail: string;
+  businessValue: string;
+  tags: string[];
+  accentColor: string;
+  badgeClass: string;
+}
+
+const storySlides: StorySlide[] = [
+  {
+    id: 'core-habit',
+    chapter: 'Chapter 01 / 05',
+    shortTab: '01. The Core Habit',
+    title: 'Spot the Friction, Build the Structure',
+    subtitle: 'How I approach every team and business problem',
+    story:
+      'Every organization has a workflow people quietly dread — copying 35 fields between legacy windows, chasing candidate approvals across email threads, or fixing the same broken spreadsheet every Friday. I notice where a process is painful to use, and I build the system that makes it effortless.',
+    processStep: 'Step 1: Observe the Real Workflow First',
+    processDetail:
+      'Before touching code or schemas, I trace where human time is wasted, where handoffs drop records, and what the end user actually needs on their screen.',
+    businessValue:
+      'You get an engineer who cares about whether the tool actually saves your team time — not someone who just closes tickets in isolation.',
+    tags: ['Workflow Discovery', 'Process Redesign', 'User-First Engineering'],
+    accentColor: 'text-blue',
+    badgeClass: 'bg-blue/10 text-blue border-blue/30',
+  },
+  {
+    id: 'dirty-data',
+    chapter: 'Chapter 02 / 05',
+    shortTab: '02. Data & ETL',
+    title: 'Make Messy Data Trustworthy First',
+    subtitle: 'AEM Enersol & Enterprise BI Foundation',
+    story:
+      'Dashboards and AI are useless if nobody trusts the numbers underneath. At AEM Enersol, we faced 5,687 historical petroleum Excel sheets across 43 inconsistent templates — where even a strikethrough font meant a technical value had been superseded.',
+    processStep: 'Step 2: Profile, Standardize & Reconcile',
+    processDetail:
+      'I use R, Python, SQL, Regex, and Power Query to profile raw sources, catch formatting semantics (like strikethroughs or same-day refunds), and reconcile before-and-after migration counts.',
+    businessValue:
+      'Decision-makers and analysts get clean, standardized datasets and Power BI views they can act on without second-guessing the underlying math.',
+    tags: ['R & Python ETL', 'SQL & Schema Mapping', 'Power BI (M & DAX)', 'Data QA/QC'],
+    accentColor: 'text-purple',
+    badgeClass: 'bg-purple/10 text-purple border-purple/30',
+  },
+  {
+    id: 'enterprise-scale',
+    chapter: 'Chapter 03 / 05',
+    shortTab: '03. Enterprise Apps',
+    title: 'Build Software That Survives Real Scale',
+    subtitle: 'Accenture Technology Malaysia Delivery',
+    story:
+      'At Accenture, I was tasked with building a SharePoint & React recruitment platform despite having zero prior React experience. When our early prototype grew into a sluggish 2,520-line file, I worked with the team to refactor it into 50+ modular components and 10 service layers.',
+    processStep: 'Step 3: Separate State, Services & Validation',
+    processDetail:
+      'By splitting state into focused contexts, enforcing strict TypeScript types, and engineering server-side pagination around SharePoint’s 5,000-item limit, we scaled smoothly to 20,000+ candidate records.',
+    businessValue:
+      'Your business gets software that stays fast as data grows — and a clean, modular codebase that any developer on your team can maintain.',
+    tags: ['React & TypeScript', 'SPFx & Fluent UI', 'RBAC & Validation', 'Performance Tuning'],
+    accentColor: 'text-pink',
+    badgeClass: 'bg-pink/10 text-pink border-pink/30',
+  },
+  {
+    id: 'constrained-automation',
+    chapter: 'Chapter 04 / 05',
+    shortTab: '04. Floor Automation',
+    title: 'Automate Under Real-World Constraints',
+    subtitle: 'ASE Electronics Semiconductor Test Operations',
+    story:
+      'On ASE’s cleanroom test floor in Penang, strict security meant we couldn’t install external libraries or query databases directly — yet staff spent 45 minutes manually compiling remnant buffer reports and tracking 400+ electrical testers.',
+    processStep: 'Step 4: Deliver With Zero Extra Dependencies',
+    processDetail:
+      'Working strictly with installed Excel, 64-bit VBA7, native Win32 APIs, and SECS/GEM equipment signals, I automated legacy query clients, reconciled 400+ testers, and supported equipment state/downtime tracking.',
+    businessValue:
+      'Even in locked-down corporate or factory environments, I find safe, zero-license-cost ways to eliminate repetitive manual work.',
+    tags: ['Excel VBA7 & Win32', 'SECS/GEM Context', 'Inventory Reconciliation', 'Hardware & PC Builds'],
+    accentColor: 'text-green',
+    badgeClass: 'bg-green/10 text-green border-green/30',
+  },
+  {
+    id: 'guardrailed-ai',
+    chapter: 'Chapter 05 / 05',
+    shortTab: '05. Guardrailed AI',
+    title: 'Why Accuracy & Protection Are Personal to Me',
+    subtitle: 'RinggitSense, BAiTI, CREAMS & Sen2Nal',
+    story:
+      'Losing money to a scam earlier in life made financial clarity and data protection deeply personal to me. I saw firsthand what happens when systems are opaque, permissions are sloppy, or tools present guesswork as fact.',
+    processStep: 'Step 5: Deterministic Rules First, Bounded AI Second',
+    processDetail:
+      'In my full-stack and AI systems, I enforce database-level tenant isolation (PostgreSQL RLS / CentreScope), exact decimal arithmetic, and explicit [NEEDS INPUT] boundaries whenever AI encounters ambiguous data.',
+    businessValue:
+      'You get modern AI and full-stack capabilities engineered with accountability, privacy, and audit trails built in from day one.',
+    tags: ['Spring Boot & FastAPI', 'Laravel & MySQL', 'PostgreSQL FORCE RLS', 'Multi-Agent Claude & FinBERT'],
+    accentColor: 'text-blue',
+    badgeClass: 'bg-blue/10 text-blue border-blue/30',
+  },
 ];
 
-const technologies = [
-  'Java 21 / Spring Boot',
-  'Python / FastAPI',
-  'TypeScript / React 18',
-  'SharePoint SPFx',
-  'PostgreSQL (FORCE RLS)',
-  'Laravel / MySQL',
-  'Multi-Agent AI Pipelines',
-  'Power BI / DAX',
+const processSteps = [
+  {
+    step: '01',
+    name: 'Diagnose the Bottleneck',
+    desc: 'Sit with the real workflow to find where manual effort, spreadsheets, or handoffs break down.',
+  },
+  {
+    step: '02',
+    name: 'Clean & Model the Data',
+    desc: 'Profile raw inputs, handle edge-case formatting, and lock in a schema that preserves business truth.',
+  },
+  {
+    step: '03',
+    name: 'Build Within Constraints',
+    desc: 'Whether it’s Spring Boot, FastAPI, SPFx, or locked-down cleanroom VBA, build for the reality on the ground.',
+  },
+  {
+    step: '04',
+    name: 'Verify & Hand Over',
+    desc: 'Prove parity against real records, write automated checks, and document clearly so teams can own it.',
+  },
 ];
 
 export default function AboutSection() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const currentSlide = storySlides[activeIndex];
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev === 0 ? storySlides.length - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev === storySlides.length - 1 ? 0 : prev + 1));
+  };
+
   return (
     <AnimatedSection
       id="about"
-      className="py-24 px-6 bg-white/85 border-y-2 border-cream-darker/80 relative"
+      className="py-24 px-6 bg-white/90 border-y-2 border-cream-darker/80 relative"
     >
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-12">
-          <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-blue bg-blue/10 px-3 py-1 rounded-full mb-3">
-            <span>01 / Profile &amp; Background</span>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
-            <motion.h2
-              variants={slideUp}
-              className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
-            >
-              About Me
-            </motion.h2>
+            <div className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-blue bg-blue/10 px-3 py-1 rounded-full mb-3">
+              <span>01 / Story &amp; Engineering Process</span>
+            </div>
+            <div>
+              <motion.h2
+                variants={slideUp}
+                className="text-3xl md:text-4xl font-bold text-charcoal mb-3 inline-block"
+              >
+                How I Think, Work &amp; Build
+              </motion.h2>
+            </div>
+            <SketchUnderline width={160} className="text-blue/50" delay={0.2} />
           </div>
-          <SketchUnderline width={120} className="text-blue/50" delay={0.2} />
+          <p className="text-sm text-charcoal-light max-w-md font-mono">
+            Swipe or click through the 5 chapters below to see how my work evolved from data extraction to enterprise software and automation.
+          </p>
         </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="md:col-span-2 space-y-4"
-            >
-              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                I&apos;m Faisal, a <span className="text-charcoal font-medium">Data Science graduate</span>{' '}
-                based in Kuala Lumpur who ended up building at the intersection of analytics,
-                software, and business systems. I like taking problems that feel messy at first,
-                whether they live in a workflow, a dataset, or a financial decision, and turning
-                them into something clearer and more useful.
-              </motion.p>
-
-              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Academically, I graduated from{' '}
-                <span className="text-blue font-medium">International Islamic University Malaysia</span>{' '}
-                with a CGPA of 3.72, made the Dean&apos;s List for 9 semesters, and received a{' '}
-                <span className="text-pink font-medium">Gold Medal</span> for my final year project.
-                What stayed with me most from that chapter was the moment I realized that building
-                the right system can support progress in people&apos;s lives, not just check a technical
-                box.
-              </motion.p>
-
-              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Professionally, I work inside enterprise delivery at{' '}
-                <span className="text-blue font-medium">Accenture Technology Malaysia</span>, where
-                I&apos;ve learned how much trust depends on speed, validation, usability, and clean
-                reporting. I don&apos;t just want systems that run, I want systems people can rely on
-                when the stakes are real.
-              </motion.p>
-
-              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                I&apos;m also unusually careful with money and transactions, partly by temperament and
-                partly because I know what it feels like to lose a substantial amount to a scam.
-                That experience made financial clarity deeply personal to me. It&apos;s a big reason
-                I&apos;m drawn to analytics, market tools, anomaly detection, and AI-driven financial
-                systems that could one day help other people protect themselves better too.
-              </motion.p>
-
-              <motion.p variants={slideUp} className="text-charcoal-light leading-relaxed">
-                Here are a few areas I&apos;ve been working across recently:
-              </motion.p>
-
-              <motion.ul
-                variants={slideUp}
-                className="grid grid-cols-2 gap-2 font-mono text-sm"
+        {/* Interactive Chapter Tabs */}
+        <div
+          role="tablist"
+          aria-label="Professional story chapters"
+          className="flex items-center gap-2 overflow-x-auto pb-3 mb-6"
+        >
+          {storySlides.map((slide, idx) => {
+            const isSelected = idx === activeIndex;
+            return (
+              <button
+                key={slide.id}
+                type="button"
+                role="tab"
+                aria-selected={isSelected}
+                aria-controls={`story-panel-${slide.id}`}
+                id={`story-tab-${slide.id}`}
+                onClick={() => setActiveIndex(idx)}
+                className={`px-4 py-2.5 min-h-[44px] rounded-xl font-mono text-xs whitespace-nowrap border transition-[background-color,color,border-color,transform] duration-150 ease-out active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
+                  isSelected
+                    ? 'bg-charcoal text-cream border-charcoal font-semibold shadow-sm'
+                    : 'bg-cream/70 text-charcoal-light border-cream-darker hover:bg-cream-dark hover:text-charcoal'
+                }`}
               >
-                {technologies.map((tech) => (
-                  <li key={tech} className="flex items-center gap-2 text-charcoal-light">
-                    <span className="text-blue">&#9656;</span>
-                    {tech}
-                  </li>
-                ))}
-              </motion.ul>
-            </motion.div>
+                {slide.shortTab}
+              </button>
+            );
+          })}
+        </div>
 
+        {/* Main Story Carousel Card */}
+        <div
+          className="bg-cream/60 rounded-2xl border-2 border-cream-darker p-6 md:p-10 shadow-sm relative overflow-hidden"
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowLeft') handlePrev();
+            if (e.key === 'ArrowRight') handleNext();
+          }}
+        >
+          {/* Progress Bar */}
+          <div className="w-full h-1.5 bg-cream-darker rounded-full overflow-hidden mb-8" aria-hidden="true">
+            <div
+              className="h-full bg-blue transition-[width] duration-200 ease-out rounded-full"
+              style={{ width: `${((activeIndex + 1) / storySlides.length) * 100}%` }}
+            />
+          </div>
+
+          <AnimatePresence mode="wait">
             <motion.div
-              variants={slideUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="relative group"
+              key={currentSlide.id}
+              id={`story-panel-${currentSlide.id}`}
+              role="tabpanel"
+              aria-labelledby={`story-tab-${currentSlide.id}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
             >
-              <div className="relative z-10 rounded-xl overflow-hidden border-2 border-cream-darker">
-                <div className="aspect-square bg-cream-dark flex items-center justify-center">
-                  <span className="text-6xl">&#128104;&#8205;&#128187;</span>
+              {/* Left Column: Narrative Story */}
+              <div className="lg:col-span-7 min-w-0">
+                <div className="flex flex-wrap items-center gap-3 mb-3">
+                  <span
+                    className={`font-mono text-xs font-semibold px-3 py-1 rounded-full border ${currentSlide.badgeClass}`}
+                  >
+                    {currentSlide.chapter}
+                  </span>
+                  <span className="font-mono text-xs text-charcoal-light">
+                    {currentSlide.subtitle}
+                  </span>
+                </div>
+
+                <h3 className="text-2xl md:text-3xl font-bold text-charcoal mb-4 break-words">
+                  {currentSlide.title}
+                </h3>
+
+                <p className="text-charcoal text-base md:text-lg leading-relaxed mb-6 break-words">
+                  {currentSlide.story}
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {currentSlide.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-xs px-3 py-1 rounded-full bg-white border border-cream-darker text-charcoal-light"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </div>
               </div>
-              <div className="absolute inset-0 border-2 border-blue/30 rounded-xl translate-x-4 translate-y-4 -z-10 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-300" />
-            </motion.div>
-          </div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 mt-16"
-          >
-            {stats.map((stat) => (
-              <motion.div
-                key={stat.label}
-                variants={slideUp}
-                className="text-center p-6 rounded-xl bg-white border border-cream-darker/60 hover:shadow-md transition-shadow duration-200 min-w-0"
-              >
-                <div className={`text-3xl md:text-4xl font-bold mb-2 ${stat.color}`}>
-                  {stat.value}
+              {/* Right Column: Process & Business Value Breakdown */}
+              <div className="lg:col-span-5 space-y-4 min-w-0">
+                <div className="bg-white p-5 rounded-xl border border-cream-darker shadow-sm">
+                  <p className={`font-mono text-xs uppercase tracking-wider font-semibold mb-1.5 ${currentSlide.accentColor}`}>
+                    {currentSlide.processStep}
+                  </p>
+                  <p className="text-sm text-charcoal-light leading-relaxed break-words">
+                    {currentSlide.processDetail}
+                  </p>
                 </div>
-                <div className="text-sm text-charcoal-light font-mono break-words">{stat.label}</div>
-              </motion.div>
-            ))}
-          </motion.div>
+
+                <div className="bg-white p-5 rounded-xl border-2 border-charcoal/15 shadow-sm">
+                  <p className="font-mono text-xs uppercase tracking-wider font-semibold text-charcoal mb-1.5">
+                    Why This Matters to an Employer
+                  </p>
+                  <p className="text-sm text-charcoal font-medium leading-relaxed break-words">
+                    {currentSlide.businessValue}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Carousel Controls Footer */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mt-8 pt-6 border-t border-cream-darker">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handlePrev}
+                aria-label="Previous story chapter"
+                className="px-4 py-2 min-h-[44px] rounded-lg bg-white border border-cream-darker text-charcoal font-mono text-xs font-medium hover:border-blue hover:text-blue active:scale-[0.98] transition-[color,border-color,transform] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+              >
+                &larr; Previous
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                aria-label="Next story chapter"
+                className="px-4 py-2 min-h-[44px] rounded-lg bg-charcoal text-cream font-mono text-xs font-medium hover:bg-charcoal-light active:scale-[0.98] transition-[background-color,transform] duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+              >
+                Next Chapter &rarr;
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {storySlides.map((slide, idx) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  onClick={() => setActiveIndex(idx)}
+                  aria-label={`Go to ${slide.shortTab}`}
+                  className="p-2 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue"
+                >
+                  <span
+                    className={`block rounded-full transition-all duration-200 ${
+                      idx === activeIndex ? 'w-6 h-2 bg-blue' : 'w-2 h-2 bg-charcoal-lighter'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </AnimatedSection>
+
+        {/* 4-Step Professional Workflow Strip */}
+        <div className="mt-12">
+          <p className="font-mono text-xs uppercase tracking-widest text-charcoal-light font-semibold mb-4">
+            My 4-Step Engineering Process on Every Project
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {processSteps.map((item) => (
+              <div
+                key={item.step}
+                className="p-5 rounded-xl bg-cream/40 border border-cream-darker/80 min-w-0"
+              >
+                <div className="font-mono text-xs font-bold text-blue mb-1">
+                  STEP {item.step}
+                </div>
+                <h4 className="text-base font-bold text-charcoal mb-1.5 break-words">
+                  {item.name}
+                </h4>
+                <p className="text-xs text-charcoal-light leading-relaxed break-words">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </AnimatedSection>
   );
 }
