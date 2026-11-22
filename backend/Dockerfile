@@ -5,7 +5,7 @@ COPY gradle/ gradle/
 COPY gradlew build.gradle settings.gradle ./
 RUN chmod +x gradlew && ./gradlew dependencies --no-daemon || true
 COPY src/ src/
-RUN ./gradlew clean build -x test --no-daemon
+RUN ./gradlew bootJar --no-daemon
 
 # Stage 2: Run
 FROM eclipse-temurin:21-jre

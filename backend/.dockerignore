@@ -1,6 +1,7 @@
 .git
 .gitignore
 .gradle
+.gradle-home
 build
 *.md
 .idea
