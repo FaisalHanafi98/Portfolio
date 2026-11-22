@@ -1,8 +1,9 @@
-import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
+import NotFoundPage from './pages/NotFoundPage';
 
 // Lazy load the project detail page — only needed when user navigates to /projects/:slug
 const ProjectPage = lazy(() => import('./pages/ProjectPage'));
@@ -17,6 +18,16 @@ function LazyFallback() {
 }
 
 function App() {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (hash) {
+      document.getElementById(hash.slice(1))?.scrollIntoView();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
+  }, [pathname, hash]);
+
   return (
     <MotionConfig reducedMotion="user">
       <Layout>
@@ -25,6 +36,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/projects/:slug" element={<ProjectPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
         </AnimatePresence>

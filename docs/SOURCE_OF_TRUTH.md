@@ -86,6 +86,26 @@ backup and the preceding deploy artifacts before changing the live release.
 Verify public HTTPS, API health, the project list, and a direct project link
 before treating the cutover as complete.
 
+## Browser regression checks
+
+Use Java 21 to start the local backend with `./gradlew bootRun` from
+`backend/` (`.\gradlew.bat bootRun` in PowerShell). Then, from `frontend/`,
+run `npm ci`, `npx --no-install playwright install chromium`, and
+`npm run test:e2e`. The tests start Vite on `127.0.0.1:5173` and wait for
+the backend's seeded project list before exercising the content journeys.
+
+To use an installed Chrome, set `PLAYWRIGHT_CHANNEL=chrome` and run the same
+test command. In PowerShell, use `$env:PLAYWRIGHT_CHANNEL='chrome'`.
+To test a running local Compose stack, set
+`PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000`. With an explicit base URL the
+test runner uses that server directly. It creates no portfolio records.
+
+The browser suite covers project navigation and section scrolling, engineering
+details, a real API 404, recovery from a simulated HTTP 503, mobile menu
+scrolling and focus, story tab keyboard navigation, and unknown URLs.
+Failure traces and screenshots go to the ignored `frontend/test-results/`
+folder. Run the faster rendering fixtures with `npm test` from `frontend/`.
+
 ## Supporting Reference Only
 
 - `README.md`
