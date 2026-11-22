@@ -18,7 +18,7 @@ Use this README as supporting reference only.
 - **Database:** PostgreSQL (production) / H2 (development)
 - **Monitoring:** Spring Boot Actuator + Prometheus
 - **Documentation:** OpenAPI/Swagger
-- **Build Tool:** Gradle 8.14
+- **Build Tool:** Gradle 9.7.1 (wrapper with distribution checksum)
 
 ### Frontend
 - **Framework:** React 18
