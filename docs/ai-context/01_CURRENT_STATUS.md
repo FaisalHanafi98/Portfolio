@@ -1,6 +1,46 @@
 # Portfolio project summary
 
-**As of 16 November 2026 · local working copy at `a99af78`**
+**As of 22 November 2026 · implementation through `6b263f8`**
+
+## Implementation, 22 November 2026
+
+Faisal authorised continued implementation in micro-commits and publication to GitHub.
+This pass adds repeatable browser verification, keyboard navigation for the
+story chapters, and recovery from unknown routes. Opening a page scrolls to
+the top or its section anchor, including the return from a project detail to
+the showcase. The baseline is `5fd85cb` with 13 passing frontend fixture tests.
+
+Use Playwright Test 1.65.1 (Apache-2.0, Node 20+) as a development dependency
+for reproducible browser tests. It exercises local servers and uses an installed
+Chrome locally or a downloaded Chromium in CI. Browser binaries and test traces
+are local test artifacts. Tests run against a local seeded development backend,
+with fixture responses limited to failure cases. Acceptance requires working
+project navigation, a real API 404, keyboard chapter changes with focus preserved,
+and a useful unknown-route page.
+
+The existing Gradle 9.7.1 wrapper update passed backend tests and a boot JAR
+build under Java 21 with isolated output. Its wrapper JAR matched the checksum
+published by Gradle, and the distribution checksum is now pinned. The first
+build attempt failed when it tried to delete the existing locked output under
+`backend/build/`. Verification used an init script in the local Git metadata
+to direct output to ignored `backend/.gradle-home/verification-2026-11-22/`.
+
+Seven Chrome browser journeys passed against the real local H2 API, and all
+13 rendering fixtures passed alongside lint and the frontend production build.
+The staged backend baseline passed 17 tests, including the default-profile test
+that is deleted only in the working copy. The active secret-scan hook passed.
+The legacy L1 and L2-full checks also passed with isolated build output. The
+session-cap check was skipped because its documented shared guard is absent.
+The new keyboard, unknown-route, and return-to-projects tests reproduced their
+failures before the fixes. The local Compose configuration and CI YAML validate.
+Docker Desktop failed to start, so PostgreSQL-backed browser tests in the
+updated CI job await execution.
+
+The micro-commit patches, SOP messages, and ordered file manifest are saved
+locally in `.git/codex-staging/2026-11-22/`. The four implementation commits
+are `d40b7c8`, `b5577b3`, `d1d6189`, and
+`6b263f8`. This summary is the fifth micro-commit. Remote CI
+and deployment results were unverified when these commits were prepared.
 
 Portfolio is Faisal Hanafi’s public, read-only engineering portfolio. It gives
 recruiters a quick view of his work and gives technical reviewers details on the
