@@ -188,6 +188,20 @@ the state rendering with fixture data.
 | [API](../backend/src/main/java/com/faisal/portfolio/common/GlobalExceptionHandler.java) and [startup seed](../backend/src/main/java/com/faisal/portfolio/seed/DataSeeder.java) | Reads resolve to data or an HTTP error. Startup either seeds the database in a transaction or skips when projects already exist. |
 | [Local runtime check](../scripts/healthcheck_l2_full.sh) | Reuse or start the dev backend, wait for health, wait separately for seeded projects, then check project detail and the frontend build. Clean up the backend if the check started it. |
 
+### Navigation and story chapters
+
+An unknown URL displays a Page Not Found heading with a working home link.
+Opening a page without a section anchor starts at the top. Returning from a
+project detail to `/#projects` brings the showcase into view.
+
+The story chapter list has one tab stop. Left and right arrows select and focus
+the adjacent chapter, wrapping at either end. Home and End select and focus the
+first and last chapters. The selected tab identifies its panel, which is also
+keyboard-focusable. Previous, next, and direct chapter buttons remain available.
+
+Run the [browser regression checks](SOURCE_OF_TRUTH.md#browser-regression-checks)
+to verify these interactions against a running application.
+
 ## 11. Security Considerations
 
 This is a read-heavy public portfolio product. Security expectations should stay proportional to that reality.

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '../ui/AnimatedSection';
 import { slideUp } from '../../lib/animations';
@@ -132,7 +133,22 @@ const processSteps = [
 
 export default function AboutSection() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const chapterTabs = useRef<(HTMLButtonElement | null)[]>([]);
   const currentSlide = storySlides[activeIndex];
+
+  const handleChapterKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    const chapterForKey: Record<string, number> = {
+      ArrowLeft: (index - 1 + storySlides.length) % storySlides.length,
+      ArrowRight: (index + 1) % storySlides.length,
+      Home: 0,
+      End: storySlides.length - 1,
+    };
+    const nextIndex = chapterForKey[event.key];
+    if (nextIndex === undefined) return;
+    event.preventDefault();
+    setActiveIndex(nextIndex);
+    chapterTabs.current[nextIndex]?.focus();
+  };
 
   const handlePrev = () => {
     setActiveIndex((prev) => (prev === 0 ? storySlides.length - 1 : prev - 1));
@@ -182,10 +198,13 @@ export default function AboutSection() {
                 key={slide.id}
                 type="button"
                 role="tab"
+                ref={(tab) => { chapterTabs.current[idx] = tab; }}
+                tabIndex={isSelected ? 0 : -1}
                 aria-selected={isSelected}
                 aria-controls={`story-panel-${slide.id}`}
                 id={`story-tab-${slide.id}`}
                 onClick={() => setActiveIndex(idx)}
+                onKeyDown={(event) => handleChapterKeyDown(event, idx)}
                 className={`px-4 py-2.5 min-h-[44px] rounded-xl font-mono text-xs whitespace-nowrap border transition-[background-color,color,border-color,transform] duration-150 ease-out active:scale-[0.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
                   isSelected
                     ? 'bg-charcoal text-cream border-charcoal font-semibold shadow-sm'
@@ -219,6 +238,7 @@ export default function AboutSection() {
               key={currentSlide.id}
               id={`story-panel-${currentSlide.id}`}
               role="tabpanel"
+              tabIndex={0}
               aria-labelledby={`story-tab-${currentSlide.id}`}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
