@@ -5,16 +5,20 @@ This is the only file that defines session execution behavior for this repositor
 ## Session Rules
 
 - One deliverable only per session.
-- Do not bypass `.githooks/pre-commit`.
+- Run the configured `.githooks/pre-commit` on each micro-commit.
 - Do not treat `AGENTS.md` as workflow truth.
 - Do not use archived documents to guide execution.
 
 ## Session Start
 
-- Start the session guard:
-  - `../.orchestrator/session_guard.sh start`
-- Run the entry runtime check:
-  - `scripts/healthcheck.sh --l2-fast`
+Set `git config --local core.hooksPath .githooks` once per clone and verify
+with `git config --get core.hooksPath`. Git shares this setting across linked
+worktrees. The project hook invokes the generated `.hooks/pre-commit`
+scanner. The former shared session guard has been retired from this workflow.
+Use the shared tooling's `--hooks-only` mode when refreshing hook sources so
+the project hook path stays configured.
+
+Run `bash scripts/healthcheck.sh --l2-fast` at session start.
 
 ## Gate Semantics
 
@@ -36,7 +40,7 @@ This is the only file that defines session execution behavior for this repositor
   - tears down the backend if the script started it
 
 - `pre-commit` = enforced commit gate
-  - session guard check
+  - shared secret scan through `.hooks/pre-commit`
   - L1
   - L2-full
 
@@ -52,5 +56,5 @@ A session is done only when:
 ## Reality Boundaries
 
 - Local runtime truth is defined by the healthcheck scripts.
-- Deployment truth is defined by the Lightsail workflow and files under `deploy/`.
+- Deployment status and future work are tracked in [the runtime guide](SOURCE_OF_TRUTH.md).
 - Product intent is defined by `docs/PORTFOLIO_PRD.md`.

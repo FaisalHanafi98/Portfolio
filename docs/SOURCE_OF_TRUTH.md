@@ -12,7 +12,7 @@ For the project overview, implementation status, and roadmap, see the
 ### Execution truth
 
 - `docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md`
-- `.githooks/pre-commit`
+- `.githooks/pre-commit` delegates secret scanning to `.hooks/pre-commit` and runs L1 and L2-full.
 - `scripts/healthcheck.sh`
 - `scripts/healthcheck_l1.sh`
 - `scripts/healthcheck_l2_fast.sh`

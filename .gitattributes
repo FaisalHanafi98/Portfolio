@@ -1,0 +1,4 @@
+/.githooks/pre-commit text eol=lf
+/.hooks/pre-commit text eol=lf
+/backend/gradlew text eol=lf
+/scripts/healthcheck*.sh text eol=lf
