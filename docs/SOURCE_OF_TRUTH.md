@@ -76,14 +76,9 @@ records the retirement of the former Lightsail instance. The failed
 [22 November release attempt](https://github.com/FaisalHanafi98/Portfolio/actions/runs/44970309509)
 ran the [historical workflow at `63feb9e`](https://github.com/FaisalHanafi98/Portfolio/blob/63feb9e41da7e21473a499a6ee14a90ff779d237/.github/workflows/deploy-portfolio.yml).
 
-For a replacement VPS, build the frontend and boot JAR in CI and deploy those
-artifacts to the host. The existing Nginx and systemd files under `deploy/`
-document the frontend root, private backend port, and same-origin API proxy.
-Supply the production profile and database credentials through the service
-environment. Keep PostgreSQL and the Spring port private, and retain a database
-backup and the preceding deploy artifacts before changing the live release.
-Verify public HTTPS, API health, the project list, and a direct project link
-before treating the cutover as complete.
+The [proposed roadmap](PORTFOLIO_ROADMAP.md) covers a Singapore VPS, GHCR
+image delivery, Caddy HTTPS, Docker Compose and encrypted PostgreSQL backups.
+Choose a provider and verify the rehearsal before any VPS cutover.
 
 ## Browser regression checks
 

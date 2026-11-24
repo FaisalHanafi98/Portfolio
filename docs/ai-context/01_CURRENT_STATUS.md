@@ -1,6 +1,6 @@
 # Portfolio project summary
 
-**As of 22 November 2026 · implementation through `6b263f8`**
+**As of 24 November 2026**
 
 ## Cleanup work order · 24 November 2026
 
@@ -17,6 +17,28 @@
 The cleanup runs in an isolated checkout at `63feb9e`. Tests use local fixture
 data and an in-memory development database. Use individual SOP commits so each
 cleanup can be reviewed and reverted independently.
+
+### Cleanup evidence
+
+- The exact [CI run at 63feb9e](https://github.com/FaisalHanafi98/Portfolio/actions/runs/44970309452)
+  passed Backend, Frontend and Compose. The separate [Lightsail run](https://github.com/FaisalHanafi98/Portfolio/actions/runs/44970309509)
+  failed at its deploy step. The workflow removal landed at `31a63b0` and the
+  push scheduled only CI.
+- The checkout uses the project hook for secret scanning and L1/L2-full.
+  The historical orchestrator session cap is retired. See the
+  [session guide](../PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md).
+- The original checkout audit found 28 tracked edits or deletions and 69
+  untracked files. The untracked files comprise 47 detached-worktree files,
+  five archived files, six deployment drafts, three local settings or
+  environment files, three candidate images and five tooling or note files.
+  The implementation was isolated in a clean linked checkout, preserving the
+  original files and the working-copy deletion of the backend test.
+- The flagship evidence was checked against CREAMS at `5592ab5`, Sen2Nal at
+  `790bd17`, and BAiTI at `56eb320`. The case studies distinguish verified
+  local behaviour from features still in development.
+  [Flagship scope](../PORTFOLIO_PRD.md#flagship-case-studies)
+
+[Proposed 6–12 month roadmap](../PORTFOLIO_ROADMAP.md)
 
 ## Implementation, 22 November 2026
 
@@ -60,8 +82,7 @@ and deployment results were unverified when these commits were prepared.
 
 Portfolio is Faisal Hanafi’s public, read-only engineering portfolio. It gives
 recruiters a quick view of his work and gives technical reviewers details on the
-problems, technologies, and trade-offs behind it. CREAMS, Auto-Recruit, and
-Portfolio itself are the priority stories. The application also demonstrates how
+problems, technologies, and trade-offs behind it. CREAMS, Sen2Nal, and BAiTI are the priority stories. The application also demonstrates how
 Faisal connects a frontend, an API, and a database into a working product.
 [Product requirements](../PORTFOLIO_PRD.md)
 
@@ -69,8 +90,8 @@ Faisal connects a frontend, an API, and a database into a working product.
 
 | Area | What the checkout contains |
 |---|---|
-| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents a business-value introduction (`01 / DATA & BI`, `02 / WORKFLOW SOFTWARE`, `03 / AUTOMATION & AI`), an interactive 5-chapter story and 4-step engineering process carousel (`About`), a dual-view (`Business & Impact View` vs. `+ Engineering Depth`) showcase of 5 real business systems (`Auto-Recruit`, `CREAMS`, `RinggitSense`, `BAiTI`, `Sen2Nal` — omitting the self-referential `Portfolio` entry), skills with a Cloud & BI Certifications strip, all 4 chronological career/academic experiences (`ASE Electronics`, `Accenture Technology Malaysia`, `AEM Enersol`, `IIUM`), and contact links (`faisalhanafi.dev@gmail.com`). React Router serves project details at `/projects/:slug`. |
-| API and data | Java 21 and Spring Boot 3.4 expose versioned, read-only JSON endpoints for health, project summaries and details, skill categories, and experience. Spring Data JPA reads the stored content. The application seeds the database on startup when no projects exist. |
+| Website | A responsive React and TypeScript single-page app built with Vite and styled with Tailwind CSS. The home page presents a business-value introduction (`01 / DATA & BI`, `02 / WORKFLOW SOFTWARE`, `03 / AUTOMATION & AI`), an interactive 5-chapter story and 4-step engineering process carousel (`About`), a dual-view showcase of CREAMS, Sen2Nal, and BAiTI, plus an Additional projects section for Auto-Recruit and RinggitSense, skills with a Cloud & BI Certifications strip, all 4 chronological career/academic experiences (`ASE Electronics`, `Accenture Technology Malaysia`, `AEM Enersol`, `IIUM`), and contact links (`faisalhanafi.dev@gmail.com`). React Router serves project details at `/projects/:slug`. |
+| API and data | Java 21 and Spring Boot 3.4 expose versioned, read-only JSON endpoints for health, project summaries and details, skill categories, and experience. Spring Data JPA reads the stored content. The application seeds an empty database and refreshes the three flagship projects in place. |
 | Runtime | Standalone development uses H2 and a Spring backend on port `8081`. Local Compose is configured to use PostgreSQL, a Spring backend on `8080`, and an Nginx frontend on `3000` that forwards `/api/` to Spring. |
 | Verification | The GitHub Actions workflow defines backend build and tests, frontend type-check, lint, tests and build, and a Compose smoke test covering API health, project list and detail, and the direct CREAMS page URL through Nginx. |
 
@@ -134,8 +155,7 @@ Faisal connects a frontend, an API, and a database into a working product.
 
 | Item | Status and next evidence |
 |---|---|
-| Validate the full stack | Run the Compose smoke test with a working Docker engine and record the result for the actual revision. The existing frontend fixture tests exercise rendering states, and a real API-backed browser journey remains a useful next extension. |
-| Restore local gate enforcement | The session guide describes a runtime gate under `.githooks/`. This checkout selects `.hooks/` for secret scanning, and the documented session guard is absent at its expected path. Reconcile the two before relying on the local commit gate. |
+| Release verification | CI validated the PostgreSQL Compose and browser journeys at `63feb9e`. Carry the same checks into the first VPS release. |
 | Choose and deploy to a budget VPS | The proposed design builds the Vite assets and Spring Boot JAR in CI and runs Nginx, Spring via systemd, and PostgreSQL on one VPS. Nginx serves HTTPS and proxies the API on the same origin. Spring and PostgreSQL stay private. Keep a database backup and the previous release available for recovery. The hosting shortlist is research, and provider choice and cutover are open. |
 | Review release security | The August status tracked a pre-deployment security review. Record its findings and verify the selected host's public exposure before cutover. |
 | Polish release content | CREAMS, Auto-Recruit, Sen2Nal, and Portfolio seed narratives and hero proof-tape claims were aligned with verified facts on 16 November 2026. The navbar now uses a safe `"Request Resume"` email action when `VITE_RESUME_URL` / `frontend/public/resume.pdf` is absent; supply the PDF asset when ready for direct download. |
