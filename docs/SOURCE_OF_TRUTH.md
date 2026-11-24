@@ -78,7 +78,10 @@ ran the [historical workflow at `63feb9e`](https://github.com/FaisalHanafi98/Por
 
 The [proposed roadmap](PORTFOLIO_ROADMAP.md) covers a Singapore VPS, GHCR
 image delivery, Caddy HTTPS, Docker Compose and encrypted PostgreSQL backups.
-Choose a provider and verify the rehearsal before any VPS cutover.
+The Docker-based rollout is on hold (KIV) following a Docker Desktop startup
+failure. Resume on a working Docker environment and choose a provider before
+cutover. The next planned implementation is the status snapshot using the
+local Spring Boot development profile.
 
 ## Browser regression checks
 

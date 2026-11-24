@@ -2,21 +2,29 @@
 
 **Proposed · 24 November 2026**
 
-The first milestone is a working public release of the existing Portfolio.
-The following milestones add a visible operating history, aggregate analytics
-and two AI experiences grounded in the CREAMS, Sen2Nal and BAiTI case studies.
-Months are measured from the start of VPS work. The figures below are proposed
-release targets.
+The roadmap covers a public release of the existing Portfolio, a visible
+operating history, aggregate analytics and two AI experiences grounded in
+the CREAMS, Sen2Nal and BAiTI case studies. The windows are proposed
+estimates. The VPS rollout has no scheduled restart date.
+
+**Current order.** Keep the Docker-based VPS rollout on hold (KIV). The next
+implementation is the Spring Boot status snapshot, verified locally with
+the existing development profile. Public status verification follows a
+working deployment.
 
 | Window | Deliverable and skills on display | Release evidence |
 |---|---|---|
-| Weeks 1–6 | Deploy the trilogy on a Singapore VPS. Show the source commit, release and health history. Demonstrates software delivery and DevOps. | Rebuild a blank host, deploy a signed-off revision, observe public HTTPS and smoke checks, roll back to the previous image digests, and restore a database backup. |
+| Weeks 1–6 · KIV | Deploy the trilogy on a Singapore VPS. Show the source commit, release and health history. Demonstrates software delivery and DevOps. | Rebuild a blank host, deploy a signed-off revision, observe public HTTPS and smoke checks, roll back to the previous image digests, and restore a database backup. |
 | Months 2–3 | Launch a public `/status` view for measured service health. Demonstrates instrumentation and resilient UX. | Compare displayed metrics with controlled latency and database faults. Exercise stale GitHub data and missing telemetry. |
 | Months 3–5 | Add first-party events and an aggregate dashboard. Demonstrates SQL, data quality and privacy-aware analytics. | Reconcile funnel and read-depth reports against known fixture counts, prove retry deduplication and expiry, and measure ingestion overhead. |
 | Months 5–8 | Launch “Ask About My Work” against approved evidence. Demonstrates retrieval, provenance, bounded model use and evaluation. | Publish a dated retrieval and citation evaluation, test refusal and exhaustion paths, and trace answers to stable project-section links. |
 | Months 8–12 | Add a JD-to-experience matcher and a public engineering write-up. Demonstrates structured AI output and evidence-based evaluation. | A recruiter can map requirements to evidence and gaps. Test the matcher against synthetic job descriptions and publish the measured results and limits. |
 
-## Weeks 1–6 · Production delivery
+## Weeks 1–6 · Production delivery (KIV)
+
+Docker Desktop failed to start on the workstation. Resume the release
+rehearsal when a working Docker environment is available. Revisit the VPS
+cutover after the rehearsal is verified and a provider is selected.
 
 - Rehearse on a 2 GB VPS and prefer 4 GB for production if the budget allows,
   especially before enabling pgvector and metrics retention. Choose Linux and
