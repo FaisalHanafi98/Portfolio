@@ -186,14 +186,17 @@ test('about section renders the interactive story carousel and omits static acad
   assert.doesNotMatch(html, /Dean&#x27;s List Semesters|FYP Recognition/);
 });
 
-test('projects section filters out the portfolio entry and leads with What It Is About, What I Did, and Why People Care', () => {
+test('the flagship trilogy leads and additional projects remain discoverable', () => {
   const projectsList = [
-    { ...project, id: 10, slug: 'auto-recruit', title: 'Auto-Recruit', featured: true },
-    { ...project, id: 11, slug: 'portfolio', title: 'Portfolio Self Entry', featured: true },
+    { ...project, id: 10, slug: 'creams', title: 'CREAMS', featured: true },
+    { ...project, id: 11, slug: 'sen2nal', title: 'Sen2Nal', featured: true },
+    { ...project, id: 12, slug: 'baiti', title: 'BAiTI', featured: true },
+    { ...project, id: 13, slug: 'auto-recruit', title: 'Auto-Recruit', featured: false },
+    { ...project, id: 14, slug: 'portfolio', title: 'Portfolio Self Entry', featured: true },
   ];
   const html = renderHome([[['projects'], { status: 'success', data: projectsList }]]);
 
-  assert.match(html, /Auto-Recruit/);
+  assert.match(html, /CREAMS[\s\S]*Sen2Nal[\s\S]*BAiTI[\s\S]*Additional projects[\s\S]*Auto-Recruit/);
   assert.match(html, /01 \/ What This Project Is About/);
   assert.match(html, /02 \/ What I Did/);
   assert.match(html, /03 \/ Why People Care/);

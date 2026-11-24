@@ -10,7 +10,7 @@ Non-technical recruiters (fast legitimacy signal), technical hiring managers
 
 ### Content priorities
 
-Represent CREAMS, Auto-Recruit, and this portfolio itself well. Preserve:
+Lead with CREAMS, Sen2Nal, and BAiTI. Preserve:
 clear storytelling, professional presentation, truthful claims, maintainable
 implementation.
 

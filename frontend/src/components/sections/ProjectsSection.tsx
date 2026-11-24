@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import AnimatedSection from '../ui/AnimatedSection';
 import QueryContent from '../ui/QueryContent';
 import FeaturedProject from '../projects/FeaturedProject';
+import ProjectCard from '../projects/ProjectCard';
 import { ProjectCardSkeleton } from '../ui/Skeleton';
 import { useProjects } from '../../api/hooks';
 import { slideUp, staggerContainer } from '../../lib/animations';
@@ -33,7 +34,7 @@ export default function ProjectsSection() {
             </div>
             <SketchUnderline width={220} className="text-pink/50" delay={0.2} />
             <p className="text-charcoal-light mt-4 max-w-2xl leading-relaxed">
-              Every project below starts with the real-world problem, what I built to solve it, and why the outcome matters to the people and business using it.
+              CREAMS, Sen2Nal and BAiTI show how I design software for sensitive records, reproducible research and tenant isolation.
             </p>
           </div>
 
@@ -43,7 +44,7 @@ export default function ProjectsSection() {
               type="button"
               onClick={() => setShowTechnicalDepth(false)}
               aria-pressed={!showTechnicalDepth}
-              className={`px-3.5 py-2 min-h-[40px] rounded-lg font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-lg font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue ${
                 !showTechnicalDepth
                   ? 'bg-charcoal text-cream font-semibold'
                   : 'text-charcoal-light hover:text-charcoal'
@@ -55,7 +56,7 @@ export default function ProjectsSection() {
               type="button"
               onClick={() => setShowTechnicalDepth(true)}
               aria-pressed={showTechnicalDepth}
-              className={`px-3.5 py-2 min-h-[40px] rounded-lg font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue ${
+              className={`px-3.5 py-2 min-h-[44px] rounded-lg font-mono text-xs transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue ${
                 showTechnicalDepth
                   ? 'bg-charcoal text-cream font-semibold'
                   : 'text-charcoal-light hover:text-charcoal'
@@ -79,6 +80,8 @@ export default function ProjectsSection() {
         >
           {(projects) => {
             const visibleProjects = projects.filter((project) => project.slug !== 'portfolio');
+            const flagshipProjects = visibleProjects.filter((project) => project.featured);
+            const additionalProjects = visibleProjects.filter((project) => !project.featured);
 
             return (
               <motion.div
@@ -88,7 +91,7 @@ export default function ProjectsSection() {
                 viewport={{ once: true }}
                 className="space-y-12"
               >
-                {visibleProjects.map((project, index) => (
+                {flagshipProjects.map((project, index) => (
                   <FeaturedProject
                     key={project.id}
                     project={project}
@@ -96,6 +99,16 @@ export default function ProjectsSection() {
                     showTechnicalDepth={showTechnicalDepth}
                   />
                 ))}
+                {additionalProjects.length > 0 && (
+                  <section aria-labelledby="additional-projects">
+                    <h3 id="additional-projects" className="text-xl font-semibold mb-5">
+                      Additional projects
+                    </h3>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {additionalProjects.map((project) => <ProjectCard key={project.id} project={project} />)}
+                    </div>
+                  </section>
+                )}
               </motion.div>
             );
           }}

@@ -18,7 +18,7 @@ const businessPillars = [
     title: 'Replace Manual Spreadsheets With Reliable Apps',
     summary:
       'Build role-based web applications, approval pipelines, and validation rules so teams stop losing records across email threads and shared Excel files.',
-    proof: 'Proven on 20,000+ candidate records in Auto-Recruit & 25 models in CREAMS',
+    proof: 'Centre-scoped workflows in CREAMS and PostgreSQL tenant isolation in BAiTI',
     accent: 'border-pink/30 bg-pink/5 text-pink',
   },
   {
@@ -26,7 +26,7 @@ const businessPillars = [
     title: 'Automate Constrained Operations Safely',
     summary:
       'Deliver zero-extra-license cleanroom/workstation automations, equipment-data links, and guardrailed AI pipelines backed by deterministic math and audit trails.',
-    proof: 'Proven on ASE’s semiconductor test floor (~88.5% faster reporting) & RinggitSense',
+    proof: 'Equipment reporting at ASE and timestamped research evidence in Sen2Nal',
     accent: 'border-green/30 bg-green/5 text-green',
   },
 ];

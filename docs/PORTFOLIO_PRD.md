@@ -83,12 +83,25 @@ The product currently represents:
 
 The active product must:
 
-- surface flagship work clearly, especially CREAMS, Auto-Recruit, and this portfolio
+- surface flagship work clearly, in this order: CREAMS, Sen2Nal, and BAiTI
 - provide a project listing and project detail experience
 - present skills in a grouped and readable format
 - present work experience as a clear timeline or equivalent structure
 - support responsive usage across mobile and desktop layouts
 - maintain a visual standard appropriate for recruiters and engineering managers
+
+### Flagship case studies
+
+| Case study | What the portfolio can demonstrate | Evidence boundary |
+|---|---|---|
+| CREAMS | Laravel 12, Blade, Bootstrap and MySQL support rehabilitation operations. CentreScope and relationship scopes apply centre ownership. Private document routes and role checks handle sensitive materials. | Centre filtering is enforced through Laravel. Documented administrator and execution paths have different scope rules. |
+| Sen2Nal | Python, FastAPI, Pydantic, PostgreSQL and React support staged market research. Run status, cutoff eligibility and a hashed replay manifest make evidence traceable. | VADER and the replay contract have local/offline evidence. FinBERT runtime, provider rights and live replay publication remain open. Research only. Not financial advice. |
+| BAiTI | Java 21, Spring Boot, PostgreSQL 16, Flyway and React support a shared-schema property workspace. Separate roles and forced row-level security constrain tenant access. | Authentication and property flows have local PostgreSQL and browser evidence. Procurement, reserve planning, policy assistance and hosting are later work. |
+
+Auto-Recruit and RinggitSense retain their existing detail routes under
+Additional projects. The seed refreshes the three named case studies in place
+and retains their row identities. Existing secondary descriptions and media
+survive a refresh.
 
 ### Public API Capabilities
 
@@ -185,7 +198,7 @@ the state rendering with fixture data.
 | [Experience selection](../frontend/src/components/sections/ExperienceSection.tsx) | A company button selects its experience ID. Selection survives list reordering and falls back to the first entry if the selected ID disappears. The outgoing panel exits before the incoming panel enters. |
 | [Project lists](../frontend/src/components/sections/ProjectsSection.tsx) and [detail](../frontend/src/components/projects/ProjectDetail.tsx) | Featured and other groups, optional detail blocks and links, and project image selection derive from the returned content. Image loading is browser-owned. |
 | [Motion](../frontend/src/lib/animations.ts) and [styles](../frontend/src/styles/globals.css) | Viewport reveals, page transitions, pointer and focus feedback, and reduced-motion styles. |
-| [API](../backend/src/main/java/com/faisal/portfolio/common/GlobalExceptionHandler.java) and [startup seed](../backend/src/main/java/com/faisal/portfolio/seed/DataSeeder.java) | Reads resolve to data or an HTTP error. Startup either seeds the database in a transaction or skips when projects already exist. |
+| [API](../backend/src/main/java/com/faisal/portfolio/common/GlobalExceptionHandler.java) and [startup seed](../backend/src/main/java/com/faisal/portfolio/seed/DataSeeder.java) | Reads resolve to data or an HTTP error. Startup seeds a fresh database in a transaction. It refreshes the named flagship projects and their ordering in an existing database. |
 | [Local runtime check](../scripts/healthcheck_l2_full.sh) | Reuse or start the dev backend, wait for health, wait separately for seeded projects, then check project detail and the frontend build. Clean up the backend if the check started it. |
 
 ### Navigation and story chapters

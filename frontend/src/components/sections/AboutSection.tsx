@@ -94,12 +94,12 @@ const storySlides: StorySlide[] = [
     chapter: 'Chapter 05 / 05',
     shortTab: '05. Guardrailed AI',
     title: 'Why Accuracy & Protection Are Personal to Me',
-    subtitle: 'RinggitSense, BAiTI, CREAMS & Sen2Nal',
+    subtitle: 'CREAMS, Sen2Nal & BAiTI',
     story:
       'Losing money to a scam earlier in life made financial clarity and data protection deeply personal to me. I saw firsthand what happens when systems are opaque, permissions are sloppy, or tools present guesswork as fact.',
     processStep: 'Step 5: Deterministic Rules First, Bounded AI Second',
     processDetail:
-      'In my full-stack and AI systems, I enforce database-level tenant isolation (PostgreSQL RLS / CentreScope), exact decimal arithmetic, and explicit [NEEDS INPUT] boundaries whenever AI encounters ambiguous data.',
+      'BAiTI uses PostgreSQL row-level security. CREAMS applies centre filters in Laravel. Sen2Nal marks missing or ambiguous research evidence explicitly before it can enter a replay manifest.',
     businessValue:
       'You get modern AI and full-stack capabilities engineered with accountability, privacy, and audit trails built in from day one.',
     tags: ['Spring Boot & FastAPI', 'Laravel & MySQL', 'PostgreSQL FORCE RLS', 'Multi-Agent Claude & FinBERT'],
