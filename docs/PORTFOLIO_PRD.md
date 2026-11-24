@@ -59,7 +59,7 @@ Current reality:
 - backend exists and serves portfolio content through public endpoints
 - frontend exists and consumes the backend
 - a gated local workflow exists for structural and runtime checks
-- a Lightsail deployment workflow exists
+- GitHub CI verifies the stack. The former Lightsail deployment is retired
 
 The current stage is focused on:
 
@@ -220,8 +220,7 @@ This PRD does not define deployment targets, runtime ports, Spring profiles, hea
 Those live in:
 
 - `docs/SOURCE_OF_TRUTH.md`
-- `.github/workflows/deploy-portfolio.yml`
-- `deploy/*`
+- `.github/workflows/ci.yml` for build and rehearsal checks
 - backend runtime configuration files
 
 ## 13. Risks And Constraints

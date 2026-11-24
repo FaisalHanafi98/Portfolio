@@ -17,15 +17,13 @@ For the project overview, implementation status, and roadmap, see the
 - `scripts/healthcheck_l1.sh`
 - `scripts/healthcheck_l2_fast.sh`
 - `scripts/healthcheck_l2_full.sh`
-- `../.orchestrator/session_guard.sh`
 - `../../standards/COMMIT_MESSAGES.md`
 
 ### Deployment truth
 
-- `.github/workflows/deploy-portfolio.yml`
-- `deploy/portfolio.service`
-- `deploy/nginx-portfolio.conf`
-- `deploy/setup-lightsail.sh`
+- [GitHub CI](../.github/workflows/ci.yml) verifies the stack.
+- The replacement production deployment is pending. The files under `deploy/`
+  describe the former Lightsail setup.
 
 ### Backend profile and runtime truth
 
@@ -49,8 +47,8 @@ For the project overview, implementation status, and roadmap, see the
 - Local backend runs on port `8081`.
 - Local runtime and ops healthcheck is `http://localhost:8081/actuator/health`.
 - Local user-path verification includes `http://localhost:8081/api/v1/projects`.
-- The legacy deployment workflow targets AWS Lightsail. The former instance
-  was retired in August 2026, and the replacement host is pending.
+- The Lightsail instance retired in August 2026. The automatic Lightsail
+  workflow was removed on 24 November 2026. The replacement host is pending.
 - The deployment configuration uses Nginx for the frontend and proxies the
   API to Spring on port `8080`.
 - Public deployment verification uses `/api/v1/health`.
@@ -74,8 +72,9 @@ isolated Compose stack on the runner.
 ## VPS migration preparation
 
 The [August 2026 session record](ai-context/02_SESSION_HISTORY/2026-08-23_lightsail_decommission_and_streamlining.md)
-records the retirement of the former Lightsail instance. The checked-in
-Lightsail workflow still triggers on pushes to `main` or `master`.
+records the retirement of the former Lightsail instance. The failed
+[22 November release attempt](https://github.com/FaisalHanafi98/Portfolio/actions/runs/44970309509)
+ran the [historical workflow at `63feb9e`](https://github.com/FaisalHanafi98/Portfolio/blob/63feb9e41da7e21473a499a6ee14a90ff779d237/.github/workflows/deploy-portfolio.yml).
 
 For a replacement VPS, build the frontend and boot JAR in CI and deploy those
 artifacts to the host. The existing Nginx and systemd files under `deploy/`

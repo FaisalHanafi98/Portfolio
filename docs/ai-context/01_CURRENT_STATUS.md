@@ -2,6 +2,22 @@
 
 **As of 22 November 2026 · implementation through `6b263f8`**
 
+## Cleanup work order · 24 November 2026
+
+1. Record the exact CI and Lightsail outcomes at `63feb9e`. Retire the
+   automatic Lightsail workflow and preserve its historical revision.
+2. Reconcile Git's configured hook with secret scanning and L1/L2 verification.
+   Audit local edits and work from a clean linked checkout.
+3. Verify the three case studies in their source projects. Update the seed,
+   showcase and PRD. Confirm stable slugs and row identities, three ordered
+   flagships and the existing loading, error and navigation behaviour.
+4. Write the proposed 6–12 month roadmap. Start with a repeatable VPS release,
+   then add measured operations, first-party analytics and grounded AI.
+
+The cleanup runs in an isolated checkout at `63feb9e`. Tests use local fixture
+data and an in-memory development database. Use individual SOP commits so each
+cleanup can be reviewed and reverted independently.
+
 ## Implementation, 22 November 2026
 
 Faisal authorised continued implementation in micro-commits and publication to GitHub.
@@ -109,11 +125,10 @@ Faisal connects a frontend, an API, and a database into a working product.
   [Product requirements](../PORTFOLIO_PRD.md#8-current-product-gaps--backlog)
 - Faisal’s August 2026 direction retired the old Lightsail instance and shifted
   work to a local full-stack rehearsal, automated verification, and preparation
-  for a replacement VPS. The repository still contains the legacy Lightsail
-  deployment workflow. Its push trigger records how the code is configured;
-  the latest live deployment and the replacement provider are unconfirmed.
+  for a replacement VPS. The retired deployment workflow is preserved in Git history. The replacement
+  provider remains open.
   [Owner-reviewed August session](02_SESSION_HISTORY/2026-08-23_lightsail_decommission_and_streamlining.md) ·
-  [Legacy workflow](../../.github/workflows/deploy-portfolio.yml)
+  [Failed Lightsail run](https://github.com/FaisalHanafi98/Portfolio/actions/runs/44970309509)
 
 ## Proposed changes and open decisions
 

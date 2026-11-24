@@ -123,7 +123,7 @@ npm run type-check         # TypeScript check
 - **Live target:** AWS Lightsail
 - **Frontend:** Static Vite build served by Nginx from `/var/www/portfolio`
 - **Backend:** Spring Boot service managed by systemd and reverse-proxied by Nginx
-- **Deployment workflow:** `.github/workflows/deploy-portfolio.yml`
+- **Deployment:** The Lightsail workflow is retired. See the [runtime guide](docs/SOURCE_OF_TRUTH.md) for the current release state.
 - **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge
 
 ## Author
