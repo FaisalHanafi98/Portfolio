@@ -19,13 +19,15 @@ else
   exit 1
 fi
 
-# 2. Frontend typecheck (skip if node_modules missing — flag, don't fail L1).
+# 2. Frontend typecheck & lint (skip if node_modules missing — flag, don't fail L1).
 cd "$PROJECT_ROOT/frontend"
 if [ ! -d "node_modules" ]; then
   echo "  ! frontend/node_modules missing — run 'npm ci' before L2"
 else
   echo "  - typechecking frontend (tsc --noEmit)"
   npx tsc --noEmit
+  echo "  - linting frontend (npm run lint)"
+  npm run lint --silent
 fi
 
 echo "==> L1: PASS"

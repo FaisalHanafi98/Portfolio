@@ -105,13 +105,19 @@ if ! curl -fsS --max-time 10 "$SLUG_URL" > /dev/null; then
 fi
 echo "  - single-project lookup OK"
 
-# Step 4: frontend build.
-echo "  - building frontend"
+# Step 4: frontend SSR tests and production build.
+echo "  - running frontend content-state tests"
 cd "$PROJECT_ROOT/frontend"
 if [ ! -d "node_modules" ]; then
   echo "  - node_modules missing, running npm ci"
   npm ci --silent
 fi
+if ! npm test --silent; then
+  echo "  RED: frontend content-state tests failed"
+  exit 1
+fi
+
+echo "  - building frontend"
 if ! npm run build --silent; then
   echo "  RED: frontend build failed"
   exit 1

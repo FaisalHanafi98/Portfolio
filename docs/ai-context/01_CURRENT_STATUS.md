@@ -1,6 +1,57 @@
 # Portfolio project summary
 
-**As of 24 November 2026**
+**As of 26 November 2026**
+
+## Governance, skill admission & gate hardening · 26 November 2026
+
+Completed in isolated linked worktree `projects/Portfolio-cleanup-20261124`
+on `codex/portfolio-cleanup-20261124` (from `550caa5`), preserving
+`projects/Portfolio` (`main` at `63feb9e`) and `stash@{0}`
+(`de1104ad832201d3abe12eac57706134680899cd`). Prepares the repository before
+implementing the bounded read-only `GET /api/v1/status` backend snapshot.
+
+- **SOP & artifact reconciliation:** Retired superseded
+  `docs/COMMIT_MESSAGE_SOP.md` and obsolete root `backend.tar.gz`; reconciled
+  stale Lightsail, Gradle-version, and session-guard references across
+  `README.md`, `.github/workflows/ci.yml`, `.cursor/rules/core.mdc`,
+  `docs/ai-context/00_PROJECT_SOURCE_OF_TRUTH.md`, and
+  `docs/ai-context/05_MODULE_STATUS/{deployment_ci_cd,frontend_react}.md`.
+  Kept `"mcp": []` with Playwright Test pinned at `1.65.1` in `frontend/package.json`.
+- **Skill budget, `design.md` lock & pinned capabilities:**
+  - Switched `.ai/manifest.json` to `context_mode: shared`, added `security-review`
+    (`+ security-reviewer`), `systematic-debugging`, and `ponytail` (pinned in
+    `Development/core/skills/ponytail/` @ `ebd8654c2c627f721eb8f9c0d1bd4090a29f9e10`, MIT),
+    narrowed `ui-accessibility` and `frontend-design-aesthetics` to frontend UI
+    turns (`core` @ `ef3cbe6` / `8907e10`), removed `code-commenting` and 12 stale copied
+    `.claude/skills/*/references/` files, and excluded `impeccable`,
+    `design-for-ai`, and `sloplint.mjs`.
+  - Verified `diagram-design` (`b228c5d77794a84150fca41b22940bb316b1398d`, MIT
+    with offline/privacy override) remains workspace-only outside Portfolio.
+  - Added locked [design.md](../../design.md) and Portfolio `ponytail` (`lite`
+    default, `/ponytail-review staged` before `code-reviewer`/`security-reviewer`,
+    `TODO(CR-XXX):`, and Non-Strippable Invariants) in `.ai/facts.md`.
+- **Pre-commit & deterministic gates:**
+  - Extended shared [.githooks/pre-commit](../../.githooks/pre-commit) with staged
+    index-blob scanning blocking Trojan-Source bidi controls (`U+202A–U+202E`,
+    `U+2066–U+2069`, `U+200E`, `U+200F`, `U+061C`) across text blobs and
+    invisible/exotic whitespace (`U+200B–U+200D`, `U+2060`, `U+FEFF`, `U+00A0`,
+    `U+202F`, `U+205F`, `U+3000`) in code/config files before running `L1` and `L2-full`.
+  - Locked `management.endpoints.web.exposure.include: health`, `show-details: never`,
+    and `prometheus.access: none` in [application-prod.yml](../../backend/src/main/resources/application-prod.yml).
+  - Added [EnterpriseBoundaryArchitectureTest.java](../../backend/src/test/java/com/faisal/portfolio/EnterpriseBoundaryArchitectureTest.java)
+    (no `System.out`/`printStackTrace`/`@Autowired` in `src/main/`, DTO/Map boundary
+    check on `@RestController`, `prod` lockdown assertion, and zero JDBC/stacktrace
+    leak on simulated DB exceptions).
+  - Enabled `'no-console': ['error', { allow: ['warn', 'error'] }]` in `frontend/.eslintrc.cjs`,
+    wired `npm run lint` into `scripts/healthcheck_l1.sh`, and wired `npm test` into
+    `scripts/healthcheck_l2_full.sh`.
+- **Verification recorded:** Synthetic `.githooks/pre-commit` rejections (`U+202E` and
+  `U+200B`), `ai.py doctor` (`[ok]`, `~681` tokens vs `2000` budget), Java 21 backend
+  `./gradlew.bat test --no-daemon --rerun-tasks` (`23/23` tests passing), frontend
+  `type-check` / `lint` (`--max-warnings 0`) / `test` (`13/13`) / `build`, and
+  `bash scripts/healthcheck.sh --all` (`L1: PASS`, `L2 FULL: GREEN`) all passed.
+  Docker Compose PostgreSQL rehearsal, remote CI execution, and Playwright E2E
+  re-runs were not executed in this governance pass.
 
 ## Cleanup work order · 24 November 2026
 
