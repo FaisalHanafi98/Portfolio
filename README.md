@@ -27,6 +27,7 @@ Use this README as supporting reference only.
 - **Styling:** Tailwind CSS
 - **Animation:** Framer Motion
 - **State Management:** React Query
+- **E2E Verification:** Playwright Test (`1.65.1`)
 
 ## Project Structure
 
@@ -120,18 +121,16 @@ npm run type-check         # TypeScript check
 
 ## Deployment
 
-- **Live target:** AWS Lightsail
-- **Frontend:** Static Vite build served by Nginx from `/var/www/portfolio`
-- **Backend:** Spring Boot service managed by systemd and reverse-proxied by Nginx
-- **Deployment:** The Lightsail workflow is retired. See the [runtime guide](docs/SOURCE_OF_TRUTH.md) for the current release state.
-- **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge
+- **Deployment:** The Lightsail workflow is retired; Compose PostgreSQL/Nginx rehearsal is verified in CI and VPS cutover is KIV. See the [runtime guide](docs/SOURCE_OF_TRUTH.md) and [roadmap](docs/PORTFOLIO_ROADMAP.md).
+- **Frontend:** Static Vite build served by Nginx with `/api/` reverse-proxied to Spring Boot on port `8080`.
+- **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge.
 
 ## Author
 
 **Mohamad Faisal Bin Mohd Hanafi**
 
-- LinkedIn: [linkedin.com/in/faisal-hanafi](https://linkedin.com/in/faisal-hanafi)
-- GitHub: [github.com/FaisalHanafi](https://github.com/FaisalHanafi)
+- LinkedIn: [linkedin.com/in/faisalhanafidsa0105](https://www.linkedin.com/in/faisalhanafidsa0105/)
+- GitHub: [github.com/FaisalHanafi98](https://github.com/FaisalHanafi98)
 
 ## License
 

@@ -5,4 +5,92 @@ cd "$(git rev-parse --show-toplevel)"
 
 # Run the shared scanner before starting the application checks.
 bash .hooks/pre-commit
+
+if command -v python >/dev/null 2>&1 && python -c "import sys" 2>/dev/null; then
+  PY_BIN=python
+elif command -v python3 >/dev/null 2>&1 && python3 -c "import sys" 2>/dev/null; then
+  PY_BIN=python3
+else
+  echo "pre-commit: python/python3 is required for Unicode/bidi verification" >&2
+  exit 1
+fi
+
+"$PY_BIN" - <<'PY'
+import os
+import subprocess
+import sys
+
+BIDI = set(range(0x202A, 0x202F)) | set(range(0x2066, 0x206A)) | {0x200E, 0x200F, 0x061C}
+INVISIBLE = set(range(0x200B, 0x200E)) | {0x2060, 0xFEFF, 0x00A0, 0x202F, 0x205F, 0x3000}
+CODE_EXTS = {".java", ".ts", ".tsx", ".css", ".yml", ".yaml", ".json", ".gradle", ".properties", ".sh"}
+SKIP_DIRS = {"build", "dist", "node_modules"}
+
+raw_list = subprocess.check_output(
+    [
+        "git", "--no-replace-objects", "--no-lazy-fetch", "--no-optional-locks",
+        "diff", "--cached", "--raw", "-z", "--no-abbrev", "--no-renames",
+        "--no-ext-diff", "--no-textconv", "--ignore-submodules=none",
+        "--diff-filter=ACMTU",
+    ]
+)
+
+if not raw_list:
+    sys.exit(0)
+
+parts = raw_list.split(b"\0")
+entries = []
+for i in range(0, len(parts) - 1, 2):
+    header, path_b = parts[i], parts[i + 1]
+    fields = header[1:].split()
+    if len(fields) != 5 or not path_b:
+        continue
+    mode, _, oid, _ = fields[1], fields[2], fields[3], fields[4]
+    if mode not in (b"100644", b"100755"):
+        continue
+    path = os.fsdecode(path_b)
+    norm_parts = set(path.replace("\\", "/").split("/"))
+    if norm_parts & SKIP_DIRS or path.lower().endswith(".jar"):
+        continue
+    entries.append((path, oid))
+
+if not entries:
+    sys.exit(0)
+
+batch = subprocess.check_output(
+    ["git", "--no-replace-objects", "--no-lazy-fetch", "--no-optional-locks", "cat-file", "--batch"],
+    input=b"".join(oid + b"\n" for _, oid in entries),
+)
+
+hits = []
+cursor = 0
+for path, _ in entries:
+    nl = batch.find(b"\n", cursor)
+    if nl < 0:
+        break
+    meta = batch[cursor:nl].split()
+    cursor = nl + 1
+    if len(meta) != 3 or meta[1] != b"blob":
+        continue
+    size = int(meta[2])
+    blob = batch[cursor:cursor + size]
+    cursor += size + 1
+    if b"\x00" in blob[:8192]:
+        continue
+    ext = os.path.splitext(path)[1].lower()
+    text = blob.decode("utf-8", errors="surrogateescape")
+    for lineno, line in enumerate(text.splitlines(), 1):
+        for ch in line:
+            cp = ord(ch)
+            if cp in BIDI:
+                hits.append((path, lineno, f"U+{cp:04X}", "Trojan-Source bidi control"))
+            elif ext in CODE_EXTS and cp in INVISIBLE:
+                hits.append((path, lineno, f"U+{cp:04X}", "invisible/exotic whitespace in code/config"))
+
+if hits:
+    print("pre-commit: BLOCKED - disallowed Unicode control or hidden whitespace in staged files:", file=sys.stderr)
+    for path, lineno, code, kind in hits:
+        print(f"  {path}:{lineno}: {code} ({kind})", file=sys.stderr)
+    sys.exit(1)
+PY
+
 bash scripts/healthcheck.sh --all

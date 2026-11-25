@@ -1,4 +1,4 @@
-<!-- GENERATED from core@3b953ef - edit in core/, then: python core/tools/ai.py sync -->
+<!-- GENERATED from core@8907e10 - edit in core/, then: python core/tools/ai.py sync -->
 
 @AGENTS.md
 

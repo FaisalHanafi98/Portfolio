@@ -2,5 +2,5 @@
 description: Core rules pointer (generated)
 alwaysApply: true
 ---
-Project instructions live in ./AGENTS.md (generated from core@3b953ef).
+Project instructions live in ./AGENTS.md (synced via core shared mode).
 Follow AGENTS.md; do not duplicate rules here.

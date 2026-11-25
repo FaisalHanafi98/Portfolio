@@ -33,7 +33,7 @@ Base URL selection:
 - Development build without `VITE_API_URL`: falls back to `/api/v1`
 
 VITE_API_URL is intentionally unset in the GitHub Actions build step. The relative `/api/v1`
-path works because Nginx on Lightsail proxies `/api/` to the Spring Boot backend.
+path works because Nginx proxies `/api/` to the Spring Boot backend (in Compose/VPS; Vite proxies during local dev).
 
 Timeout: 10 seconds
 Error handling: Axios response interceptor logs errors to console; rejects the promise.
