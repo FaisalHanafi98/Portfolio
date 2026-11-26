@@ -18,6 +18,7 @@ after(() => vite.close());
 
 const { default: ProjectPage } = await vite.ssrLoadModule('/src/pages/ProjectPage.tsx');
 const { default: HomePage } = await vite.ssrLoadModule('/src/pages/HomePage.tsx');
+const { default: StatusPage } = await vite.ssrLoadModule('/src/pages/StatusPage.tsx');
 const { default: Navbar } = await vite.ssrLoadModule('/src/components/layout/Navbar.tsx');
 
 const project = {
@@ -202,4 +203,73 @@ test('the flagship trilogy leads and additional projects remain discoverable', (
   assert.match(html, /03 \/ Why People Care/);
   assert.doesNotMatch(html, /Portfolio Self Entry/);
 });
+
+test('status page renders loading, offline pause, insufficient data, measured p95, degraded DB, and cached refresh failure distinctly', () => {
+  const baseStatus = {
+    status: 'healthy',
+    checkedAt: '2026-11-26T03:00:00Z',
+    uptimeSeconds: 125,
+    startedAt: '2026-11-26T02:57:55Z',
+    revision: '53f0c21',
+    database: { status: 'up', latencyMs: 2 },
+    traffic: {
+      windowSeconds: 300,
+      requestCount: 4,
+      minSamples: 20,
+      p95Status: 'insufficient_data',
+      p95Ms: null,
+    },
+  };
+
+  const loadingHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], { status: 'pending', fetchStatus: 'fetching' }],
+  ]);
+  assert.match(loadingHtml, /role="status"[^>]*>Loading status/);
+  assert.match(loadingHtml, /aria-hidden="true"/);
+
+  const wasOnline = onlineManager.isOnline();
+  onlineManager.setOnline(false);
+  try {
+    const pausedHtml = renderRoute('/status', '/status', StatusPage, [
+      [['status'], { status: 'pending', fetchStatus: 'paused' }],
+    ]);
+    assert.match(pausedHtml, /Waiting for a connection to load status/);
+  } finally {
+    onlineManager.setOnline(wasOnline);
+  }
+
+  const insufficientHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], { status: 'success', data: baseStatus }],
+  ]);
+  assert.match(insufficientHtml, /Healthy/);
+  assert.match(insufficientHtml, /Database Up/);
+  assert.match(insufficientHtml, /Insufficient data/);
+  assert.match(insufficientHtml, /4 of 20 minimum requests/);
+  assert.match(insufficientHtml, /5-minute rolling window/);
+  assert.match(insufficientHtml, /<table/);
+
+  const degradedAndMeasuredHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], {
+      status: 'error',
+      error: httpError(503),
+      data: {
+        ...baseStatus,
+        status: 'degraded',
+        database: { status: 'degraded', latencyMs: null },
+        traffic: {
+          windowSeconds: 300,
+          requestCount: 24,
+          minSamples: 20,
+          p95Status: 'measured',
+          p95Ms: 14.25,
+        },
+      },
+    }],
+  ]);
+  assert.match(degradedAndMeasuredHtml, /Degraded/);
+  assert.match(degradedAndMeasuredHtml, /14\.25 ms/);
+  assert.match(degradedAndMeasuredHtml, /Showing the last loaded result/);
+  assert.match(degradedAndMeasuredHtml, /<button[^>]*>Try again<\/button>/);
+});
+
 

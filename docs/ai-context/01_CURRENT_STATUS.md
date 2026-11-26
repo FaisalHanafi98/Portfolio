@@ -2,6 +2,24 @@
 
 **As of 26 November 2026**
 
+## Public `/status` frontend view · 26 November 2026
+
+Implemented the public `/status` route (`StatusPage`) in
+`projects/Portfolio-cleanup-20261124` on `codex/portfolio-cleanup-20261124`
+(from `53f0c21`), consuming `GET /api/v1/status` through `useStatus` and
+`QueryContent` under the `design.md` contract (`#faf8f5` cream tokens, WCAG AA
+status labels, `44px` targets, non-focus-stealing manual refresh, explicit
+JVM-process-uptime caveat, and the `Operational Signals Table` fallback).
+Navigation links are exposed from `Navbar` (`Status`) and `Footer`
+(`System Status`). Scheduled GitHub workflow polling remains deferred.
+
+- **Verified locally after edits:** Frontend `type-check`, `lint`
+  (`--max-warnings 0`), `build`, SSR fixture suite (`14/14` in
+  `frontend/tests/content-states.test.mjs`), and full Chrome Playwright E2E
+  suite (`11/11`, `PLAYWRIGHT_CHANNEL=chrome` against booted H2 `:8081`).
+- **Not verified here:** Docker Compose Postgres/Nginx rehearsal and remote CI
+  workflows.
+
 ## Bounded `GET /api/v1/status` backend snapshot · 26 November 2026
 
 Implemented the next roadmap slice in `projects/Portfolio-cleanup-20261124`

@@ -80,3 +80,27 @@ export interface Experience {
   description: string;
   highlights: string[];
 }
+
+// Operational status snapshot types
+export interface StatusDatabase {
+  status: string;
+  latencyMs: number | null;
+}
+
+export interface StatusTraffic {
+  windowSeconds: number;
+  requestCount: number;
+  minSamples: number;
+  p95Status: string;
+  p95Ms: number | null;
+}
+
+export interface StatusSnapshot {
+  status: string;
+  checkedAt: string;
+  uptimeSeconds: number;
+  startedAt: string;
+  revision: string;
+  database: StatusDatabase;
+  traffic: StatusTraffic;
+}
