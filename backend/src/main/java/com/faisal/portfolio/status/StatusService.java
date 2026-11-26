@@ -29,6 +29,7 @@ public class StatusService {
 
     private final DataSource dataSource;
     private final ApiLatencyTracker latencyTracker;
+    private final GitHubStatusService gitHubStatusService;
     private final StatusProperties properties;
     private final ObjectProvider<BuildProperties> buildProperties;
     private final ObjectProvider<GitProperties> gitProperties;
@@ -38,12 +39,14 @@ public class StatusService {
     public StatusService(
             DataSource dataSource,
             ApiLatencyTracker latencyTracker,
+            GitHubStatusService gitHubStatusService,
             StatusProperties properties,
             ObjectProvider<BuildProperties> buildProperties,
             ObjectProvider<GitProperties> gitProperties
     ) {
         this.dataSource = dataSource;
         this.latencyTracker = latencyTracker;
+        this.gitHubStatusService = gitHubStatusService;
         this.properties = properties;
         this.buildProperties = buildProperties;
         this.gitProperties = gitProperties;
@@ -63,6 +66,7 @@ public class StatusService {
         StatusSnapshotDto.DatabaseStatusDto database = probeDatabase();
         String overallStatus = "up".equals(database.status()) ? "healthy" : "degraded";
         StatusSnapshotDto.TrafficMetricsDto traffic = latencyTracker.snapshot();
+        StatusSnapshotDto.GitHubStatusDto github = gitHubStatusService.getSnapshot(now);
 
         return new StatusSnapshotDto(
                 overallStatus,
@@ -71,7 +75,8 @@ public class StatusService {
                 startedAt,
                 resolveRevision(),
                 database,
-                traffic
+                traffic,
+                github
         );
     }
 

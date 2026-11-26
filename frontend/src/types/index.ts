@@ -95,6 +95,39 @@ export interface StatusTraffic {
   p95Ms: number | null;
 }
 
+export type GitHubSyncStatus = 'healthy' | 'degraded' | 'stale' | 'unavailable' | 'empty';
+
+export interface GitHubWorkflowRun {
+  id: number;
+  name: string;
+  branch: string;
+  event: string;
+  status: string;
+  conclusion: string | null;
+  shortSha: string;
+  updatedAt: string | null;
+  htmlUrl: string | null;
+}
+
+export interface GitHubCommitActivity {
+  shortSha: string;
+  message: string;
+  committedAt: string | null;
+  htmlUrl: string | null;
+}
+
+export interface GitHubStatus {
+  status: GitHubSyncStatus;
+  repository: string;
+  lastSyncedAt: string | null;
+  snapshotAgeSeconds: number | null;
+  cacheTtlSeconds: number;
+  nextPollAt: string | null;
+  stateReason: string | null;
+  workflowRuns: GitHubWorkflowRun[];
+  recentCommits: GitHubCommitActivity[];
+}
+
 export interface StatusSnapshot {
   status: string;
   checkedAt: string;
@@ -103,4 +136,5 @@ export interface StatusSnapshot {
   revision: string;
   database: StatusDatabase;
   traffic: StatusTraffic;
+  github: GitHubStatus;
 }

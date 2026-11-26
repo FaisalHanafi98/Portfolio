@@ -20,7 +20,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = PortfolioApplication.class)
+@SpringBootTest(
+        classes = PortfolioApplication.class,
+        properties = "portfolio.status.github.scheduling-enabled=false"
+)
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class StatusControllerTest {
@@ -45,7 +48,13 @@ class StatusControllerTest {
                 .andExpect(jsonPath("$.data.traffic.windowSeconds").value(300))
                 .andExpect(jsonPath("$.data.traffic.minSamples").value(20))
                 .andExpect(jsonPath("$.data.traffic.p95Status").value("insufficient_data"))
-                .andExpect(jsonPath("$.data.traffic.p95Ms").value(nullValue()));
+                .andExpect(jsonPath("$.data.traffic.p95Ms").value(nullValue()))
+                .andExpect(jsonPath("$.data.github.status").value("unavailable"))
+                .andExpect(jsonPath("$.data.github.repository").value("FaisalHanafi98/Portfolio"))
+                .andExpect(jsonPath("$.data.github.cacheTtlSeconds").value(900))
+                .andExpect(jsonPath("$.data.github.stateReason").value("awaiting_first_sync"))
+                .andExpect(jsonPath("$.data.github.workflowRuns").isArray())
+                .andExpect(jsonPath("$.data.github.recentCommits").isArray());
     }
 
     @Test

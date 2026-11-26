@@ -95,6 +95,14 @@ export function StatusSkeleton() {
         ))}
       </div>
       <div className="bg-white rounded-2xl p-6 border-2 border-cream-darker space-y-3">
+        <Skeleton width="45%" height={24} />
+        <Skeleton width="75%" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
+          <Skeleton width="100%" height={72} variant="rectangular" />
+          <Skeleton width="100%" height={72} variant="rectangular" />
+        </div>
+      </div>
+      <div className="bg-white rounded-2xl p-6 border-2 border-cream-darker space-y-3">
         <Skeleton width="40%" height={24} />
         <Skeleton width="100%" height={36} variant="rectangular" />
         <Skeleton width="100%" height={36} variant="rectangular" />

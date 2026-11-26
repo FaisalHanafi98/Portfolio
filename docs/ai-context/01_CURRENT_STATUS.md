@@ -1,6 +1,37 @@
 # Portfolio project summary
 
-**As of 26 November 2026**
+**As of 27 November 2026**
+
+## Server-side GitHub workflow & activity poller · 27 November 2026
+
+Implemented the scheduled GitHub workflow and commit activity poller in
+`projects/Portfolio-cleanup-20261124` on `codex/portfolio-cleanup-20261124`
+(from `21497cd`), extending `GET /api/v1/status` and `StatusPage` (`/status`):
+
+- **Backend poller (`GitHubStatusService`, `StatusProperties.GitHubProperties`, `StatusMetricsConfig`, `StatusSnapshotDto`):**
+  - Polls public `/repos/{owner}/{repo}/actions/runs` and `/commits` on a
+    scheduled background cycle using conditional requests (`ETag`/`If-None-Match`,
+    `If-Modified-Since`), a 15-minute server cache (`cache-ttl-seconds: 900`),
+    strict `4000ms` connect/read timeouts with `Redirect.NEVER`, and bounded
+    exponential backoff (`60s` initial, `3600s` max, honoring bounded `Retry-After`
+    / `X-RateLimit-Reset`).
+  - Keeps GitHub credentials (`GITHUB_TOKEN`) and quota strictly server-side,
+    omits committer emails, validates `https://github.com/` URLs, caps parsed
+    payload size (`512 KB`) and items (`max-items: 5`), and isolates DB outages
+    from GitHub outages cleanly.
+  - Exposes dynamic `snapshotAgeSeconds` and distinguishes `healthy`,
+    `degraded`, `stale`, `unavailable`, and `empty` states cleanly.
+- **Frontend UI (`StatusPage`, `types/index.ts`, `Skeleton.tsx`):**
+  - Renders `Repository CI & Activity Sync` with colour+text+icon badges across
+    all 5 GitHub states, snapshot age, cache cadence, workflow runs, commits,
+    `44px` verified external links, and an updated `Operational Signals Table`
+    row.
+- **Checks run after final edit:** Backend `./gradlew.bat test` (`36/36`),
+  frontend `type-check`, `lint`, SSR `content-states.test.mjs` (`14/14`),
+  `vite build`, and Chrome Playwright E2E (`12/12`, `PLAYWRIGHT_CHANNEL=chrome`
+  against booted H2 `:8081`).
+- **Not verified here:** Docker Compose PostgreSQL/Nginx rehearsal, live
+  rate-limited traffic against public `api.github.com`, and remote CI workflows.
 
 ## Public `/status` frontend view · 26 November 2026
 
