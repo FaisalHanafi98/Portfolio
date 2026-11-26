@@ -93,12 +93,13 @@ npm run dev
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/v1/health` | Health check |
+| GET | `/api/v1/status` | Bounded operational status snapshot (`uptimeSeconds`, coarse DB health, revision, 5-min request count & p95) |
 | GET | `/api/v1/projects` | List all projects |
 | GET | `/api/v1/projects/{slug}` | Get project details |
 | GET | `/api/v1/skills` | Get skills by category |
 | GET | `/api/v1/experience` | Get work experience |
-| GET | `/actuator/health` | Local ops/runtime healthcheck, not a public production endpoint |
-| GET | `/actuator/prometheus` | Prometheus metrics |
+| GET | `/actuator/health` | Local ops/runtime healthcheck (`show-details: never` in `prod`) |
+| GET | `/actuator/prometheus` | Local dev Prometheus metrics (`access: none` / blocked in `prod`) |
 
 ## Development Commands
 

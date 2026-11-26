@@ -2,6 +2,40 @@
 
 **As of 26 November 2026**
 
+## Bounded `GET /api/v1/status` backend snapshot · 26 November 2026
+
+Implemented the next roadmap slice in `projects/Portfolio-cleanup-20261124`
+on `codex/portfolio-cleanup-20261124` (from `a82e2aa`): a narrow, read-only,
+non-cached (`Cache-Control: no-store`) public operational snapshot at
+`GET /api/v1/status`. The frontend `/status` route and scheduled GitHub
+workflow polling remain separate future slices.
+
+- **Status contract (`com.faisal.portfolio.status`):**
+  - Exposes JVM process uptime (`uptimeSeconds`, `startedAt`), resolved revision
+    (`portfolio.status.revision` / `APP_REVISION` -> `GitProperties` ->
+    `BuildProperties`, defaulting to `local-dev` in `dev` and `unconfigured` when
+    unset), coarse DB probe state (`up` / `degraded`, redacted `latencyMs`), and
+    rolling 5-minute API traffic metrics (`windowSeconds`, `requestCount`,
+    `minSamples`, `p95Status`, `p95Ms`).
+  - `StatusService` bounds JDBC `Connection.isValid` probes via a 2-thread
+    daemon executor, 2-permit concurrency guard, and `portfolio.status.db-timeout-ms`
+    (`1000ms` default, clamped `50–5000ms`), returning `degraded` cleanly without
+    leaking JDBC URLs, hostnames, or `SQLException` details.
+  - `ApiMetricsFilter`, `ApiLatencyTracker`, and `StatusMetricsConfig` cap
+    Micrometer scrape cardinality (`maximumAllowableTags` 16, allowlisted
+    `/api/v1/*` templates + `OTHER`, bounded SLO buckets, 5-minute rolling expiry)
+    and return `p95Status: "insufficient_data"` (`p95Ms: null`) below
+    `portfolio.status.min-samples` (`20` default).
+- **Verification recorded:**
+  - `./gradlew.bat test --no-daemon --rerun-tasks` (Java 21): `29/29` tests
+    passed (`StatusControllerTest` `2/2`, `ApiLatencyTrackerTest` `2/2`,
+    `StatusDegradedDbTest` `2/2`, `EnterpriseBoundaryArchitectureTest` `4/4`,
+    `DefaultDevProfileIntegrationTest` `3/3`, `ProjectControllerTest` `5/5`, and
+    all remaining suites).
+  - `.githooks/pre-commit` (`bash .hooks/pre-commit`, Unicode/bidi scan, `L1`, and
+    `L2-full` verifying live `GET /api/v1/status` against H2 `:8081`) passed.
+  - Docker Compose PostgreSQL verification and remote CI remain unexecuted here.
+
 ## Governance, skill admission & gate hardening · 26 November 2026
 
 Completed in isolated linked worktree `projects/Portfolio-cleanup-20261124`

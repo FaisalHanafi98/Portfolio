@@ -108,6 +108,7 @@ survive a refresh.
 The product requires public API support for:
 
 - `GET /api/v1/health`
+- `GET /api/v1/status`
 - `GET /api/v1/projects`
 - `GET /api/v1/projects/{slug}`
 - `GET /api/v1/skills`

@@ -105,6 +105,15 @@ if ! curl -fsS --max-time 10 "$SLUG_URL" > /dev/null; then
 fi
 echo "  - single-project lookup OK"
 
+STATUS_URL="http://localhost:${PORT}/api/v1/status"
+echo "  - GET $STATUS_URL"
+if ! curl -fsS --max-time 5 "$STATUS_URL" > /tmp/portfolio_status.json || ! grep -q '"database"' /tmp/portfolio_status.json; then
+  echo "  RED: GET /api/v1/status failed"
+  cat /tmp/portfolio_status.json 2>/dev/null || echo "(no response)"
+  exit 1
+fi
+echo "  - status snapshot OK"
+
 # Step 4: frontend SSR tests and production build.
 echo "  - running frontend content-state tests"
 cd "$PROJECT_ROOT/frontend"

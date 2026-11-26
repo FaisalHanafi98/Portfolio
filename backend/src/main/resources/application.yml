@@ -27,3 +27,10 @@ management:
       enabled: true
     java:
       enabled: true
+
+portfolio:
+  status:
+    db-timeout-ms: ${STATUS_DB_TIMEOUT_MS:1000}
+    window-seconds: ${STATUS_WINDOW_SECONDS:300}
+    min-samples: ${STATUS_MIN_SAMPLES:20}
+    revision: ${APP_REVISION:}
