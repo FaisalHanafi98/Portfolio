@@ -2,6 +2,25 @@
 
 **As of 27 November 2026**
 
+## Branch review & documentation reconciliation (`550caa5..HEAD`) · 27 November 2026
+
+Completed pre-review audit of `codex/portfolio-cleanup-20261124` in
+`projects/Portfolio-cleanup-20261124` ahead of `origin/main` (`963df7d`), keeping
+all commits local, `projects/Portfolio` (`63feb9e`) untouched, and `stash@{0}`
+intact:
+
+- Reconciled shared `.claude/skills/{react-ui-patterns,ui-accessibility}/SKILL.md`
+  pointers via `ai.py sync ... --docs-only` (`ai.py doctor` now passes `[ok]`,
+  `~681` always-on tokens).
+- Removed trailing EOF blank line warning in `frontend/tests/content-states.test.mjs`
+  (`git diff --check` clean).
+- Added `/api/v1/status` JSON and `/status` SPA checks to the Compose smoke job
+  in `.github/workflows/ci.yml`.
+- Updated `docs/SOURCE_OF_TRUTH.md`, `docs/PORTFOLIO_ROADMAP.md`,
+  `docs/PORTFOLIO_PRD.md`, `docs/ai-context/00_PROJECT_SOURCE_OF_TRUTH.md`,
+  `docs/ai-context/05_MODULE_STATUS/{backend_api,deployment_ci_cd,frontend_react}.md`,
+  and `README.md` so all active and module docs match the delivered code and checks.
+
 ## Server-side GitHub workflow & activity poller · 27 November 2026
 
 Implemented the scheduled GitHub workflow and commit activity poller in

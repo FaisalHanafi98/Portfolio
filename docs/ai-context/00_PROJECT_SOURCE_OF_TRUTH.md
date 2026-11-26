@@ -87,6 +87,7 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | project | Project, ProjectController, ProjectDetailDto, ProjectDto, ProjectImage, ProjectRepository, ProjectService, Technology | HIGH — file list verified |
 | skill | Skill, SkillCategory, SkillCategoryDto, SkillCategoryRepository, SkillController, SkillRepository, SkillService | HIGH — file list verified |
 | experience | Experience, ExperienceController, ExperienceDto, ExperienceRepository, ExperienceService | HIGH — file list verified |
+| status | ApiLatencyTracker, ApiMetricsFilter, GitHubStatusService, StatusController, StatusMetricsConfig, StatusProperties, StatusService, StatusSnapshotDto | HIGH — file list verified |
 | common | ApiResponse (record), GlobalExceptionHandler, ResourceNotFoundException | HIGH — file list verified |
 | config | CorsConfig, OpenApiConfig | HIGH — file list verified |
 | seed | DataSeeder (CommandLineRunner) | HIGH — file verified |
@@ -99,10 +100,10 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | components/layout/ | EmailSidebar, Footer, Layout, Navbar, SocialSidebar | HIGH — file list verified |
 | components/projects/ | FeaturedProject, ProjectCard, ProjectDetail | HIGH — file list verified |
 | components/sections/ | AboutSection, ContactSection, ExperienceSection, HeroSection, ProjectsSection, SkillsSection | HIGH — file list verified |
-| components/ui/ | AnimatedSection, Button, Card, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
+| components/ui/ | AnimatedSection, Button, Card, QueryContent, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
 | hooks/ | useScrollPosition.ts | HIGH — file list verified |
-| lib/ | animations.ts | HIGH — file list verified |
-| pages/ | HomePage.tsx, ProjectPage.tsx | HIGH — file list verified |
+| lib/ | animations.ts, projectImages.ts, projectNarratives.ts | HIGH — file list verified |
+| pages/ | HomePage.tsx, NotFoundPage.tsx, ProjectPage.tsx, StatusPage.tsx | HIGH — file list verified |
 | types/ | index.ts | HIGH — file list verified |
 
 ---
@@ -169,13 +170,13 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 ## Stable Facts vs Planned Items
 
 ### Stable (implemented and verified)
-- Spring Boot REST API serving projects, skills, experience, and health
+- Spring Boot REST API serving projects, skills, experience, health, and bounded operational `/api/v1/status` (with DB probe, rolling 5-minute latency p95, and scheduled conditional GitHub poller)
 - H2 dev database with DataSeeder
-- Gate system (secret scan + L1 + L2-fast + L2-full + pre-commit hook)
+- Gate system (secret scan + staged Unicode/bidi verification + L1 + L2-fast + L2-full + pre-commit hook)
+- Boundary architecture & production Actuator/Prometheus lockdown checks (`EnterpriseBoundaryArchitectureTest`)
 - GitHub Actions CI pipeline (Backend, Frontend, Compose PostgreSQL + Playwright E2E)
-- React frontend with Tailwind, Framer Motion, React Query, and 7 Playwright E2E checks
+- React frontend with Tailwind, Framer Motion, React Query, public `/status` route, 14 SSR fixture checks, and 12 Playwright E2E checks
 
 ### Planned (documented in `docs/PORTFOLIO_ROADMAP.md`)
-- `GET /api/v1/status` backend snapshot and public `/status` operations view
 - Docker VPS delivery rehearsal resume (currently KIV)
-- First-party analytics, Ask About My Work (pgvector RAG), and JD matcher (Months 3–12)
+- Flyway schema baseline, first-party analytics, Ask About My Work (pgvector RAG), and JD matcher (Months 3–12)

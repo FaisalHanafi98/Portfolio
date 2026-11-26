@@ -1,6 +1,6 @@
 ---
 name: react-ui-patterns
-description: Use when writing React or Next.js components, hooks, or pages - waterfall elimination, bundle discipline, compound components, state placement; Next.js specifics in references/nextjs-patterns.md. Not for plain HTML/CSS pages.
+description: Use ONLY when writing or reviewing React/Next.js components, hooks, or pages — never for Python, FastAPI, SQLAlchemy, Pydantic, Java, PHP, or plain HTML/CSS tasks. Covers waterfall elimination, bundle discipline, compound components, and state placement; Next.js specifics in references/nextjs-patterns.md.
 ---
 
 <!-- GENERATED shared pointer; edit the canonical source. -->

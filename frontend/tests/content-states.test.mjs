@@ -372,5 +372,3 @@ test('status page renders loading, offline pause, insufficient data, measured p9
   assert.match(emptyHtml, /GitHub Empty/);
   assert.match(emptyHtml, /zero workflow runs/i);
 });
-
-

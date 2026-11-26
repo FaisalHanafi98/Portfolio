@@ -77,7 +77,7 @@ The product currently represents:
 - projects
 - skills
 - experience
-- a lightweight public health capability
+- a lightweight public health and live operational status capability
 
 ### Product Requirements
 
