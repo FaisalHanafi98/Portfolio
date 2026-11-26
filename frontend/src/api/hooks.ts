@@ -5,6 +5,7 @@ import type {
   ProjectDetail,
   SkillCategory,
   Experience,
+  StatusSnapshot,
 } from '../types';
 
 // Query keys for cache management
@@ -13,6 +14,7 @@ export const queryKeys = {
   project: (slug: string) => ['project', slug] as const,
   skills: ['skills'] as const,
   experience: ['experience'] as const,
+  status: ['status'] as const,
 };
 
 // Projects hooks
@@ -60,6 +62,19 @@ export function useExperience() {
       return response.data;
     },
     staleTime: 10 * 60 * 1000,
+  });
+}
+
+// Operational status hook (no fresh cache window; preserves cached fallback on refresh error)
+export function useStatus() {
+  return useQuery<StatusSnapshot>({
+    queryKey: queryKeys.status,
+    queryFn: async () => {
+      const response = await api.getStatus();
+      return response.data;
+    },
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
   });
 }
 

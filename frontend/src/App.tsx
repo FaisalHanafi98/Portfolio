@@ -5,8 +5,9 @@ import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// Lazy load the project detail page — only needed when user navigates to /projects/:slug
+// Lazy load secondary pages — only needed when user navigates away from home
 const ProjectPage = lazy(() => import('./pages/ProjectPage'));
+const StatusPage = lazy(() => import('./pages/StatusPage'));
 
 function LazyFallback() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/projects/:slug" element={<ProjectPage />} />
+              <Route path="/status" element={<StatusPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>

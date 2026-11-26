@@ -77,7 +77,7 @@ The product currently represents:
 - projects
 - skills
 - experience
-- a lightweight public health capability
+- a lightweight public health and live operational status capability
 
 ### Product Requirements
 
@@ -108,6 +108,7 @@ survive a refresh.
 The product requires public API support for:
 
 - `GET /api/v1/health`
+- `GET /api/v1/status`
 - `GET /api/v1/projects`
 - `GET /api/v1/projects/{slug}`
 - `GET /api/v1/skills`
@@ -171,7 +172,7 @@ Design expectations:
 
 ### Content request states
 
-Projects, project detail, skills, and experience use
+Projects, project detail, skills, experience, and the public `/status` snapshot use
 [`QueryContent`](../frontend/src/components/ui/QueryContent.tsx) to display
 the state of their existing React Query requests.
 
@@ -193,7 +194,7 @@ the state rendering with fixture data.
 
 | Owner | Transitions |
 |---|---|
-| [Router and lazy route](../frontend/src/App.tsx) | Home, project detail, or unmatched URL. The detail code loads through Suspense before the project request starts. |
+| [Router and lazy route](../frontend/src/App.tsx) | Home, project detail, `/status`, or unmatched URL. Detail and status routes load through Suspense before their API requests start. |
 | [Navbar](../frontend/src/components/layout/Navbar.tsx) and [scroll hook](../frontend/src/hooks/useScrollPosition.ts) | Opening the mobile menu locks page scrolling on mobile. Selecting a link, pressing Escape, or crossing the desktop breakpoint closes it. The toggle exposes its expanded state. Header styling changes at the scroll threshold. |
 | [Experience selection](../frontend/src/components/sections/ExperienceSection.tsx) | A company button selects its experience ID. Selection survives list reordering and falls back to the first entry if the selected ID disappears. The outgoing panel exits before the incoming panel enters. |
 | [Project lists](../frontend/src/components/sections/ProjectsSection.tsx) and [detail](../frontend/src/components/projects/ProjectDetail.tsx) | Featured and other groups, optional detail blocks and links, and project image selection derive from the returned content. Image loading is browser-owned. |

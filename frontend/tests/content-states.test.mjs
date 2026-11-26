@@ -18,6 +18,7 @@ after(() => vite.close());
 
 const { default: ProjectPage } = await vite.ssrLoadModule('/src/pages/ProjectPage.tsx');
 const { default: HomePage } = await vite.ssrLoadModule('/src/pages/HomePage.tsx');
+const { default: StatusPage } = await vite.ssrLoadModule('/src/pages/StatusPage.tsx');
 const { default: Navbar } = await vite.ssrLoadModule('/src/components/layout/Navbar.tsx');
 
 const project = {
@@ -203,3 +204,171 @@ test('the flagship trilogy leads and additional projects remain discoverable', (
   assert.doesNotMatch(html, /Portfolio Self Entry/);
 });
 
+test('status page renders loading, offline pause, insufficient data, measured p95, degraded DB, cached refresh failure, and all 5 GitHub poller states distinctly', () => {
+  const baseStatus = {
+    status: 'healthy',
+    checkedAt: '2026-11-26T03:00:00Z',
+    uptimeSeconds: 125,
+    startedAt: '2026-11-26T02:57:55Z',
+    revision: '53f0c21',
+    database: { status: 'up', latencyMs: 2 },
+    traffic: {
+      windowSeconds: 300,
+      requestCount: 4,
+      minSamples: 20,
+      p95Status: 'insufficient_data',
+      p95Ms: null,
+    },
+    github: {
+      status: 'healthy',
+      repository: 'FaisalHanafi98/Portfolio',
+      lastSyncedAt: '2026-11-26T02:55:00Z',
+      snapshotAgeSeconds: 300,
+      cacheTtlSeconds: 900,
+      nextPollAt: '2026-11-26T03:10:00Z',
+      stateReason: null,
+      workflowRuns: [
+        {
+          id: 101,
+          name: 'CI',
+          branch: 'main',
+          event: 'push',
+          status: 'completed',
+          conclusion: 'success',
+          shortSha: '21497cd',
+          updatedAt: '2026-11-26T02:54:00Z',
+          htmlUrl: 'https://github.com/FaisalHanafi98/Portfolio/actions/runs/101',
+        },
+      ],
+      recentCommits: [
+        {
+          shortSha: '21497cd',
+          message: 'Feat(Status): Add public /status frontend view.',
+          committedAt: '2026-11-26T02:50:00Z',
+          htmlUrl: 'https://github.com/FaisalHanafi98/Portfolio/commit/21497cd',
+        },
+      ],
+    },
+  };
+
+  const loadingHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], { status: 'pending', fetchStatus: 'fetching' }],
+  ]);
+  assert.match(loadingHtml, /role="status"[^>]*>Loading status/);
+  assert.match(loadingHtml, /aria-hidden="true"/);
+
+  const wasOnline = onlineManager.isOnline();
+  onlineManager.setOnline(false);
+  try {
+    const pausedHtml = renderRoute('/status', '/status', StatusPage, [
+      [['status'], { status: 'pending', fetchStatus: 'paused' }],
+    ]);
+    assert.match(pausedHtml, /Waiting for a connection to load status/);
+  } finally {
+    onlineManager.setOnline(wasOnline);
+  }
+
+  const healthyGitHubHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], { status: 'success', data: baseStatus }],
+  ]);
+  assert.match(healthyGitHubHtml, /Healthy/);
+  assert.match(healthyGitHubHtml, /Database Up/);
+  assert.match(healthyGitHubHtml, /GitHub Healthy/);
+  assert.match(healthyGitHubHtml, /FaisalHanafi98\/Portfolio/);
+  assert.match(healthyGitHubHtml, /15-minute server cache/);
+  assert.match(healthyGitHubHtml, /5m 0s/);
+  assert.match(healthyGitHubHtml, /Feat\(Status\): Add public \/status frontend view\./);
+  assert.match(healthyGitHubHtml, /Insufficient data/);
+  assert.match(healthyGitHubHtml, /4 of 20 minimum requests/);
+  assert.match(healthyGitHubHtml, /5-minute rolling window/);
+  assert.match(healthyGitHubHtml, /<table/);
+
+  const staleAndDbDegradedHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], {
+      status: 'error',
+      error: httpError(503),
+      data: {
+        ...baseStatus,
+        status: 'degraded',
+        database: { status: 'degraded', latencyMs: null },
+        traffic: {
+          windowSeconds: 300,
+          requestCount: 24,
+          minSamples: 20,
+          p95Status: 'measured',
+          p95Ms: 14.25,
+        },
+        github: {
+          ...baseStatus.github,
+          status: 'stale',
+          snapshotAgeSeconds: 1020,
+          stateReason: 'upstream_rate_limited',
+        },
+      },
+    }],
+  ]);
+  assert.match(staleAndDbDegradedHtml, /Degraded/);
+  assert.match(staleAndDbDegradedHtml, /14\.25 ms/);
+  assert.match(staleAndDbDegradedHtml, /GitHub Stale/);
+  assert.match(staleAndDbDegradedHtml, /17m 0s/);
+  assert.match(staleAndDbDegradedHtml, /rate limit/i);
+  assert.match(staleAndDbDegradedHtml, /Showing the last loaded result/);
+  assert.match(staleAndDbDegradedHtml, /<button[^>]*>Try again<\/button>/);
+
+  const partialDegradedHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], {
+      status: 'success',
+      data: {
+        ...baseStatus,
+        github: {
+          ...baseStatus.github,
+          status: 'degraded',
+          stateReason: 'partial_feed_error',
+          recentCommits: [],
+        },
+      },
+    }],
+  ]);
+  assert.match(partialDegradedHtml, /GitHub Degraded/);
+  assert.match(partialDegradedHtml, /One GitHub feed failed/);
+
+  const unavailableHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], {
+      status: 'success',
+      data: {
+        ...baseStatus,
+        github: {
+          ...baseStatus.github,
+          status: 'unavailable',
+          lastSyncedAt: null,
+          snapshotAgeSeconds: null,
+          nextPollAt: null,
+          stateReason: 'awaiting_first_sync',
+          workflowRuns: [],
+          recentCommits: [],
+        },
+      },
+    }],
+  ]);
+  assert.match(unavailableHtml, /GitHub Unavailable/);
+  assert.match(unavailableHtml, /No cached GitHub snapshot/);
+
+  const emptyHtml = renderRoute('/status', '/status', StatusPage, [
+    [['status'], {
+      status: 'success',
+      data: {
+        ...baseStatus,
+        github: {
+          ...baseStatus.github,
+          status: 'empty',
+          snapshotAgeSeconds: 0,
+          stateReason: 'empty_activity',
+          workflowRuns: [],
+          recentCommits: [],
+        },
+      },
+    }],
+  ]);
+  assert.match(emptyHtml, /GitHub Empty/);
+  assert.match(emptyHtml, /zero workflow runs/i);
+});

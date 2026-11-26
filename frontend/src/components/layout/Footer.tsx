@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const socialLinks = [
@@ -55,18 +56,26 @@ export default function Footer() {
           ))}
         </motion.div>
 
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <a
             href="https://github.com/FaisalHanafi98/Portfolio"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-charcoal-light hover:text-charcoal transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded inline-block"
           >
-            <p className="font-hand text-lg">Designed & Built by Faisal</p>
+            <p className="font-hand text-lg">Designed &amp; Built by Faisal</p>
             <p className="text-xs mt-1 font-mono text-charcoal-light">
               Spring Boot + React + TypeScript
             </p>
           </a>
+          <div>
+            <Link
+              to="/status"
+              className="inline-flex items-center min-h-[44px] px-3 font-mono text-xs text-blue hover:text-blue-dark transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
+            >
+              System Status
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

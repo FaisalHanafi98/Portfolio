@@ -39,6 +39,12 @@ export const api = {
     return response.data;
   },
 
+  // Operational status snapshot
+  getStatus: async (): Promise<ApiResponse<import('../types').StatusSnapshot>> => {
+    const response = await apiClient.get('/status');
+    return response.data;
+  },
+
   // Projects
   getProjects: async (): Promise<ApiResponse<import('../types').ProjectSummary[]>> => {
     const response = await apiClient.get('/projects');

@@ -26,6 +26,18 @@ springdoc:
   swagger-ui:
     enabled: false
 
+# Restrict Actuator in production so metrics and Prometheus remain private
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+    prometheus:
+      access: none
+
 logging:
   level:
     com.faisal.portfolio: INFO

@@ -1,5 +1,5 @@
 {
-  "core": "3b953ef",
+  "core": "8907e10",
   "stacks": [
     "springboot",
     "react"
@@ -7,14 +7,17 @@
   "skills": [
     "springboot",
     "react-ui-patterns",
-    "ui-accessibility",
-    "frontend-design-aesthetics",
+    "security-review",
     "tdd",
-    "code-commenting",
-    "verification-before-completion"
+    "systematic-debugging",
+    "verification-before-completion",
+    "ponytail",
+    "ui-accessibility",
+    "frontend-design-aesthetics"
   ],
   "agents": [
-    "code-reviewer"
+    "code-reviewer",
+    "security-reviewer"
   ],
   "mcp": [],
   "hooks": {
@@ -24,5 +27,6 @@
   },
   "budget": {
     "always_on_tokens": 2000
-  }
+  },
+  "context_mode": "shared"
 }

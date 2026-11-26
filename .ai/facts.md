@@ -14,6 +14,11 @@ Lead with CREAMS, Sen2Nal, and BAiTI. Preserve:
 clear storytelling, professional presentation, truthful claims, maintainable
 implementation.
 
+### Engineering & UI Contracts
+
+- **Design system lock:** [design.md](design.md) governs palette tokens, typography, motion, WCAG 2.2 AA / 44px touch targets, and `QueryContent` UX state-machine guarantees.
+- **Ponytail (`lite` default):** invoke `/ponytail-review staged` before `code-reviewer` and `security-reviewer`. Non-strippable invariants: never cut input validation, Actuator/Prometheus privacy controls, bounded Micrometer route-template labels, degraded-DB timeout bounds, WCAG 2.2 AA accessibility attributes, or UX state-machine edge cases. Record any bounded deferral as `TODO(CR-XXX): <limit>, <upgrade trigger>` per `standards/DOCUMENTATION.md` rather than `shortcut:`.
+
 ### Operational truth rule (unchanged from the previous AGENTS.md)
 
 Context files answer no operational questions. Runtime, deployment, CI/CD,

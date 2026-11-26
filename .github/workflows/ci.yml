@@ -78,7 +78,7 @@ jobs:
       - name: Build
         run: npm run build
         # VITE_API_URL intentionally unset — defaults to /api/v1 (relative)
-        # Nginx on Lightsail proxies /api/ to Spring Boot on port 8080
+        # Nginx proxies /api/ to Spring Boot on port 8080
 
   compose:
     name: Compose smoke test
@@ -118,9 +118,13 @@ jobs:
             jq -e '.success and any(.data[]; .slug == "creams")'
           curl -fsS --max-time 10 "$base/api/v1/health" |
             jq -e '.success and .data.status == "ok"'
+          curl -fsS --max-time 10 "$base/api/v1/status" |
+            jq -e '.success and .data.database != null and .data.github != null'
           curl -fsS --max-time 10 "$base/api/v1/projects/creams" |
             jq -e '.success and .data.slug == "creams"'
           curl -fsS --max-time 10 "$base/projects/creams" |
+            grep -F '<div id="root"></div>'
+          curl -fsS --max-time 10 "$base/status" |
             grep -F '<div id="root"></div>'
 
       - name: Test browser journeys against PostgreSQL and Nginx

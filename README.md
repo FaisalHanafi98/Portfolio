@@ -27,6 +27,7 @@ Use this README as supporting reference only.
 - **Styling:** Tailwind CSS
 - **Animation:** Framer Motion
 - **State Management:** React Query
+- **E2E Verification:** Playwright Test (`1.65.1`)
 
 ## Project Structure
 
@@ -37,6 +38,7 @@ portfolio/
 │       ├── project/       # Projects feature
 │       ├── skill/         # Skills feature
 │       ├── experience/    # Experience feature
+│       ├── status/        # Status snapshot, latency metrics & GitHub poller
 │       ├── common/        # Shared (ApiResponse, exceptions)
 │       ├── config/        # CORS, OpenAPI config
 │       └── seed/          # Data seeder
@@ -92,12 +94,13 @@ npm run dev
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/v1/health` | Health check |
+| GET | `/api/v1/status` | Bounded operational status snapshot (`uptimeSeconds`, coarse DB health, revision, 5-min request count/p95, and cached GitHub workflow/commit sync) |
 | GET | `/api/v1/projects` | List all projects |
 | GET | `/api/v1/projects/{slug}` | Get project details |
 | GET | `/api/v1/skills` | Get skills by category |
 | GET | `/api/v1/experience` | Get work experience |
-| GET | `/actuator/health` | Local ops/runtime healthcheck, not a public production endpoint |
-| GET | `/actuator/prometheus` | Prometheus metrics |
+| GET | `/actuator/health` | Local ops/runtime healthcheck (`show-details: never` in `prod`) |
+| GET | `/actuator/prometheus` | Local dev Prometheus metrics (`access: none` / blocked in `prod`) |
 
 ## Development Commands
 
@@ -116,22 +119,22 @@ npm run dev                # Start dev server
 npm run build              # Production build
 npm run lint               # Run ESLint
 npm run type-check         # TypeScript check
+npm test                   # Run SSR content-state assertions
+npm run test:e2e           # Run Playwright E2E checks (requires running backend)
 ```
 
 ## Deployment
 
-- **Live target:** AWS Lightsail
-- **Frontend:** Static Vite build served by Nginx from `/var/www/portfolio`
-- **Backend:** Spring Boot service managed by systemd and reverse-proxied by Nginx
-- **Deployment:** The Lightsail workflow is retired. See the [runtime guide](docs/SOURCE_OF_TRUTH.md) for the current release state.
-- **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge
+- **Deployment:** The Lightsail workflow is retired; Compose PostgreSQL/Nginx rehearsal is verified in CI and VPS cutover is KIV. See the [runtime guide](docs/SOURCE_OF_TRUTH.md) and [roadmap](docs/PORTFOLIO_ROADMAP.md).
+- **Frontend:** Static Vite build served by Nginx with `/api/` reverse-proxied to Spring Boot on port `8080`.
+- **Operational rule:** Treat `docs/SOURCE_OF_TRUTH.md` as authoritative if this README and executable files ever diverge.
 
 ## Author
 
 **Mohamad Faisal Bin Mohd Hanafi**
 
-- LinkedIn: [linkedin.com/in/faisal-hanafi](https://linkedin.com/in/faisal-hanafi)
-- GitHub: [github.com/FaisalHanafi](https://github.com/FaisalHanafi)
+- LinkedIn: [linkedin.com/in/faisalhanafidsa0105](https://www.linkedin.com/in/faisalhanafidsa0105/)
+- GitHub: [github.com/FaisalHanafi98](https://github.com/FaisalHanafi98)
 
 ## License
 

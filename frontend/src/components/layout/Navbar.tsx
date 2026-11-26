@@ -4,11 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useScrolledPast } from '../../hooks/useScrollPosition';
 
 const navLinks = [
-  { name: 'About', href: '/#about' },
-  { name: 'Projects', href: '/#projects' },
-  { name: 'Skills', href: '/#skills' },
-  { name: 'Experience', href: '/#experience' },
-  { name: 'Contact', href: '/#contact' },
+  { name: 'About', href: '/#about', isRoute: false },
+  { name: 'Projects', href: '/#projects', isRoute: false },
+  { name: 'Skills', href: '/#skills', isRoute: false },
+  { name: 'Experience', href: '/#experience', isRoute: false },
+  { name: 'Status', href: '/status', isRoute: true },
+  { name: 'Contact', href: '/#contact', isRoute: false },
 ];
 
 const resumeSubject = encodeURIComponent('Resume Request — Faisal Hanafi');
@@ -78,12 +79,21 @@ export default function Navbar() {
             <ul className="flex items-center gap-6">
               {navLinks.map((link) => (
                 <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-charcoal-light hover:text-charcoal transition-colors text-sm font-medium link-underline py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
-                  >
-                    {link.name}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="text-charcoal-light hover:text-charcoal transition-colors text-sm font-medium link-underline py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
+                    >
+                      {link.name}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-charcoal-light hover:text-charcoal transition-colors text-sm font-medium link-underline py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
+                    >
+                      {link.name}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -147,13 +157,23 @@ export default function Navbar() {
                 <ul className="flex flex-col items-center gap-2 py-5 px-4">
                   {navLinks.map((link) => (
                     <li key={link.name} className="w-full text-center">
-                      <a
-                        href={link.href}
-                        onClick={handleNavClick}
-                        className="text-charcoal-light hover:text-charcoal hover:bg-cream-dark/50 active:scale-[0.99] transition-[color,background-color,transform] duration-150 ease-out text-lg font-medium inline-flex items-center justify-center w-full min-h-[44px] py-2 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-                      >
-                        {link.name}
-                      </a>
+                      {link.isRoute ? (
+                        <Link
+                          to={link.href}
+                          onClick={handleNavClick}
+                          className="text-charcoal-light hover:text-charcoal hover:bg-cream-dark/50 active:scale-[0.99] transition-[color,background-color,transform] duration-150 ease-out text-lg font-medium inline-flex items-center justify-center w-full min-h-[44px] py-2 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+                        >
+                          {link.name}
+                        </Link>
+                      ) : (
+                        <a
+                          href={link.href}
+                          onClick={handleNavClick}
+                          className="text-charcoal-light hover:text-charcoal hover:bg-cream-dark/50 active:scale-[0.99] transition-[color,background-color,transform] duration-150 ease-out text-lg font-medium inline-flex items-center justify-center w-full min-h-[44px] py-2 rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+                        >
+                          {link.name}
+                        </a>
+                      )}
                     </li>
                   ))}
                   <li className="pt-2 w-full text-center">

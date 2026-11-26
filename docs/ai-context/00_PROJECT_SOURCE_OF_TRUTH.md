@@ -30,7 +30,7 @@ Primary audiences:
 | Framework | Spring Boot 3.4.2 | HIGH — build.gradle verified |
 | Language | Java 21 | HIGH — build.gradle toolchain confirmed |
 | JDK requirement | Amazon Corretto or Temurin 21 ONLY | HIGH — pilot confirmed; JDK 8/25/26 all fail |
-| Build tool | Gradle 8.14 | HIGH — README verified |
+| Build tool | Gradle 9.7.1 (wrapper with distribution checksum) | HIGH — gradle-wrapper.properties verified |
 | ORM | Spring Data JPA (Hibernate) | HIGH — build.gradle verified |
 | Validation | spring-boot-starter-validation | HIGH — build.gradle verified |
 | Observability | Spring Boot Actuator + Micrometer Prometheus | HIGH — build.gradle verified |
@@ -55,12 +55,10 @@ Primary audiences:
 
 | Component | Value | Confidence |
 |---|---|---|
-| Hosting | AWS Lightsail | HIGH — deploy workflow verified |
-| Web server | Nginx (serves frontend static files + proxies /api/) | HIGH — deploy workflow + deploy/ files |
-| Backend process manager | systemd (portfolio.service) | HIGH — deploy workflow verified |
-| CI/CD | GitHub Actions (.github/workflows/deploy-portfolio.yml) | HIGH — file verified |
-| SSL | Let's Encrypt via certbot | HIGH — deploy workflow conditional verified |
-| Domain | faisalhanafi.com | HIGH — deploy workflow verified |
+| Hosting | Lightsail retired (Aug 2026); replacement VPS pending (Docker rollout KIV) | HIGH — `docs/SOURCE_OF_TRUTH.md` verified |
+| Web server | Nginx in Compose rehearsal (serves static Vite build + proxies `/api/` to `:8080`) | HIGH — `docker-compose.yml` verified |
+| CI/CD | GitHub Actions (`.github/workflows/ci.yml` — Backend, Frontend, Compose smoke) | HIGH — `ci.yml` verified (`deploy-portfolio.yml` retired at `31a63b0`) |
+| Historical reference | Legacy Lightsail scripts in `deploy/` (non-active; see `docs/SOURCE_OF_TRUTH.md`) | HIGH — directory verified |
 
 ---
 
@@ -70,11 +68,10 @@ Primary audiences:
 Local dev:
   React (Vite dev server :5173) --> Spring Boot (:8081, dev profile, H2)
 
-Production:
-  Browser --> Nginx (:80/:443)
-                ├── /          --> /var/www/portfolio (static Vite build)
+Compose rehearsal / intended production:
+  Browser --> Nginx (:3000 local / :80/:443 VPS)
+                ├── /          --> static Vite build
                 └── /api/      --> Spring Boot (:8080, prod profile, PostgreSQL)
-                                   (managed by systemd as 'portfolio' service)
 ```
 
 Backend port distinction: local dev uses 8081; production backend uses 8080 (behind Nginx).
@@ -90,6 +87,7 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | project | Project, ProjectController, ProjectDetailDto, ProjectDto, ProjectImage, ProjectRepository, ProjectService, Technology | HIGH — file list verified |
 | skill | Skill, SkillCategory, SkillCategoryDto, SkillCategoryRepository, SkillController, SkillRepository, SkillService | HIGH — file list verified |
 | experience | Experience, ExperienceController, ExperienceDto, ExperienceRepository, ExperienceService | HIGH — file list verified |
+| status | ApiLatencyTracker, ApiMetricsFilter, GitHubStatusService, StatusController, StatusMetricsConfig, StatusProperties, StatusService, StatusSnapshotDto | HIGH — file list verified |
 | common | ApiResponse (record), GlobalExceptionHandler, ResourceNotFoundException | HIGH — file list verified |
 | config | CorsConfig, OpenApiConfig | HIGH — file list verified |
 | seed | DataSeeder (CommandLineRunner) | HIGH — file verified |
@@ -102,10 +100,10 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | components/layout/ | EmailSidebar, Footer, Layout, Navbar, SocialSidebar | HIGH — file list verified |
 | components/projects/ | FeaturedProject, ProjectCard, ProjectDetail | HIGH — file list verified |
 | components/sections/ | AboutSection, ContactSection, ExperienceSection, HeroSection, ProjectsSection, SkillsSection | HIGH — file list verified |
-| components/ui/ | AnimatedSection, Button, Card, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
+| components/ui/ | AnimatedSection, Button, Card, QueryContent, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
 | hooks/ | useScrollPosition.ts | HIGH — file list verified |
-| lib/ | animations.ts | HIGH — file list verified |
-| pages/ | HomePage.tsx, ProjectPage.tsx | HIGH — file list verified |
+| lib/ | animations.ts, projectImages.ts, projectNarratives.ts | HIGH — file list verified |
+| pages/ | HomePage.tsx, NotFoundPage.tsx, ProjectPage.tsx, StatusPage.tsx | HIGH — file list verified |
 | types/ | index.ts | HIGH — file list verified |
 
 ---
@@ -147,14 +145,14 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 
 ## Non-Negotiable Rules
 
-1. Pre-commit gate must pass before any commit. Never use --no-verify.
-2. One deliverable per session. The session guard enforces a 90-minute cap.
+1. Pre-commit gate (`.githooks/pre-commit`) must pass before any commit. Never use `--no-verify`.
+2. One deliverable per session (`docs/PORTFOLIO_SESSION_SOURCE_OF_TRUTH.md`; former shared session guard retired at `447ac37`).
 3. JDK 21 only. JDK 8, 25, and 26 were all tested during the 2026-04-18 pilot and all failed.
 4. Do not run the prod Spring profile locally unless PostgreSQL is available and configured.
-5. Do not commit lightsail private key.txt (it is gitignored but must not be staged).
-6. Do not use git add -A without reviewing git status first.
+5. Keep secrets and `lightsail private key.txt` (gitignored) out of Git commits.
+6. Do not use `git add -A` without reviewing `git status` first.
 7. Commit messages must follow the [shared workspace SOP](../../../../standards/COMMIT_MESSAGES.md).
-8. Production backend port is 8080; local dev backend port is 8081.
+8. Container/production backend port is 8080; local dev backend port is 8081.
 
 ---
 
@@ -165,23 +163,20 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 - `../../standards/COMMIT_MESSAGES.md` — required commit message format
 - `.githooks/pre-commit` — enforced commit gate
 - `scripts/healthcheck.sh` — healthcheck dispatcher
-- `.github/workflows/deploy-portfolio.yml` — CI/CD pipeline (deployment truth)
+- `.github/workflows/ci.yml` — CI pipeline (build, test, Compose + Playwright smoke)
 
 ---
 
 ## Stable Facts vs Planned Items
 
 ### Stable (implemented and verified)
-- Spring Boot REST API serving projects, skills, experience, and health
+- Spring Boot REST API serving projects, skills, experience, health, and bounded operational `/api/v1/status` (with DB probe, rolling 5-minute latency p95, and scheduled conditional GitHub poller)
 - H2 dev database with DataSeeder
-- V3.2 gate system (session guard + L1 + L2-fast + L2-full + pre-commit hook)
-- GitHub Actions CI/CD pipeline deploying to Lightsail
-- React frontend with Tailwind, Framer Motion, React Query
+- Gate system (secret scan + staged Unicode/bidi verification + L1 + L2-fast + L2-full + pre-commit hook)
+- Boundary architecture & production Actuator/Prometheus lockdown checks (`EnterpriseBoundaryArchitectureTest`)
+- GitHub Actions CI pipeline (Backend, Frontend, Compose PostgreSQL + Playwright E2E)
+- React frontend with Tailwind, Framer Motion, React Query, public `/status` route, 14 SSR fixture checks, and 12 Playwright E2E checks
 
-### Planned (documented but not verified as implemented)
-- Cybersecurity audit (planned 2026-04-16, not yet done)
-- Playwright/E2E tests (listed in OPTIONAL_IMPROVEMENTS, not implemented)
-- Contact form (listed in OPTIONAL_IMPROVEMENTS, not implemented)
-- OG meta tags (listed in OPTIONAL_IMPROVEMENTS, not implemented)
-- Response compression (listed in OPTIONAL_IMPROVEMENTS, not implemented)
-- Production deployment verification of 2026-05-01 changes
+### Planned (documented in `docs/PORTFOLIO_ROADMAP.md`)
+- Docker VPS delivery rehearsal resume (currently KIV)
+- Flyway schema baseline, first-party analytics, Ask About My Work (pgvector RAG), and JD matcher (Months 3–12)

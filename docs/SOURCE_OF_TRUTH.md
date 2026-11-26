@@ -78,7 +78,11 @@ ran the [historical workflow at `63feb9e`](https://github.com/FaisalHanafi98/Por
 
 The [proposed roadmap](PORTFOLIO_ROADMAP.md) covers a Singapore VPS, GHCR
 image delivery, Caddy HTTPS, Docker Compose and encrypted PostgreSQL backups.
-Choose a provider and verify the rehearsal before any VPS cutover.
+The Docker-based rollout is on hold (KIV) following a Docker Desktop startup
+failure. Resume on a working Docker environment and choose a provider before
+cutover. The local operational status slice (`GET /api/v1/status`, `/status`,
+and the server-side GitHub poller) is implemented and verified against the
+Spring Boot development profile (`dev`/H2).
 
 ## Browser regression checks
 
@@ -96,7 +100,8 @@ test runner uses that server directly. It creates no portfolio records.
 
 The browser suite covers project navigation and section scrolling, engineering
 details, a real API 404, recovery from a simulated HTTP 503, mobile menu
-scrolling and focus, story tab keyboard navigation, and unknown URLs.
+scrolling and focus, story tab keyboard navigation, `/status` service/DB/GitHub
+operational states and 375px mobile reflow, and unknown URLs.
 Failure traces and screenshots go to the ignored `frontend/test-results/`
 folder. Run the faster rendering fixtures with `npm test` from `frontend/`.
 

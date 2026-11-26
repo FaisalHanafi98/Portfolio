@@ -1,63 +1,14 @@
-<!-- GENERATED from core@3b953ef - edit in core/, then: python core/tools/ai.py sync -->
+<!-- GENERATED from core@8907e10 - edit in core/, then: python core/tools/ai.py sync -->
 
-# Portfolio - instructions for AI agents
+# Portfolio-cleanup-20261124 - instructions for AI agents
 
-# Constraints
+Read the [workspace standards](../../standards/README.md) once before working.
+Shared policies live there; project facts and exceptions follow below.
+This shared mode requires the surrounding Development workspace.
 
-These are the rules that apply to every session. Everything procedural lives in
-skills and loads on demand — this file stays small on purpose.
+Stack rules: [springboot](../../core/rules/stacks/springboot.md). Read when relevant.
 
-## Git
-
-- Never force-push, hard-reset, or delete branches without an explicit request.
-- Never skip hooks (`--no-verify`). If a hook blocks you, fix the cause.
-- Stage specific files; no blanket `git add -A` in repos with unrelated changes.
-- Commit format: `type(scope): description` — feat, fix, refactor, docs, test, chore.
-- Commit when a discrete task completes. Ask before pushing to main/master/dev.
-
-## Secrets and data
-
-- No secrets, credentials, or `.env` files in any commit, ever. The pre-commit
-  secret scan is a backstop, not permission to be careless.
-- PDPA: no real personal data in code, tests, or fixtures. CREAMS and
-  RinggitSense are sensitive; use synthetic data.
-- Financial advice output (RinggitSense, Sen2Nal) carries the mandatory
-  disclaimers defined in each project's facts.
-
-## Engineering
-
-- Behavior changes need a test that fails first. Run the verification command
-  and read its output before claiming anything works.
-- Prefer built-in tools and CLIs over MCP when an equivalent exists.
-- Keep diffs scoped to the task. No opportunistic refactors or drive-by fixes;
-  flag them instead.
-- Don't invent facts — especially Malaysian regulations, bank formats, or
-  statistics. Say what you don't know.
-
-## Escalation
-
-- Ask before anything destructive, schema-changing, or production-affecting.
-- When a task turns out bigger than classified, say so before continuing.
-
-## Spring Boot / Java
-
-- Constructor injection only; no field @Autowired. Service layer owns
-  transactions (@Transactional at service, not controller or repository).
-- DTOs at API boundaries — never expose entities. Bean Validation on input.
-- Tests: JUnit 5 + Mockito for units, MockMvc for web slices, Testcontainers
-  for repository tests against real PostgreSQL.
-- Depth: the `springboot` skill (patterns, security, tdd, verification
-  references).
-
-## React / TypeScript
-
-- React 18 + TypeScript, strict mode. Server data through a query library
-  (SWR/React Query) — never raw `useEffect` fetching.
-- Parallelize independent fetches; no request waterfalls.
-- Accessibility before aesthetics: labels, keyboard nav, 4.5:1 contrast,
-  44px touch targets. The `ui-accessibility` skill has the full checklist.
-- Semantic color tokens, no hardcoded hex in components.
-- Depth: `react-ui-patterns` and `frontend-design-aesthetics` skills.
+Stack rules: [react](../../core/rules/stacks/react.md). Read when relevant.
 
 ## Project facts
 
@@ -73,9 +24,14 @@ Non-technical recruiters (fast legitimacy signal), technical hiring managers
 
 ### Content priorities
 
-Represent CREAMS, Auto-Recruit, and this portfolio itself well. Preserve:
+Lead with CREAMS, Sen2Nal, and BAiTI. Preserve:
 clear storytelling, professional presentation, truthful claims, maintainable
 implementation.
+
+### Engineering & UI Contracts
+
+- **Design system lock:** [design.md](design.md) governs palette tokens, typography, motion, WCAG 2.2 AA / 44px touch targets, and `QueryContent` UX state-machine guarantees.
+- **Ponytail (`lite` default):** invoke `/ponytail-review staged` before `code-reviewer` and `security-reviewer`. Non-strippable invariants: never cut input validation, Actuator/Prometheus privacy controls, bounded Micrometer route-template labels, degraded-DB timeout bounds, WCAG 2.2 AA accessibility attributes, or UX state-machine edge cases. Record any bounded deferral as `TODO(CR-XXX): <limit>, <upgrade trigger>` per `standards/DOCUMENTATION.md` rather than `shortcut:`.
 
 ### Operational truth rule (unchanged from the previous AGENTS.md)
 
@@ -87,5 +43,5 @@ executable files they reference. The pre-2026-02 CLAUDE.md is archived at
 
 ## Synced skills
 
-On-demand skills in `.claude/skills/`: springboot, react-ui-patterns, ui-accessibility, frontend-design-aesthetics, tdd, code-commenting, verification-before-completion.
+On-demand skills in `.claude/skills/`: springboot, react-ui-patterns, security-review, tdd, systematic-debugging, verification-before-completion, ponytail, ui-accessibility, frontend-design-aesthetics.
 Trust their trigger descriptions; don't preload them.
