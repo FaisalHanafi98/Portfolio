@@ -538,7 +538,7 @@ export default function StatusPage() {
       className="pt-28 pb-16 px-6"
     >
       <div className="max-w-5xl mx-auto">
-        <div className="mb-8">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/"
             className="inline-flex items-center gap-2 text-blue hover:text-blue-dark active:scale-[0.98] font-mono text-sm transition-[color,transform] duration-150 ease-out min-h-[44px] px-1 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
@@ -547,6 +547,12 @@ export default function StatusPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Back to Portfolio
+          </Link>
+          <Link
+            to="/analytics"
+            className="inline-flex items-center gap-2 text-blue-dark hover:text-charcoal font-mono text-sm transition-colors min-h-[44px] px-2 rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+          >
+            Analytics Evidence
           </Link>
         </div>
 

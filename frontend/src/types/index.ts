@@ -138,3 +138,32 @@ export interface StatusSnapshot {
   traffic: StatusTraffic;
   github: GitHubStatus;
 }
+
+export interface ProjectFunnelMetric {
+  projectSlug: string;
+  caseStudyOpens: number;
+  meaningfulReads: number;
+  conversionRatePercent: number | null;
+  depth25Count: number;
+  depth50Count: number;
+  depth75Count: number;
+  depth100Count: number;
+}
+
+export interface AnalyticsTopicMetric {
+  topicLabel: string;
+  eventCount: number;
+}
+
+export interface AnalyticsSummary {
+  generatedAt: string;
+  lastRecordedAt: string | null;
+  windowDays: number;
+  rawRetentionDays: number;
+  aggregateRetentionMonths: number;
+  minTopicCellCount: number;
+  totalEvents: number;
+  projectFunnel: ProjectFunnelMetric[];
+  topics: AnalyticsTopicMetric[];
+  suppressedTopicCellCount: number;
+}

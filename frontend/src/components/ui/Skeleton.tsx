@@ -110,3 +110,31 @@ export function StatusSkeleton() {
     </div>
   );
 }
+
+export function AnalyticsSkeleton() {
+  return (
+    <div className="space-y-8">
+      <div className="bg-white rounded-2xl border-2 border-cream-darker p-6 shadow-sm space-y-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-44 rounded-full" />
+            <Skeleton className="h-7 w-72" />
+            <Skeleton className="h-4 w-56" />
+          </div>
+          <Skeleton className="h-11 w-40 rounded-xl" />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+          <Skeleton className="h-24 w-full rounded-xl" />
+        </div>
+      </div>
+
+      <div className="bg-white rounded-2xl border-2 border-cream-darker p-6 shadow-sm space-y-4">
+        <Skeleton className="h-6 w-64" />
+        <Skeleton className="h-48 w-full rounded-xl" />
+      </div>
+    </div>
+  );
+}

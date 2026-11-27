@@ -1,7 +1,7 @@
 # Deployment and CI/CD — Module Status
 
 Source: `.github/workflows/ci.yml`, `docker-compose.yml`, `docs/SOURCE_OF_TRUTH.md`
-Last verified: 2026-11-26 (active CI pipeline; Lightsail retired at `31a63b0`, Docker VPS rollout KIV at `550caa5`)
+Last verified: 2026-11-28 (active CI pipeline; Lightsail retired at `31a63b0`, Docker VPS rollout KIV at `550caa5`)
 Confidence: HIGH for CI/Compose definition; replacement VPS host PENDING
 
 ---
@@ -11,8 +11,8 @@ Confidence: HIGH for CI/Compose definition; replacement VPS host PENDING
 Triggers: push or pull request to `main` or `master`.
 
 1. **Backend Build & Test (`ubuntu-latest`)**: JDK 21 (Temurin), `./gradlew clean build --no-daemon`.
-2. **Frontend Build & Lint (`ubuntu-latest`)**: Node 20, `npm ci`, `npm run type-check`, `npm run lint`, `npm test` (`content-states.test.mjs`, 14 SSR tests), `npm run build`.
-3. **Compose Smoke Test (`ubuntu-latest`)**: Installs Chromium, builds & starts PostgreSQL + Spring (`prod` profile on `:8080`) + Nginx (`:3000`), verifies `/api/v1/projects`, `/api/v1/health`, `/api/v1/status`, `/api/v1/projects/creams`, direct `/projects/creams` and `/status` SPA routes, runs `npm run test:e2e`, and runs `docker compose down --volumes`.
+2. **Frontend Build & Lint (`ubuntu-latest`)**: Node 20, `npm ci`, `npm run type-check`, `npm run lint`, `npm test` (`tests/*.test.mjs`, 22 Node SSR & analytics tracker tests), `npm run build`.
+3. **Compose Smoke Test (`ubuntu-latest`)**: Installs Chromium, builds & starts PostgreSQL (with Flyway `V1` + `V2` migrations) + Spring (`prod` profile on `:8080`) + Nginx (`:3000`, `Host $http_host`), verifies `/api/v1/projects`, `/api/v1/health`, `/api/v1/status`, `/api/v1/analytics/summary`, `/api/v1/projects/creams`, direct `/projects/creams`, `/status`, and `/analytics` SPA routes, runs `npm run test:e2e`, and runs `docker compose down --volumes`.
 
 ---
 

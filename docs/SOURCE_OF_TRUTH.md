@@ -62,9 +62,12 @@ on port 8080. The bundled frontend serves the app on port 3000 and proxies
 `/api/` to that backend. Standalone development uses `dev` and port 8081.
 
 Check `http://localhost:3000/api/v1/health`, then confirm
-`http://localhost:3000/api/v1/projects` returns a populated list and
+`http://localhost:3000/api/v1/projects` returns a populated list,
+`http://localhost:3000/api/v1/status` returns status telemetry,
+`http://localhost:3000/api/v1/analytics/summary` returns aggregate funnel data, and
 `http://localhost:3000/api/v1/projects/creams` returns the CREAMS project.
-Open `http://localhost:3000/projects/creams` to exercise direct navigation.
+Open `http://localhost:3000/projects/creams`, `http://localhost:3000/status`, and
+`http://localhost:3000/analytics` to exercise direct navigation.
 Use `docker compose down` to stop the rehearsal and retain its database volume.
 The [CI smoke test](../.github/workflows/ci.yml) runs those checks against an
 isolated Compose stack on the runner.
@@ -80,9 +83,10 @@ The [proposed roadmap](PORTFOLIO_ROADMAP.md) covers a Singapore VPS, GHCR
 image delivery, Caddy HTTPS, Docker Compose and encrypted PostgreSQL backups.
 The Docker-based rollout is on hold (KIV) following a Docker Desktop startup
 failure. Resume on a working Docker environment and choose a provider before
-cutover. The local operational status slice (`GET /api/v1/status`, `/status`,
-and the server-side GitHub poller) is implemented and verified against the
-Spring Boot development profile (`dev`/H2).
+cutover. Both the live status slice (`GET /api/v1/status`, `/status`, GitHub poller)
+and the Flyway baseline + first-party analytics slice (`V1`/`V2`,
+`POST /api/v1/analytics/events`, `GET /api/v1/analytics/summary`, `/analytics`)
+are implemented and verified against the Spring Boot development profile (`dev`/H2).
 
 ## Browser regression checks
 
@@ -96,12 +100,14 @@ To use an installed Chrome, set `PLAYWRIGHT_CHANNEL=chrome` and run the same
 test command. In PowerShell, use `$env:PLAYWRIGHT_CHANNEL='chrome'`.
 To test a running local Compose stack, set
 `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000`. With an explicit base URL the
-test runner uses that server directly. It creates no portfolio records.
+test runner uses that server directly. It modifies no portfolio content records
+and exercises analytics ingestion against the running backend.
 
 The browser suite covers project navigation and section scrolling, engineering
 details, a real API 404, recovery from a simulated HTTP 503, mobile menu
 scrolling and focus, story tab keyboard navigation, `/status` service/DB/GitHub
-operational states and 375px mobile reflow, and unknown URLs.
+operational states, `/analytics` funnel conversion/suppression/retry and 375px
+mobile reflow, and unknown URLs.
 Failure traces and screenshots go to the ignored `frontend/test-results/`
 folder. Run the faster rendering fixtures with `npm test` from `frontend/`.
 

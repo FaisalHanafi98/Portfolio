@@ -39,7 +39,8 @@ portfolio/
 │       ├── skill/         # Skills feature
 │       ├── experience/    # Experience feature
 │       ├── status/        # Status snapshot, latency metrics & GitHub poller
-│       ├── common/        # Shared (ApiResponse, exceptions)
+│       ├── analytics/     # First-party event ingestion, rollups & retention
+│       ├── common/        # Shared (ApiResponse, exceptions, JSON converters)
 │       ├── config/        # CORS, OpenAPI config
 │       └── seed/          # Data seeder
 │
@@ -95,6 +96,8 @@ npm run dev
 |--------|----------|-------------|
 | GET | `/api/v1/health` | Health check |
 | GET | `/api/v1/status` | Bounded operational status snapshot (`uptimeSeconds`, coarse DB health, revision, 5-min request count/p95, and cached GitHub workflow/commit sync) |
+| POST | `/api/v1/analytics/events` | Bounded first-party engagement event ingestion (`eventId` deduplication, strict allowlist, zero PII/raw IP storage) |
+| GET | `/api/v1/analytics/summary` | Aggregate case-study conversion funnel, read-depth buckets, retention policy, and sparse topic suppression |
 | GET | `/api/v1/projects` | List all projects |
 | GET | `/api/v1/projects/{slug}` | Get project details |
 | GET | `/api/v1/skills` | Get skills by category |
@@ -119,7 +122,7 @@ npm run dev                # Start dev server
 npm run build              # Production build
 npm run lint               # Run ESLint
 npm run type-check         # TypeScript check
-npm test                   # Run SSR content-state assertions
+npm test                   # Run SSR content-state and analytics tracker assertions
 npm run test:e2e           # Run Playwright E2E checks (requires running backend)
 ```
 

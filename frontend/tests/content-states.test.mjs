@@ -19,6 +19,7 @@ after(() => vite.close());
 const { default: ProjectPage } = await vite.ssrLoadModule('/src/pages/ProjectPage.tsx');
 const { default: HomePage } = await vite.ssrLoadModule('/src/pages/HomePage.tsx');
 const { default: StatusPage } = await vite.ssrLoadModule('/src/pages/StatusPage.tsx');
+const { default: AnalyticsPage } = await vite.ssrLoadModule('/src/pages/AnalyticsPage.tsx');
 const { default: Navbar } = await vite.ssrLoadModule('/src/components/layout/Navbar.tsx');
 
 const project = {
@@ -371,4 +372,126 @@ test('status page renders loading, offline pause, insufficient data, measured p9
   ]);
   assert.match(emptyHtml, /GitHub Empty/);
   assert.match(emptyHtml, /zero workflow runs/i);
+});
+function renderAnalytics(state) {
+  return renderRoute('/analytics', '/analytics', AnalyticsPage, [[['analytics-summary'], state]]);
+}
+
+const analyticsSummaryFixture = {
+  generatedAt: '2026-11-27T12:35:00Z',
+  lastRecordedAt: '2026-11-27T12:30:00Z',
+  windowDays: 30,
+  rawRetentionDays: 30,
+  aggregateRetentionMonths: 12,
+  minTopicCellCount: 5,
+  totalEvents: 29,
+  projectFunnel: [
+    {
+      projectSlug: 'creams',
+      caseStudyOpens: 4,
+      meaningfulReads: 3,
+      conversionRatePercent: 75,
+      depth25Count: 4,
+      depth50Count: 4,
+      depth75Count: 3,
+      depth100Count: 2,
+    },
+    {
+      projectSlug: 'sen2nal',
+      caseStudyOpens: 0,
+      meaningfulReads: 0,
+      conversionRatePercent: null,
+      depth25Count: 0,
+      depth50Count: 0,
+      depth75Count: 0,
+      depth100Count: 0,
+    },
+  ],
+  topics: [
+    {
+      topicLabel: 'ai_retrieval',
+      eventCount: 9,
+    },
+  ],
+  suppressedTopicCellCount: 2,
+};
+
+test('loading analytics summary announces progress and hides the decorative skeleton', () => {
+  const html = renderAnalytics({ status: 'pending', fetchStatus: 'fetching' });
+
+  assert.match(html, /role="status"[^>]*>Loading analytics summary/);
+  assert.match(html, /aria-hidden="true"/);
+});
+
+test('analytics summary paused offline shows a connection message', () => {
+  const wasOnline = onlineManager.isOnline();
+  onlineManager.setOnline(false);
+  try {
+    const html = renderAnalytics({ status: 'pending', fetchStatus: 'paused' });
+
+    assert.match(html, /Waiting for a connection to load analytics summary/);
+    assert.doesNotMatch(html, /Loading analytics summary/);
+  } finally {
+    onlineManager.setOnline(wasOnline);
+  }
+});
+
+test('analytics page renders funnel denominators, read depths, sparse topic suppression, retention, and freshness', () => {
+  const html = renderAnalytics({ status: 'success', data: analyticsSummaryFixture });
+
+  assert.match(html, /Analytics Evidence/);
+  assert.match(html, /CREAMS/);
+  assert.match(html, /4 opens/);
+  assert.match(html, /75\.00%/);
+  assert.match(html, /3 \/ 4/);
+  assert.match(html, /75%: 3/);
+  assert.match(html, /Insufficient sample \(0 opens\)/);
+  assert.match(html, /AI &amp; Retrieval/);
+  assert.match(html, /2 sparse topic cells suppressed \(&lt; 5 events\)/);
+  assert.match(html, /30-day raw \/ 12-month aggregate/);
+  assert.match(html, /Last Recorded Event/);
+  assert.match(html, /2026-11-27 12:30:00 UTC/);
+});
+
+test('analytics page renders explicit zero-events and zero-denominator copy when empty', () => {
+  const html = renderAnalytics({
+    status: 'success',
+    data: {
+      ...analyticsSummaryFixture,
+      lastRecordedAt: null,
+      totalEvents: 0,
+      projectFunnel: [
+        {
+          projectSlug: 'creams',
+          caseStudyOpens: 0,
+          meaningfulReads: 0,
+          conversionRatePercent: null,
+          depth25Count: 0,
+          depth50Count: 0,
+          depth75Count: 0,
+          depth100Count: 0,
+        },
+      ],
+      topics: [],
+      suppressedTopicCellCount: 0,
+    },
+  });
+
+  assert.match(html, /No events recorded yet/);
+  assert.match(html, /No engagement events have been recorded in the active window yet/);
+  assert.match(html, /Insufficient sample \(0 opens\)/);
+  assert.match(html, /No topic categories currently meet the minimum reporting threshold of 5 events/);
+});
+
+test('analytics page retains cached metrics and exposes retry when refresh returns 503', () => {
+  const html = renderAnalytics({
+    status: 'error',
+    error: httpError(503),
+    data: analyticsSummaryFixture,
+  });
+
+  assert.match(html, /Showing the last loaded result/);
+  assert.match(html, /<button[^>]*>Try again<\/button>/);
+  assert.match(html, /75\.00%/);
+  assert.match(html, /CREAMS/);
 });

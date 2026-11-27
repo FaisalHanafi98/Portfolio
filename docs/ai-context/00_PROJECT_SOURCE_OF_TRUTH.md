@@ -32,6 +32,7 @@ Primary audiences:
 | JDK requirement | Amazon Corretto or Temurin 21 ONLY | HIGH — pilot confirmed; JDK 8/25/26 all fail |
 | Build tool | Gradle 9.7.1 (wrapper with distribution checksum) | HIGH — gradle-wrapper.properties verified |
 | ORM | Spring Data JPA (Hibernate) | HIGH — build.gradle verified |
+| Schema migrations | Flyway (`flyway-core`, `flyway-database-postgresql`, `V1` baseline & `V2` analytics) | HIGH — `build.gradle` & `FlywayBaselineSchemaTest` verified |
 | Validation | spring-boot-starter-validation | HIGH — build.gradle verified |
 | Observability | Spring Boot Actuator + Micrometer Prometheus | HIGH — build.gradle verified |
 | API docs | springdoc-openapi-starter-webmvc-ui 2.8.4 | HIGH — build.gradle verified |
@@ -88,7 +89,8 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | skill | Skill, SkillCategory, SkillCategoryDto, SkillCategoryRepository, SkillController, SkillRepository, SkillService | HIGH — file list verified |
 | experience | Experience, ExperienceController, ExperienceDto, ExperienceRepository, ExperienceService | HIGH — file list verified |
 | status | ApiLatencyTracker, ApiMetricsFilter, GitHubStatusService, StatusController, StatusMetricsConfig, StatusProperties, StatusService, StatusSnapshotDto | HIGH — file list verified |
-| common | ApiResponse (record), GlobalExceptionHandler, ResourceNotFoundException | HIGH — file list verified |
+| analytics | AnalyticsConfig, AnalyticsController, AnalyticsDailyAggregate, AnalyticsDailyAggregateRepository, AnalyticsEvent, AnalyticsEventRepository, AnalyticsEventRequest, AnalyticsIngestionRateLimiter, AnalyticsIngestionService, AnalyticsIngestResultDto, AnalyticsPayloadTooLargeException, AnalyticsProperties, AnalyticsRateLimitException, AnalyticsRetentionService, AnalyticsSummaryDto, AnalyticsSummaryService | HIGH — file list verified |
+| common | ApiResponse (record), GlobalExceptionHandler, ResourceNotFoundException, StringListJsonConverter, StringMapJsonConverter | HIGH — file list verified |
 | config | CorsConfig, OpenApiConfig | HIGH — file list verified |
 | seed | DataSeeder (CommandLineRunner) | HIGH — file verified |
 
@@ -101,17 +103,19 @@ Backend port distinction: local dev uses 8081; production backend uses 8080 (beh
 | components/projects/ | FeaturedProject, ProjectCard, ProjectDetail | HIGH — file list verified |
 | components/sections/ | AboutSection, ContactSection, ExperienceSection, HeroSection, ProjectsSection, SkillsSection | HIGH — file list verified |
 | components/ui/ | AnimatedSection, Button, Card, QueryContent, Skeleton, SketchDivider, SketchDoodles, SketchUnderline, Tag | HIGH — file list verified |
-| hooks/ | useScrollPosition.ts | HIGH — file list verified |
-| lib/ | animations.ts, projectImages.ts, projectNarratives.ts | HIGH — file list verified |
-| pages/ | HomePage.tsx, NotFoundPage.tsx, ProjectPage.tsx, StatusPage.tsx | HIGH — file list verified |
+| hooks/ | useCaseStudyTracker.ts, useScrollPosition.ts | HIGH — file list verified |
+| lib/ | analytics.ts, animations.ts, projectImages.ts, projectNarratives.ts | HIGH — file list verified |
+| pages/ | AnalyticsPage.tsx, HomePage.tsx, NotFoundPage.tsx, ProjectPage.tsx, StatusPage.tsx | HIGH — file list verified |
 | types/ | index.ts | HIGH — file list verified |
 
 ---
 
 ## User Roles
 
-None. The portfolio is a public read-only product. There is no authentication, no admin panel,
-and no write access of any kind through the public API.
+None. The portfolio has no user accounts, login, or admin panel. All content and
+operational read endpoints remain public read-only, alongside one intentionally
+bounded public telemetry ingestion endpoint (`POST /api/v1/analytics/events`,
+enforced by explicit field allowlists, payload caps, and ephemeral rate limits).
 
 The PRD explicitly scopes out admin CMS, authentication, and blog platform as out-of-scope
 unless explicitly reintroduced.
@@ -134,12 +138,8 @@ unless explicitly reintroduced.
 
 | Environment | Database | Schema management | Seed | Confidence |
 |---|---|---|---|---|
-| dev | H2 in-memory (portfoliodb) | ddl-auto: create-drop (recreated each boot) | DataSeeder runs on every boot | HIGH — application-dev.yml verified |
-| prod | PostgreSQL (credentials via env vars) | ddl-auto: update | DataSeeder runs on every boot | HIGH — application-prod.yml verified; ddl-auto: update is INFERRED migration strategy |
-
-Production migration note: No Flyway or Liquibase is present in build.gradle. ddl-auto: update
-means Hibernate manages schema evolution automatically. This is sufficient for a portfolio but
-means there is no migration rollback capability. Status: ACCEPTED for current scale.
+| dev | H2 in-memory (portfoliodb) | Flyway (`V1__baseline_portfolio_schema.sql`, `V2__first_party_analytics_schema.sql`) + Hibernate `ddl-auto: validate` | DataSeeder runs on every boot | HIGH — `application-dev.yml` and `FlywayBaselineSchemaTest` verified |
+| prod | PostgreSQL (credentials via env vars) | Flyway (`V1`, `V2`, `baseline-on-migrate: true`, optional `FLYWAY_URL`/`FLYWAY_USER`/`FLYWAY_PASSWORD` overrides) + Hibernate `ddl-auto: validate` | DataSeeder runs on every boot | HIGH — `application-prod.yml` verified; live PostgreSQL Compose run executed in CI |
 
 ---
 
@@ -170,13 +170,14 @@ means there is no migration rollback capability. Status: ACCEPTED for current sc
 ## Stable Facts vs Planned Items
 
 ### Stable (implemented and verified)
-- Spring Boot REST API serving projects, skills, experience, health, and bounded operational `/api/v1/status` (with DB probe, rolling 5-minute latency p95, and scheduled conditional GitHub poller)
+- Spring Boot REST API serving projects, skills, experience, health, bounded operational `/api/v1/status`, and Flyway-migrated first-party analytics (`/api/v1/analytics/events` + `/api/v1/analytics/summary`)
+- Flyway schema baseline (`V1`) + analytics schema (`V2`) validated by Hibernate `ddl-auto: validate`
 - H2 dev database with DataSeeder
 - Gate system (secret scan + staged Unicode/bidi verification + L1 + L2-fast + L2-full + pre-commit hook)
 - Boundary architecture & production Actuator/Prometheus lockdown checks (`EnterpriseBoundaryArchitectureTest`)
 - GitHub Actions CI pipeline (Backend, Frontend, Compose PostgreSQL + Playwright E2E)
-- React frontend with Tailwind, Framer Motion, React Query, public `/status` route, 14 SSR fixture checks, and 12 Playwright E2E checks
+- React frontend with Tailwind, Framer Motion, React Query, public `/status` and `/analytics` routes, 22 Node SSR/tracker checks, and 16 Playwright E2E checks
 
 ### Planned (documented in `docs/PORTFOLIO_ROADMAP.md`)
 - Docker VPS delivery rehearsal resume (currently KIV)
-- Flyway schema baseline, first-party analytics, Ask About My Work (pgvector RAG), and JD matcher (Months 3–12)
+- Ask About My Work (pgvector RAG) and JD matcher (Months 5–12)

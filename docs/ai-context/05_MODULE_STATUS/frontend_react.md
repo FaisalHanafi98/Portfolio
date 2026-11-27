@@ -1,8 +1,8 @@
 # Frontend React — Module Status
 
-Source: `frontend/src/` file list, `client.ts`, `App.tsx`, `StatusPage.tsx`, `README.md`
-Last verified: 2026-11-27
-Confidence: HIGH (`type-check`, ESLint `--max-warnings 0`, `14/14` SSR fixture assertions, and `12/12` Chrome Playwright E2E tests verified)
+Source: `frontend/src/` file list, `client.ts`, `App.tsx`, `StatusPage.tsx`, `AnalyticsPage.tsx`, `lib/analytics.ts`, `README.md`
+Last verified: 2026-11-28
+Confidence: HIGH (`type-check`, ESLint `--max-warnings 0`, `22/22` Node SSR & tracker assertions, and `16/16` Chrome Playwright E2E tests verified)
 
 ---
 
@@ -17,7 +17,7 @@ Confidence: HIGH (`type-check`, ESLint `--max-warnings 0`, `14/14` SSR fixture a
 | Animation | Framer Motion (`<MotionConfig reducedMotion="user">`) | HIGH — `App.tsx` verified |
 | Data fetching | React Query + `QueryContent` state machine | HIGH — `client.ts` & SSR verified |
 | HTTP client | Axios (custom instance in `api/client.ts`) | HIGH — `client.ts` verified |
-| Tests | Node SSR (`tests/content-states.test.mjs`, 14 tests) + Playwright E2E (`tests/e2e/*.spec.ts`, 12 tests) | HIGH — locally executed |
+| Tests | Node SSR & tracker (`tests/*.test.mjs`, 22 tests) + Playwright E2E (`tests/e2e/*.spec.ts`, 16 tests) | HIGH — locally executed |
 
 Build command: `npm run build` (in `frontend/`)
 Output directory: `frontend/dist/` (`index.html` confirmed by `L2-full` gate check)
@@ -33,9 +33,11 @@ Base URL selection:
 - Development build with `VITE_API_URL` set: uses that value
 - Development build without `VITE_API_URL`: falls back to `/api/v1`
 
-Defined API methods in `client.ts`:
+Defined API methods in `client.ts` (and `lib/analytics.ts`):
 - `api.healthCheck()` -> `GET /api/v1/health`
 - `api.getStatus()` -> `GET /api/v1/status`
+- `api.getAnalyticsSummary()` -> `GET /api/v1/analytics/summary`
+- `postAnalyticsEvent()` (`lib/analytics.ts`) -> `POST /api/v1/analytics/events`
 - `api.getProjects()` -> `GET /api/v1/projects`
 - `api.getProject(slug)` -> `GET /api/v1/projects/{slug}`
 - `api.getSkills()` -> `GET /api/v1/skills`
@@ -52,6 +54,7 @@ Defined API methods in `client.ts`:
 | `pages/HomePage.tsx` | Main single-page portfolio layout |
 | `pages/ProjectPage.tsx` | Lazy-loaded individual project case-study page |
 | `pages/StatusPage.tsx` | Lazy-loaded public `/status` telemetry & GitHub sync view |
+| `pages/AnalyticsPage.tsx` | Lazy-loaded public `/analytics` funnel, read-depth, and suppression evidence view |
 | `pages/NotFoundPage.tsx` | Unmatched-route recovery page |
 
 ### Sections
