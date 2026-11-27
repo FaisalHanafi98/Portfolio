@@ -48,3 +48,11 @@ portfolio:
       max-items: ${STATUS_GITHUB_MAX_ITEMS:5}
       poll-tick-ms: ${STATUS_GITHUB_POLL_TICK_MS:30000}
       poll-initial-delay-ms: ${STATUS_GITHUB_POLL_INITIAL_DELAY_MS:10000}
+  analytics:
+    enabled: ${ANALYTICS_ENABLED:true}
+    max-body-bytes: ${ANALYTICS_MAX_BODY_BYTES:2048}
+    rate-limit-per-minute: ${ANALYTICS_RATE_LIMIT_PER_MIN:60}
+    raw-retention-days: ${ANALYTICS_RAW_RETENTION_DAYS:30}
+    aggregate-retention-months: ${ANALYTICS_AGGREGATE_RETENTION_MONTHS:12}
+    min-topic-cell-count: ${ANALYTICS_MIN_TOPIC_CELL_COUNT:5}
+    trust-forwarded-for: ${ANALYTICS_TRUST_FORWARDED_FOR:false}

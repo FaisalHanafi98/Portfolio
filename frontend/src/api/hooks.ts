@@ -15,6 +15,7 @@ export const queryKeys = {
   skills: ['skills'] as const,
   experience: ['experience'] as const,
   status: ['status'] as const,
+  analyticsSummary: ['analytics-summary'] as const,
 };
 
 // Projects hooks
@@ -71,6 +72,19 @@ export function useStatus() {
     queryKey: queryKeys.status,
     queryFn: async () => {
       const response = await api.getStatus();
+      return response.data;
+    },
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+  });
+}
+
+// First-party aggregate analytics summary hook
+export function useAnalyticsSummary() {
+  return useQuery<import('../types').AnalyticsSummary>({
+    queryKey: queryKeys.analyticsSummary,
+    queryFn: async () => {
+      const response = await api.getAnalyticsSummary();
       return response.data;
     },
     staleTime: 0,

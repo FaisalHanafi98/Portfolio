@@ -109,6 +109,8 @@ The product requires public API support for:
 
 - `GET /api/v1/health`
 - `GET /api/v1/status`
+- `GET /api/v1/analytics/summary`
+- `POST /api/v1/analytics/events`
 - `GET /api/v1/projects`
 - `GET /api/v1/projects/{slug}`
 - `GET /api/v1/skills`
@@ -133,7 +135,6 @@ Out of scope unless explicitly reintroduced:
 - admin CMS
 - authentication
 - blog platform
-- analytics dashboard
 - speculative platform expansion beyond portfolio use cases
 
 ## 9. Data Model Requirements
@@ -172,7 +173,8 @@ Design expectations:
 
 ### Content request states
 
-Projects, project detail, skills, experience, and the public `/status` snapshot use
+Projects, project detail, skills, experience, the public `/status` snapshot,
+and the public `/analytics` evidence view use
 [`QueryContent`](../frontend/src/components/ui/QueryContent.tsx) to display
 the state of their existing React Query requests.
 
@@ -187,14 +189,14 @@ the state of their existing React Query requests.
 
 React Query owns request, cache, and retry transitions. Retry acts on the
 same query. Keep these states consistent when changing any of the four views.
-Run `node --test tests/content-states.test.mjs` from `frontend/` to verify
-the state rendering with fixture data.
+Run `npm test` (`node --test tests/*.test.mjs`) from `frontend/` to verify
+the state rendering and analytics tracker checks with fixture data.
 
 ### Other state owners
 
 | Owner | Transitions |
 |---|---|
-| [Router and lazy route](../frontend/src/App.tsx) | Home, project detail, `/status`, or unmatched URL. Detail and status routes load through Suspense before their API requests start. |
+| [Router and lazy route](../frontend/src/App.tsx) | Home, project detail, `/status`, `/analytics`, or unmatched URL. Detail, status, and analytics routes load through Suspense before their API requests start. |
 | [Navbar](../frontend/src/components/layout/Navbar.tsx) and [scroll hook](../frontend/src/hooks/useScrollPosition.ts) | Opening the mobile menu locks page scrolling on mobile. Selecting a link, pressing Escape, or crossing the desktop breakpoint closes it. The toggle exposes its expanded state. Header styling changes at the scroll threshold. |
 | [Experience selection](../frontend/src/components/sections/ExperienceSection.tsx) | A company button selects its experience ID. Selection survives list reordering and falls back to the first entry if the selected ID disappears. The outgoing panel exits before the incoming panel enters. |
 | [Project lists](../frontend/src/components/sections/ProjectsSection.tsx) and [detail](../frontend/src/components/projects/ProjectDetail.tsx) | Featured and other groups, optional detail blocks and links, and project image selection derive from the returned content. Image loading is browser-owned. |

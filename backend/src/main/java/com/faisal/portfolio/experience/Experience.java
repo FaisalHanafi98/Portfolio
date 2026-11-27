@@ -1,11 +1,10 @@
 package com.faisal.portfolio.experience;
 
+import com.faisal.portfolio.common.StringListJsonConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +38,7 @@ public class Experience {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @JdbcTypeCode(SqlTypes.JSON)
+    @Convert(converter = StringListJsonConverter.class)
     @Column(columnDefinition = "TEXT")
     private List<String> highlights;
 

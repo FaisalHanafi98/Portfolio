@@ -8,6 +8,7 @@ import NotFoundPage from './pages/NotFoundPage';
 // Lazy load secondary pages — only needed when user navigates away from home
 const ProjectPage = lazy(() => import('./pages/ProjectPage'));
 const StatusPage = lazy(() => import('./pages/StatusPage'));
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
 
 function LazyFallback() {
   return (
@@ -38,6 +39,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/projects/:slug" element={<ProjectPage />} />
               <Route path="/status" element={<StatusPage />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>

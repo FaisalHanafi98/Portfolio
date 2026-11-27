@@ -114,6 +114,15 @@ if ! curl -fsS --max-time 5 "$STATUS_URL" > /tmp/portfolio_status.json || ! grep
 fi
 echo "  - status snapshot OK"
 
+ANALYTICS_URL="http://localhost:${PORT}/api/v1/analytics/summary"
+echo "  - GET $ANALYTICS_URL"
+if ! curl -fsS --max-time 5 "$ANALYTICS_URL" > /tmp/portfolio_analytics.json || ! grep -q '"projectFunnel"' /tmp/portfolio_analytics.json; then
+  echo "  RED: GET /api/v1/analytics/summary failed"
+  cat /tmp/portfolio_analytics.json 2>/dev/null || echo "(no response)"
+  exit 1
+fi
+echo "  - analytics summary OK"
+
 # Step 4: frontend SSR tests and production build.
 echo "  - running frontend content-state tests"
 cd "$PROJECT_ROOT/frontend"

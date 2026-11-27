@@ -45,6 +45,12 @@ export const api = {
     return response.data;
   },
 
+  // Aggregate first-party analytics summary
+  getAnalyticsSummary: async (): Promise<ApiResponse<import('../types').AnalyticsSummary>> => {
+    const response = await apiClient.get('/analytics/summary');
+    return response.data;
+  },
+
   // Projects
   getProjects: async (): Promise<ApiResponse<import('../types').ProjectSummary[]>> => {
     const response = await apiClient.get('/projects');

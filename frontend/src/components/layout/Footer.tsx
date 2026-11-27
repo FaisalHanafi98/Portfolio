@@ -68,12 +68,18 @@ export default function Footer() {
               Spring Boot + React + TypeScript
             </p>
           </a>
-          <div>
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <Link
               to="/status"
               className="inline-flex items-center min-h-[44px] px-3 font-mono text-xs text-blue hover:text-blue-dark transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
             >
               System Status
+            </Link>
+            <Link
+              to="/analytics"
+              className="inline-flex items-center min-h-[44px] px-3 font-mono text-xs text-blue hover:text-blue-dark transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded"
+            >
+              Analytics Evidence
             </Link>
           </div>
         </div>

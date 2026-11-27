@@ -1,6 +1,46 @@
 # Portfolio project summary
 
-**As of 27 November 2026**
+**As of 28 November 2026**
+
+## Flyway baseline & first-party analytics (`feat/flyway-baseline`, `origin/main..HEAD`) · 28 November 2026
+
+Implemented the Flyway schema baseline plus the complete Months 3–5
+first-party analytics slice in `projects/Portfolio-cleanup-20261124` on
+branch `feat/flyway-baseline` (keeping `projects/Portfolio` at `63feb9e`
+untouched and `stash@{0}` intact):
+
+- **Flyway schema baseline (`V1__baseline_portfolio_schema.sql`):**
+  - Added `org.flywaydb:flyway-core` and `org.flywaydb:flyway-database-postgresql`,
+    replaced `@JdbcTypeCode(SqlTypes.JSON)` with explicit JPA JSON converters
+    (`StringListJsonConverter`, `StringMapJsonConverter`), and locked both
+    `application-dev.yml` and `application-prod.yml` to Hibernate
+    `ddl-auto: validate` with `baseline-on-migrate: true` at `V1`.
+- **Analytics persistence, ingestion & retention (`V2__first_party_analytics_schema.sql`, `analytics/`):**
+  - Added `analytics_events` (unique `event_id` for idempotent retries,
+    allowlisted fields only) and `analytics_daily_aggregates`, strict JSON key
+    allowlist + `maxBodyBytes` enforcement in `AnalyticsController`, ephemeral
+    daily-salted IP hash rate limiting (`AnalyticsIngestionRateLimiter`),
+    idempotent ingestion + concurrent rollup increments
+    (`AnalyticsIngestionService`), funnel/depth summary with `< 5` sparse topic
+    suppression (`AnalyticsSummaryService`, `GET /api/v1/analytics/summary`),
+    and scheduled `03:15 UTC` expiry cleanup (`AnalyticsRetentionService`,
+    `30`-day raw / `12`-month aggregate).
+  - Updated `CorsConfig` default dev/local origins to include `127.0.0.1:5173`
+    and `127.0.0.1:3000`, and `frontend/nginx.conf` to forward `$http_host`
+    so same-origin `POST /api/v1/analytics/events` succeeds across Vite proxy
+    and Compose Nginx.
+- **Client tracker, public `/analytics` route & gates (`lib/analytics.ts`, `AnalyticsPage.tsx`, `analytics.spec.ts`):**
+  - Added visibility timer (`30s` active visible time for `meaningful_read`),
+    monotonic `25`/`50`/`75`/`100` read-depth milestones, single `eventId` retry,
+    accessible `/analytics` funnel table with explicit denominators, UTC
+    freshness, sparse suppression notice, footer & `/status` cross-links, and
+    `L2-full` / Compose CI route checks.
+- **Checks run after final code/config edit:** Backend `./gradlew.bat test`
+  (`47/47` across `16` suites), frontend `type-check`, ESLint `--max-warnings 0`,
+  Node SSR & tracker tests (`22/22`), `vite build`, and Chrome Playwright E2E
+  (`16/16`, `PLAYWRIGHT_CHANNEL=chrome` against booted H2 `:8081`).
+- **Not verified locally:** Docker Compose PostgreSQL/Nginx migration and
+  concurrent load rehearsal (`dockerDesktopLinuxEngine` offline), and remote CI runs.
 
 ## Branch review & documentation reconciliation (`550caa5..HEAD`) · 27 November 2026
 

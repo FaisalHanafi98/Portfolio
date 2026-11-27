@@ -10,16 +10,19 @@ estimates. The VPS rollout has no scheduled restart date.
 **Current order.** Keep the Docker-based VPS rollout on hold (KIV). The
 Months 2–3 live status deliverables (`GET /api/v1/status`, the public
 `/status` view, and the scheduled GitHub workflow/activity poller) are
-implemented and verified locally with the development profile (`dev`/H2).
-Compose/PostgreSQL rehearsal and live public host monitoring wait on a working
-Docker environment and VPS cutover; Flyway schema baseline precedes the
-Months 3–5 write endpoints.
+implemented and verified locally with the development profile (`dev`/H2),
+alongside the Flyway `V1` schema baseline and the Months 3–5 first-party
+analytics slice (`V2` tables, `POST /api/v1/analytics/events`, `GET
+/api/v1/analytics/summary`, retention job, client visibility tracker, and
+public `/analytics` view). Compose/PostgreSQL rehearsal, VPS cutover, and
+production-host overhead checks wait on a working Docker environment and VPS
+selection.
 
 | Window | Deliverable and skills on display | Release evidence |
 |---|---|---|
 | Weeks 1–6 · KIV | Deploy the trilogy on a Singapore VPS. Show the source commit, release and health history. Demonstrates software delivery and DevOps. | Rebuild a blank host, deploy a signed-off revision, observe public HTTPS and smoke checks, roll back to the previous image digests, and restore a database backup. |
 | Months 2–3 · Local dev complete | Public `/status` view, bounded `/api/v1/status` metrics, and conditional GitHub workflow/activity poller. Demonstrates instrumentation and resilient UX. | Local unit, MockMvc, SSR (`14/14`), and Chrome E2E tests verify DB and GitHub faults independently; public host uptime and PostgreSQL Compose rehearsal follow deployment. |
-| Months 3–5 | Add first-party events and an aggregate dashboard. Demonstrates SQL, data quality and privacy-aware analytics. | Reconcile funnel and read-depth reports against known fixture counts, prove retry deduplication and expiry, and measure ingestion overhead. |
+| Months 3–5 · Local dev complete | Flyway `V1` baseline, `V2` first-party events/daily rollups, and `/analytics` evidence view. Demonstrates SQL, data quality and privacy-aware analytics. | Local unit, MockMvc (`47/47`), SSR & tracker (`22/22`), and Chrome E2E (`16/16`) checks verify funnel denominators, `eventId` retry deduplication, retention expiry, sparse topic suppression, and strict payload validation; live PostgreSQL Compose rehearsal and VPS p95 overhead waits on deployment. |
 | Months 5–8 | Launch “Ask About My Work” against approved evidence. Demonstrates retrieval, provenance, bounded model use and evaluation. | Publish a dated retrieval and citation evaluation, test refusal and exhaustion paths, and trace answers to stable project-section links. |
 | Months 8–12 | Add a JD-to-experience matcher and a public engineering write-up. Demonstrates structured AI output and evidence-based evaluation. | A recruiter can map requirements to evidence and gaps. Test the matcher against synthetic job descriptions and publish the measured results and limits. |
 
@@ -92,16 +95,20 @@ cutover after the rehearsal is verified and a provider is selected.
 - Implement a bounded, same-origin Spring event endpoint with explicit event
   names, project and section allowlists, server timestamps, a unique event
   ID for retry deduplication, size and rate limits, and schema versioning.
-  Ingest case-study views, read-depth buckets and controlled search/chat topic
-  labels as searches and AI tools ship. Accept only locally derived coarse categories. Keep raw IPs, URLs
-  with query strings, free-text prompts and JD text out of analytics storage.
-- Store events in PostgreSQL and aggregate daily by date, project and event.
-  A visibility timer and section intersections distinguish a page opening
-  from a meaningful read. Report the denominator for every conversion and
-  suppress sparse topic cells. Set 30-day raw retention and 12-month aggregate
-  retention as proposed defaults. Expose aggregate evidence with sample size
-  and freshness. Validate duplicate, malformed, offline/best-effort and
-  clock-skew behaviour. Measure p95 overhead under a small concurrent load.
+  Ingest case-study views, read-depth buckets and controlled topic labels
+  as searches and AI tools ship (`analytics` ingestion validates controlled
+  JSON fields via an explicit allowlist and rejects unknown keys). Keep raw IPs,
+  URLs with query strings, free-text prompts and JD text out of analytics storage.
+- Store events in PostgreSQL (and H2 for dev/tests via Flyway `V2`) and aggregate
+  daily by date, project and event. A visibility timer and section intersections
+  distinguish a page opening from a 30s+ meaningful read. Report the denominator
+  for every conversion and suppress sparse topic cells (`< 5` events). Set 30-day
+  raw retention and 12-month aggregate retention via a scheduled UTC cleanup job.
+  Expose aggregate evidence (`GET /api/v1/analytics/summary` and `/analytics`)
+  with sample size and freshness. Local unit, MockMvc, SSR, and Chrome E2E
+  checks verify duplicate, malformed, offline/best-effort, suppression, and
+  clock-skew behaviour; concurrent PostgreSQL Compose/VPS p95 overhead measurement
+  remains for deployment rehearsal.
 
 ## Months 5–8 · Ask About My Work
 
