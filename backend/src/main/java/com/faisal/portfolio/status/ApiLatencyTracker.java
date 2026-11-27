@@ -26,7 +26,8 @@ public class ApiLatencyTracker {
             "/api/v1/projects/{slug}",
             "/api/v1/skills",
             "/api/v1/experience",
-            "/api/v1/status"
+            "/api/v1/status",
+            "/api/v1/analytics/events"
     );
 
     private static final int WINDOW_BUCKETS = 60;
