@@ -11,8 +11,10 @@ import jakarta.validation.Validator;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayOutputStream;
@@ -40,6 +42,7 @@ public class AnalyticsController {
     private final AnalyticsProperties properties;
     private final AnalyticsIngestionRateLimiter rateLimiter;
     private final AnalyticsIngestionService ingestionService;
+    private final AnalyticsSummaryService summaryService;
     private final ObjectMapper strictObjectMapper;
     private final Validator validator;
 
@@ -47,15 +50,26 @@ public class AnalyticsController {
             AnalyticsProperties properties,
             AnalyticsIngestionRateLimiter rateLimiter,
             AnalyticsIngestionService ingestionService,
+            AnalyticsSummaryService summaryService,
             ObjectMapper objectMapper,
             Validator validator
     ) {
         this.properties = properties;
         this.rateLimiter = rateLimiter;
         this.ingestionService = ingestionService;
+        this.summaryService = summaryService;
         this.strictObjectMapper = objectMapper.copy()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         this.validator = validator;
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<ApiResponse<AnalyticsSummaryDto>> getSummary(
+            @RequestParam(defaultValue = "30") int days
+    ) {
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(ApiResponse.success(summaryService.getSummary(days)));
     }
 
     @PostMapping("/events")
