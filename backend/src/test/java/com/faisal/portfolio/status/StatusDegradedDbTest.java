@@ -162,7 +162,7 @@ class StatusDegradedDbTest {
                 props,
                 healthyBuilder.build(),
                 new ObjectMapper().registerModule(new JavaTimeModule()),
-                Clock.fixed(Instant.parse("2026-11-27T00:00:00Z"), ZoneOffset.UTC)
+                Clock.systemUTC()
         );
         healthyGitHub.pollIfDue();
         healthyServer.verify();
