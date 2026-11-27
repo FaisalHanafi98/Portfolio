@@ -70,6 +70,9 @@ class FlywayBaselineSchemaTest {
                 .load();
 
         baselineFlyway.migrate();
-        assertThat(baselineFlyway.info().current().getVersion().getVersion()).isEqualTo("1");
+        var applied = baselineFlyway.info().applied();
+        assertThat(applied).isNotEmpty();
+        assertThat(applied[0].getVersion().getVersion()).isEqualTo("1");
+        assertThat(baselineFlyway.info().current().getVersion().getVersion()).isEqualTo("2");
     }
 }
