@@ -4,6 +4,7 @@ import Tag from '../ui/Tag';
 import Button from '../ui/Button';
 import { staggerContainer, slideUp } from '../../lib/animations';
 import { projectImages } from '../../lib/projectImages';
+import { useCaseStudyTracker } from '../../hooks/useCaseStudyTracker';
 import SketchUnderline from '../ui/SketchUnderline';
 import type { ProjectDetail as ProjectDetailType } from '../../types';
 
@@ -12,6 +13,7 @@ interface ProjectDetailProps {
 }
 
 export default function ProjectDetail({ project }: ProjectDetailProps) {
+  useCaseStudyTracker(project.slug);
   const localImage = projectImages.get(project.slug);
   const remoteImage = project.images?.find((image) => image.url && !image.url.includes('placeholder.com'));
   const heroImage = localImage ?? remoteImage?.url;
@@ -77,7 +79,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
         >
           {project.problemStatement && (
-            <section className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
+            <section data-analytics-section="problem" className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
               <p className="font-mono text-xs uppercase tracking-wider text-pink font-semibold mb-2">
                 01 / Context &amp; Problem
               </p>
@@ -91,7 +93,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
           )}
 
           {project.solution && (
-            <section className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
+            <section data-analytics-section="solution" className="bg-white p-6 rounded-xl border border-cream-darker/60 shadow-sm min-w-0">
               <p className="font-mono text-xs uppercase tracking-wider text-blue font-semibold mb-2">
                 02 / Approach &amp; Delivery
               </p>
@@ -126,7 +128,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* Architecture Decisions */}
       {project.architectureDecisions && project.architectureDecisions.length > 0 && (
-        <motion.section variants={slideUp} className="mb-12 bg-white p-6 md:p-8 rounded-xl border border-cream-darker/60 shadow-sm">
+        <motion.section data-analytics-section="architecture" variants={slideUp} className="mb-12 bg-white p-6 md:p-8 rounded-xl border border-cream-darker/60 shadow-sm">
           <p className="font-mono text-xs uppercase tracking-wider text-blue font-semibold mb-2">
             03 / System Design &amp; Trade-offs
           </p>
@@ -169,7 +171,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* Challenges */}
       {project.challenges && project.challenges.length > 0 && (
-        <motion.section variants={slideUp} className="mb-12 bg-white p-6 md:p-8 rounded-xl border border-cream-darker/60 shadow-sm">
+        <motion.section data-analytics-section="constraints" variants={slideUp} className="mb-12 bg-white p-6 md:p-8 rounded-xl border border-cream-darker/60 shadow-sm">
           <p className="font-mono text-xs uppercase tracking-wider text-pink font-semibold mb-2">
             04 / Engineering Constraints
           </p>
@@ -189,7 +191,7 @@ export default function ProjectDetail({ project }: ProjectDetailProps) {
 
       {/* Full Description */}
       <motion.div variants={slideUp} className="grid grid-cols-1 gap-6 mb-12">
-        <section className="bg-white p-6 rounded-xl border border-cream-darker/60 min-w-0">
+        <section data-analytics-section="overview" className="bg-white p-6 rounded-xl border border-cream-darker/60 min-w-0">
           <h2 className="text-xl font-semibold text-charcoal mb-3">
             Full Project Overview
           </h2>
